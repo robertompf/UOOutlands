@@ -16,6 +16,8 @@ This is a public script repository of scripts for the Steam client, written spec
 
 ## Reminders
 
+:bulb: To make copying/pasting easier, use the [RAW] view of the file. 
+
 :bug: If you discover a bug, or a script stops working. Please contact me directly in discord (Jewele). The server does change from time to time, requiring updates - and I won't know these scripts are broken until someone tells me.
 
 :mailbox: I love script submissions or ideas. Even if you are a new scripter - send me your ideas. I can't do all of this alone.
