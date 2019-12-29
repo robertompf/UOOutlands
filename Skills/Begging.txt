@@ -1,0 +1,55 @@
+/////////////////////////////////////////////
+// UO Steam Begging Script
+// for Outlands
+// by Jewele
+//
+// Walk around town, begging from NPCs you
+// stand next to. The "flashing" effect is
+// expected, as its searching for targets and
+// checking distance.
+//
+// NOTES:
+// ======
+// 10.31.2019 - the range specifier of 'findtype' is now broken on uoo. Unsure
+// when exactly it broke, but a recent patch did it.
+//
+// VERSIONS:
+// =========
+// 10.31.2019 - rewrote this again! (3rd time?) to fix a server API issue. Please note
+//              this version will attempt to beg from players. Just avoid them please.
+//
+// UOSTEAM COPY-PASTE BELOW THIS LINE
+/////////////////////////////////////////////
+sysmsg "Begging Trainer Script" 88
+@removelist 'npcs'
+@createlist 'npcs'
+@createtimer 'beg'
+@settimer 'beg' 5001
+while not dead
+  //
+  // Search : find all male/female sprites around you
+  //
+  @clearignorelist
+  @ignoreobject 'self'
+  @clearlist 'npcs'
+  @removetimer 'search'
+  @createtimer 'search'
+  while timer 'search' < 1000
+    if @findtype 0x190 'any' 'world' 2 or @findtype 0x191 'any' 'world' 2
+      @pushlist! 'npcs' 'found'
+      @ignoreobject 'found'
+    endif
+  endwhile
+  if timer 'beg' > 5000
+    for 0 to 'npcs'
+      if @inrange "npcs[]" 2
+        setalias 'last' 'npcs[]'
+        msg 'spare a penny?'
+        useskill 'begging'
+        waitfortarget 5000
+        target! 'npcs[]'
+        @settimer 'beg' 0
+      endif
+    endfor
+  endif
+endwhile

@@ -1,0 +1,27 @@
+/////////////////////////////////////////////
+// UO Steam Skill Trainer - Animal Lore
+// for Outlands
+// by Jewele
+//
+// Trains animal lore on your mount.
+//
+// How to use?
+// -----------
+// 1) Obtain a mount
+// 2) Dismount
+// 3) Run script
+//
+// UOSTEAM COPY-PASTE BELOW THIS LINE
+/////////////////////////////////////////////
+
+sysmsg "Animal Lore Trainer" 88
+
+if not findalias 'pet'
+    sysmsg "Select pet for training" 88
+    promptalias 'pet'
+endif
+
+while not dead
+    waitforcontext 'pet' 0 1000
+    pause 2100
+endwhile

@@ -1,0 +1,90 @@
+/////////////////////////////////////////////
+// UO Steam Skill Trainer - Stealing
+// for Outlands
+// by Jewele
+//
+// Steals a bottle from your pack horse and puts
+// it back. Run until you are GM.
+//
+// How to use?
+// -----------
+// 1) Buy a pack horse
+// 2) Buy 20 bottles and put on packy
+// 3) Run script
+//
+// Script not running?
+//
+//    Clear your aliases. Go to Macros-Active Objects, and clear
+//    all Active Objects.
+//
+// Script buggy?
+//
+//    DO NOT share profiles between characters, it will confuse
+//    the aliases.
+//
+// Versions
+// --------
+// 1.0 - New.
+//
+// 1.1 - Updated stealing script for multiple bottles. Server
+//       added an item move cooldown after stealing so we
+//       try to move every bottle in your pack back to the 
+//       pony, 1 by 1. The ones that are on cooldown wont move
+//       but the others will move just fine.
+//
+//
+// NOTES:
+// ======
+// Why do stacks of bottles work?
+//
+// When you steal a stackable item, it stacks in your pack and if
+// there is already an item there on cooldown, the new stack has
+// the same cooldown as the ORIGINAL item stack.
+//
+// So its :
+// 1) Steal 5 bottles (20 second cooldown)
+// 2) Steal 5 bottles - they stack, 10 second cooldown on all bottles.
+// 3) Steal 5 bottles - they stack, 0 second cooldown
+// 4) Move all bottles back to Pony
+//
+// Pretty cool eh?
+//
+// UOSTEAM COPY-PASTE BELOW THIS LINE
+/////////////////////////////////////////////
+sysmsg "Stealing Script Trainer" 88
+@clearjournal
+sysmsg "Version 1.1" 88
+@clearjournal
+@useobject 'backpack'
+pause 1000
+if not findalias 'pony'
+  sysmsg "Select pony" 88
+  promptalias 'pony'
+endif
+@useobject 'pony'
+while not dead
+  //
+  // Steal
+  //
+  useskill 'Stealing'
+  waitfortarget 5000
+  target! 'pony'
+  pause 11500
+  //
+  // Move back to Pony but ignore ones
+  // that are on cooldown
+  //
+  @clearignorelist
+  while findtype 0x143e 'any' 'backpack'
+    moveitem  'found' 'pony'
+    @ignoreobject 'found'
+    pause 1000
+  endwhile
+  //
+  // skill check
+  //
+  if skill 'Stealing' == 100
+    headmsg "Im done" 93
+    stop
+  endif
+endwhile

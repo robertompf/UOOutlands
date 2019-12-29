@@ -1,0 +1,4 @@
+To train Alchemy without a shelf, 
+use \Crafting\Alchemy.txt
+and just put in the potion
+you need for gains.

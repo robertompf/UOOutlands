@@ -42,6 +42,16 @@
 // but we cannot use that here, due to changing skill levels
 // and skill targets.
 //
+// Script not running?
+//
+//    Clear your aliases. Go to Macros-Active Objects, and clear 
+//    all Active Objects. 
+//
+// Script buggy?
+//
+//    DO NOT share profiles between characters, it will confuse
+//    the aliases.
+//
 // UOSTEAM COPY-PASTE BELOW THIS LINE
 /////////////////////////////////////////////
 sysmsg "Alchemy Trainer Script" 88

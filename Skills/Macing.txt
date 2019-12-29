@@ -1,0 +1,3 @@
+Use Melee.txt
+
+Its a single script for all weapon skills - rather than 1 for each. Just follow instructions.

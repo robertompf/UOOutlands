@@ -1,0 +1,13 @@
+/////////////////////////////////////////////
+// UO Steam Hiding Training Macro
+// for Outlands
+//
+// Prioritizes getting hiding up to 100
+/////////////////////////////////////////////
+while not dead
+  useskill "hiding"
+  pause 11000
+  if skill 'hiding' = 100
+    stop
+  endif  
+endwhile
