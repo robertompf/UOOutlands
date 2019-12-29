@@ -1,0 +1,150 @@
+/////////////////////////////////////////////
+// UO Steam Ship Auto Shoot Macro
+// for Outlands
+// by Jewele
+// UOSTEAM COPY-PASTE BELOW THIS LINE
+/////////////////////////////////////////////
+sysmsg "Auto Shoot macro running" 86
+@clearjournal
+@removelist 'crew'
+@createlist 'crew'
+@removetimer 'fire'
+@createtimer 'fire'
+@removelist 'shots'
+@createlist 'shots'
+@removetimer 'healing'
+@removetimer 'tracking'
+@createtimer 'tracking'
+while not dead
+  //
+  // Pirate Check
+  //
+  if @injournal "now tracking" 'system'
+    playsound 'dive.wav'
+    for 5
+      partymsg 'PIRATES PIRATES PIRATES'
+      headmsg 'PIRATES PIRATES PIRATES' 22
+      playsound 'dive.wav'
+      pause 2000
+    endfor
+    @clearjournal
+  endif
+  if list 'shots' == 0
+    @canceltarget
+    @cleartargetqueue
+    @clearjournal
+    msg '[reload'
+    pause 2000
+    // no reload required
+    if @injournal "no cannons" 'system'
+      sysmsg "Skipping reload" 88
+      settimer 'fire' 14001
+    // reloading too soon
+    elseif @injournal "must wait" 'system'
+      sysmsg "Reloaded too soon, retrying..." 88
+      pause 1000
+      continue
+    // reloaded
+    else
+      sysmsg "Reloaded" 88
+      pause 12000
+    endif
+    pushlist 'shots' 'boom'
+    pushlist 'shots' 'boom'
+    pushlist 'shots' 'boom'
+    pushlist 'shots' 'boom'
+    pushlist 'shots' 'boom'
+    pushlist 'shots' 'boom'
+    pushlist 'shots' 'boom'
+    pushlist 'shots' 'boom'
+    pushlist 'shots' 'boom'
+    pushlist 'shots' 'boom'
+  endif
+  //
+  // Carrack is pause ~25s after reload command, and 14s between shots.
+  //
+  if list 'shots' > 0 and timer 'fire' > 14000
+    //
+    // Commence firing
+    //
+    @canceltarget
+    @cleartargetqueue
+    @clearjournal
+    msg "[Firecannons"
+    pause 2000
+    waitfortarget 5000
+    //
+    // Reload cooldown
+    //
+    if @injournal "must wait" 'system'
+      sysmsg "Firing too soon, waiting..." 88
+      pause 1000
+    else
+	  targettileoffset -6 0 0
+      settimer 'fire' 0
+      poplist 'shots' 'front'
+    endif
+    @canceltarget
+    @cleartargetqueue
+  endif
+  //
+  // Get crew
+  //
+  if list 'crew' == 0
+    @clearignorelist
+    while @findtype 0x190 'any' 'ground' '2' or @findtype 0x191 'any' 'ground' '2'
+      if friend 'found'
+        @pushlist! 'crew' 'found'
+      endif
+      @ignoreobject 'found'
+    endwhile
+  endif
+  //
+  // wait for bandage finish
+  //
+  if @timerexists 'healing'
+    if timer 'healing' > 15000
+      @removetimer 'healing'
+    endif
+    if @injournal 'heal' 'system'
+      @removetimer 'healing'
+    endif
+    if @injournal 'cure' 'system'
+      @removetimer 'healing'
+    endif
+    if @injournal 'finish' 'system'
+      @removetimer 'healing'
+    endif
+  endif
+  //
+  // Does crew need a bandage?
+  //
+  if not @timerexists 'healing'
+    while list 'crew' > 0
+      if @inrange 'crew[0]' 2
+        @clearjournal
+        usetype 0xe21 'any' 'backpack'
+        waitfortarget 5000
+        target! 'crew[0]'
+        @createtimer 'healing'
+        pause 1000
+        if @injournal 'not damaged' 'system'
+          @removetimer 'healing'
+          poplist 'crew' 'front'
+          continue
+        endif
+        headmsg "(healing crew)" 88
+        break
+      else
+        poplist 'crew' 'front'
+      endif
+    endwhile
+  endif
+  pause 1000
+  //
+  // Slip in a hull repair
+  //
+  msg '[repair'
+  waitforgump 0x4bcb6173 2000
+  @replygump 0x4bcb6173 2
+endwhile

@@ -1,0 +1,132 @@
+/////////////////////////////////////////////
+// UO Steam Ship Heal Crew macro
+// for Outlands
+// by Jewele
+// 
+// This script heals your nearby crew with a bandage, when
+// on a ship. It can be used by itself, or, you can extend it
+// to add more actions you want to take while on a ship. 
+//
+// Healing your crew on a ship is tricky (in script), and this
+// serves as an example of how to do just this. You have to 
+// attempt to heal every crew member around you, and if 
+// they actually need a bandage, keep bandaging them until they 
+// are full.
+//
+// This server blocks querying hit points of mobiles around you,
+// except for your pets. Crew do not count as pets so... its a
+// trial/error for bandaging attempts.
+//
+// How to use?
+// -----------
+// 1) Run on ship when you need to heal your crew
+// 2) Stand next to injured crew members to bandage them
+//
+// Important Notes
+// ---------------
+// * The script will pause if you have an active target up. This 
+//   assumes you are firing your cannons, etc.
+// * The script has no idea which crew are lower health than other.
+//   This is a UO Steam limitation on this server - can't do it.
+//   If you have a certain crew member near death, manually heal them.
+//
+// Last updated : 9.12.2019
+// UOSTEAM COPY-PASTE BELOW THIS LINE
+/////////////////////////////////////////////
+
+@clearjournal
+
+@removelist 'crew'
+@createlist 'crew'
+
+sysmsg "Running crew healing script" 88
+
+while not dead
+    //
+    // Get crew
+    //
+    if list 'crew' == 0
+        @clearignorelist
+        while @findtype 0x190 'any' 'ground' '2' or @findtype 0x191 'any' 'ground' '2'
+            if friend 'found'
+                @pushlist! 'crew' 'found'
+            endif
+            @ignoreobject 'found'
+        endwhile 
+    endif
+    //
+    // Pause for active targets
+    //
+    if @targetexists
+        headmsg "(active target)" 66
+        pause 2000
+        replay
+    endif
+    //
+    // low bandages check
+    //
+    if counttype '0xe21' 'any' 'backpack' == 0
+        headmsg "Out of bandages!" 38
+        stop
+    endif
+    //
+    // out of bandages check
+    //
+    if counttype '0xe21' 'any' 'backpack' < 20
+        headmsg "Low on bandages" 38
+        pause 100
+    endif
+    //
+    // wait for bandage finish
+    //
+    if @timerexists 'healing'
+      if timer 'healing' > 15000
+        @removetimer 'healing'
+      endif
+      if @injournal 'heal' 'system'
+        @removetimer 'healing'
+      endif
+      if @injournal 'cure' 'system'
+        @removetimer 'healing'
+      endif
+      if @injournal 'finish' 'system'
+        @removetimer 'healing'
+      endif
+    endif
+    //
+    // Do I need a bandage?
+    //
+    if not @timerexists 'healing'
+      if poisoned 'self' or diffhits > 10
+        @createtimer 'healing'
+        headmsg "(bandaging)" 67
+        bandageself
+        @clearjournal
+      endif
+    endif
+    //
+    // Does crew need a bandage?
+    //
+    if not @timerexists 'healing'
+        while list 'crew' > 0
+            if @inrange 'crew[0]' 2
+                @clearjournal
+                usetype 0xe21 'any' 'backpack'
+                waitfortarget 5000
+                target! 'crew[0]'
+                @createtimer 'healing'
+                pause 1000
+                if @injournal 'not damaged' 'system'
+                    @removetimer 'healing'
+                    poplist 'crew' 'front'
+                    continue
+                endif
+                headmsg "(healing crew)" 88
+                break
+            else
+                poplist 'crew' 'front'
+            endif
+        endwhile
+    endif
+    pause 1000
+endwhile

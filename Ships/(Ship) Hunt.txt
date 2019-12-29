@@ -1,0 +1,154 @@
+@clearjournal
+createtimer 'repair'
+settimer 'repair' 0
+createtimer 'tracking'
+settimer 'tracking' 5000
+@removelist 'ids'
+@createlist 'ids'
+@removelist 'crew'
+@createlist 'crew'
+@removetimer 'healing'
+
+headmsg "[SAIL]" 55
+while not dead
+  //
+  // Get crew
+  //
+  if list 'crew' == 0
+    @clearignorelist
+    while @findtype 0x190 'any' 'ground' '2' or @findtype 0x191 'any' 'ground' '2'
+      if friend 'found'
+        @pushlist! 'crew' 'found'
+      endif
+      @ignoreobject 'found'
+    endwhile
+  endif
+  //
+  // low bandages check
+  //
+  if counttype '0xe21' 'any' 'backpack' == 0
+    headmsg "Out of bandages!" 38
+    stop
+  endif
+  //
+  // out of bandages check
+  //
+  if counttype '0xe21' 'any' 'backpack' < 20
+    headmsg "Low on bandages" 38
+    pause 100
+  endif
+  //
+  // Heal
+  //
+  if diffhits > 20
+    autotargetself
+    bigheal
+    pause 2000
+  endif
+  //
+  // Cure Pot
+  //
+  if poisoned 'self' and @findtype 0xf07 0 'backpack'
+    useobject! 'found'
+  endif
+  //
+  // Heal Pot
+  //
+  if diffhits > 60 and @findtype 0xf0c 0 'backpack'
+    useobject 'found'
+  endif
+  //
+  // Pirate Check
+  //
+  if @injournal "now tracking" 'system'
+    for 5
+      partymsg 'PIRATES PIRATES PIRATES'
+      headmsg 'PIRATES PIRATES PIRATES' 22
+      pause 2000
+    endfor
+    @clearjournal
+  endif
+  if list 'ids' == 0
+    pushlist 'ids' '2'
+    pushlist 'ids' '4'
+  endif
+  //
+  // Track
+  //
+  if timer 'tracking' > 5000
+    headmsg "[SHIPS]" 55
+    useskill 'Tracking'
+    waitforgump 0xfe5c638b 5000
+    if gumpexists 0xfe5c638b
+      replygump 0xfe5c638b ids[0]
+      poplist 'ids' 'front'
+      replygump 0xfe5c638b 3
+      pause 500
+      replygump 0xfe5c638b 3
+      pause 500
+      replygump 0xfe5c638b 3
+      pause 500
+      replygump 0xfe5c638b 3
+      pause 500
+      replygump 0xfe5c638b 3
+      pause 500
+      replygump 0xfe5c638b 3
+      pause 500
+      replygump 0xfe5c638b 3
+      pause 500
+    endif
+    settimer 'tracking' 0
+  endif
+  //
+  // wait for bandage finish
+  //
+  if @timerexists 'healing'
+    if timer 'healing' > 15000
+      @removetimer 'healing'
+    endif
+    if @injournal 'heal' 'system'
+      @removetimer 'healing'
+    endif
+    if @injournal 'cure' 'system'
+      @removetimer 'healing'
+    endif
+    if @injournal 'finish' 'system'
+      @removetimer 'healing'
+    endif
+  endif
+  //
+  // Does crew need a bandage?
+  //
+  if not @timerexists 'healing'
+    while list 'crew' > 0
+      if @inrange 'crew[0]' 2
+        @clearjournal
+        usetype 0xe21 'any' 'backpack'
+        waitfortarget 5000
+        target! 'crew[0]'
+        @createtimer 'healing'
+        pause 1000
+        if @injournal 'not damaged' 'system'
+          @removetimer 'healing'
+          poplist 'crew' 'front'
+          continue
+        endif
+        headmsg "(healing crew)" 88
+        break
+      else
+        poplist 'crew' 'front'
+      endif
+    endwhile
+  endif
+  //
+  //
+  //
+  msg '[repair'
+  waitforgump 0x4bcb6173 2000
+  @replygump 0x4bcb6173 2
+  waitforgump 0x4bcb6173 2000
+  @replygump 0x4bcb6173 3
+  waitforgump 0x4bcb6173 2000
+  @replygump 0x4bcb6173 4
+  pause 1000
+endwhile

@@ -1,0 +1,8 @@
+//
+// Just uses a spyglass looks for ships
+//
+usetype 0x14f5
+waitfortarget 5000
+target 'self'
+waitforgump 0xac42384c 5000
+replygump 0xac42384c 4

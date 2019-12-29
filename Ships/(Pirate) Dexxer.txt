@@ -1,0 +1,313 @@
+/////////////////////////////////////////////
+// UO Steam Ship assist macro
+// for Outlands
+// by Jewele
+// 
+// This script was made to allow me to focus on firing cannons,
+// positioning ship, and micro-managing the other tasks in ship
+// PvM without worrying about having to attack or heal crew.
+// This is the dexxer version and will work for archers, melee, etc.
+// If you have parry, get the parry version.
+//
+// What does it do?
+// * Heals you and nearby crew
+// * Attacks nearest grey
+// * Begs your crew if you have the skill
+// * Throws explosions if you have them in your pack.
+// * Taunts every 30 seconds
+//
+// How to use?
+// -----------
+// 1) Save a dress profile named 'default' with your equipment
+// 2) Run script
+// 3) Stay near injured crew to heal them
+//
+// Important Notes
+// ---------------
+// * The script will pause if you have an active target up. This 
+//   assumes you are firing your cannons, etc.
+// * The script has no idea which crew are lower health than other.
+//   This is a UO Steam limitation on this server - can't do it.
+//   If you have a certain crew member near death, manually heal them.
+// * Crew that stand on each other will cause problems for bandaging.
+// * Enable [X] Check hands before potions
+// * Set "Delay between actions" to [500ms]
+// * Gold stacking on deck can causes issues if you are near
+//   enemy ship hold. Ship in hold will be detected and you will
+//   attempt to stack on it (hence the delay)
+//
+// Versions
+// -----------
+// 1.0 - First release! yay! 
+// 1.1 - Removed need to save crew each time
+// 1.2 - Slight increase to potion throw timer
+// 1.3 - Refactored crew healing
+// 1.4 - Refactored crew healing (again)
+// 1.5 - Now only attacks enemies within 1 tile
+// 1.6 - Added gold and doubloon stacking
+// 1.7 - Added pirate insults
+// 1.8 - Added delay after stacking attempts
+// 1.9 - Added aggro detect for stacking attempts
+//
+// UOSTEAM COPY-PASTE BELOW THIS LINE
+/////////////////////////////////////////////
+
+@clearjournal
+@unsetalias 'hurt'
+@removelist 'crew'
+@createlist 'crew'
+if not @listexists 'taunts'
+  @createlist 'taunts'
+endif
+
+while not dead
+
+  if list 'taunts' == 0
+    pushlist 'taunts' "Put yer hearts into it, ye bunch of scurvy ridden whores!"
+    pushlist 'taunts' "Run fer land why dont ye! Thats where ye be longin!"
+    pushlist 'taunts' "Prepare to be boarded, like a 'lass in a Cambrian grog hole!"
+    pushlist 'taunts' "Give ol' Davy Jones me regards! har!"
+    pushlist 'taunts' "Incompetent knaves! Me parrot fights better than ye!"
+    pushlist 'taunts' "Ye smell like a beached whale, ye bilge-drinkin', scallywags!"
+    pushlist 'taunts' "I'll giv' ye a taste o' the cat, ye spineless maggots!"
+    pushlist 'taunts' "No quarter for you, ye belly-aching bilge rats!"
+    pushlist 'taunts' "Ill burn yer ship to the water, ye squid suckin', poxy cuttlefish!"
+    pushlist 'taunts' "Dead men tell no tales, ye pitiful, rum-thievin' landlubbers!"
+    pushlist 'taunts' "Load those cannons faster, ye feckless dim-wits!"
+    pushlist 'taunts' "I'll use yer pegleg fer firewood, ye flea-ridden mongbat!"
+    pushlist 'taunts' "Unlock yer hold and jump in the sea!, all the good your fer!"
+    pushlist 'taunts' "Grab the deck and beg for yer lives!"
+    pushlist 'taunts' "Ye makin water at the sight o me sails! ye knee 'knockin cowards!"
+    pushlist 'taunts' "I drink rum and cutt throats! Avast! No rum!"
+    pushlist 'taunts' "We'll plunder yer booty, ye lyin', yellow-bellied wretches!"
+
+  endif
+
+  //
+  // Get crew
+  //
+  if list 'crew' == 0
+    @clearignorelist
+    while @findtype 0x190 'any' 'ground' '2' or @findtype 0x191 'any' 'ground' '2'
+      if friend 'found'
+        @pushlist! 'crew' 'found'
+      endif
+      @ignoreobject 'found'
+    endwhile
+  endif
+  //
+  // Script indicator for player
+  //
+  headmsg "[FIGHT]" 92
+  pause 2000
+  //
+  // Pause 2 seconds for active targets
+  //
+  if @targetexists
+    headmsg "(active target)" 66
+    pause 1000
+    replay
+  endif
+  //
+  // low bandages check
+  //
+  if counttype '0xe21' 'any' 'backpack' == 0
+    headmsg "Out of bandages!" 38
+    stop
+  endif
+  //
+  // out of bandages check
+  //
+  if counttype '0xe21' 'any' 'backpack' < 20
+    headmsg "Low on bandages" 38
+    pause 100
+  endif
+  //
+  // Cures
+  //
+  if poisoned and @findtype! 0xf07 0 'backpack'
+    headmsg "[Cure] Potion" 194
+    clearhands 'right'
+    pause 1000
+    useobject! 'found'
+    pause 2000
+  endif
+  //
+  // Heals
+  //
+  if diffhits > 60 and not poisoned 
+    if @findtype 0xf0c 0 'backpack'
+        headmsg "[Heal] Potion" 53
+        useobject! 'found'
+        pause 3000
+    endif
+  endif
+  //
+  // run dress macro
+  //
+  dress 'default'
+  while dressing
+  endwhile
+  //
+  // harpoon check
+  //
+  if not @findlayer 'self' 2
+    if @findtype 0x26bd 'any' 'backpack'
+      equipitem 'found' 2
+      pause 1000
+    endif
+  endif
+  //
+  // attack enemy near you
+  //
+  for 0 to 10
+    @getenemy 'murderer' 'enemy' 'criminal' 'gray' 'humanoid' 'next'
+    if @findobject 'enemy' and @inrange 'enemy' 1
+      attack! 'enemy'
+    endif
+  endfor
+  //
+  // wait for bandage finish
+  //
+  if @timerexists 'healing'
+    if timer 'healing' > 15000
+      @removetimer 'healing'
+    endif
+    if @injournal 'heal' 'system'
+      @removetimer 'healing'
+    endif
+    if @injournal 'cure' 'system'
+      @removetimer 'healing'
+    endif
+    if @injournal 'finish' 'system'
+      @removetimer 'healing'
+    endif
+  endif
+  //
+  // Do I need a bandage?
+  //
+  if not @timerexists 'healing'
+    if poisoned 'self' or diffhits > 10
+      @createtimer 'healing'
+      headmsg "(bandaging)" 67
+      bandageself
+      @clearjournal
+    endif
+  endif
+  //
+  // Does crew need a bandage?
+  //
+  if not @timerexists 'healing'
+    while list 'crew' > 0
+      if @inrange 'crew[0]' 2
+        @clearjournal
+        usetype 0xe21 'any' 'backpack'
+        waitfortarget 5000
+        target! 'crew[0]'
+        @createtimer 'healing'
+        pause 1000
+        if @injournal 'not damaged' 'system'
+          @removetimer 'healing'
+          poplist 'crew' 'front'
+          continue
+        endif
+        headmsg "(healing crew)" 88
+        break
+      else
+        pause 2000
+        poplist 'crew' 'front'
+      endif
+    endwhile
+  endif
+  //
+  // throw explosion if you have them
+  //
+  if @timerexists 'explosion'
+    //
+    // reset after x seconds
+    //
+    if timer 'explosion' > 13000
+      @removetimer 'explosion'
+    endif
+  else
+    if @inrange 'enemy' 12
+      if not @inrange 'enemy' 6
+        if counttype 0xf0d 'any' 'backpack' > 0
+          findtype 0xf0d 'any' 'backpack' > 0
+          useobject 'found'
+          waitfortarget 5000
+          target! 'enemy'
+          msg "lookout!" 67
+          @createtimer 'explosion'
+        endif
+      endif
+    endif
+  endif
+  //
+  // Begging
+  //
+  if @timerexists 'begging'
+    //
+    // reset after 1 min
+    //
+    if timer 'begging' > 60000
+      @removetimer 'begging'
+    endif
+  else
+    if skill 'begging' >  50
+      @Getfriend 'friend' 'innocent'
+      if @inrange 'friend' 15
+        useskill 'Begging'
+        waitfortarget 5000
+        target! 'friend'
+        @createtimer 'begging'
+      endif
+    endif
+  endif
+  //
+  //
+  // Deck stack
+  //
+  if not @findobject 'enemy'
+    //
+    // Stack gold on deck
+    //
+    if @findtype 0xeed 'any' 'backpack'
+      sysmsg "Stacking gold..."
+      if @findtype 0xeed any ground 0 2
+        setalias 'stack' 'found'
+        while @findtype 0xeed 'any' 'backpack'
+          moveitem  'found' 'stack'
+          pause 500
+        endwhile
+      endif
+      pause 2000
+    endif
+    //
+    // Stack doubloons on deck
+    //
+    if @findtype 0x9eb 'any' 'backpack'
+      sysmsg "Stacking doubloons..."
+      if @findtype 0x9eb any ground 0 2
+        setalias 'stack' 'found'
+        while @findtype 0x9eb 'any' 'backpack'
+          moveitem  'found' 'stack'
+          pause 500
+        endwhile
+      endif
+      pause 2000
+    endif
+  endif
+
+  //
+  // Taunt
+  //
+  if @findobject 'enemy' and @inrange 'enemy' 15
+    // 2 mins
+    if timer 'taunts' > 30000
+      yellmsg 'taunts[0]'
+      @poplist 'taunts' 'front'
+      @settimer 'taunts' 0
+    endif
+  endif
+endwhile
