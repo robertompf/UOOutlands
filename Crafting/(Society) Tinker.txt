@@ -1,0 +1,152 @@
+/////////////////////////////////////////////
+// UO Steam Society Macro for Tinker
+// for Outlands
+// by Jewele
+//
+// Crafts a certain number of exceptional items
+// required for a society then stops, alerting
+// you when its done.
+//
+// This isn't fully AFK - its designed to be
+// monitored. So semi-afk :)
+//
+// How to use:
+// ===========
+// 1) Stock pack with Tinker Tools (10-20)
+// 2) Set crafting menu to metal you need
+// 3) Set recycle option to 'RECYCLE ENTIRE BACKPACK'
+// 4) Craft 1 item you need for job (sets make last)
+// 5) Modify the ingot color list code (below)
+// 6) Run script
+// 7) Wait for done alert
+//
+// Version 1.0
+// -----------
+// First release! yay!
+//
+// UOSTEAM COPY-PASTE BELOW THIS LINE
+/////////////////////////////////////////////
+@removelist 'ore'
+@createlist 'ore'
+@removelist 'graphicid'
+@createlist 'graphicid'
+// MODIFY START --------->
+//
+//
+// Add ore color for job
+pushlist 'ore' 2406       // shadow iron
+// Add item graphic id for job item
+pushlist 'graphicid' 0x1416
+//
+//
+// <---------- MODIFY END
+//
+// Open backpack
+//
+@useobject 'backpack'
+pause 1000
+msg "bank"
+pause 1000
+useskill 'hiding'
+//
+// Set alias
+//
+if not @findalias 'Box'
+  sysmsg "Select box or chest with materials"
+  promptalias 'Box'
+endif
+//
+// Move all ingots from pack to Box (reset)
+//
+while @findtype 0x1bf2 'any' 'backpack'
+  sysmsg "dumping"
+  moveitem  'found' 'Box'
+  pause 500
+endwhile
+//
+// Loop until its done
+//
+@clearjournal
+while not @injournal "completed a society job" 'System'
+  //
+  // Check weight
+  //
+  if diffweight < 10
+    headmsg 'I am too heavy, please unload me' '88'
+    playsound 'uhoh.wav'
+    pause 5000
+    continue
+  endif
+  //
+  // Check or restock ingots
+  //
+  if @counttype 0x1bf2 ore[0] 'backpack' <  25
+    sysmsg "restocking"
+    useobject 'Box'
+    pause 1000
+    movetype 0x1bf2 'Box' 'backpack' 0 0 0 ore[0] 500
+    pause 1000
+  endif
+  //
+  // Verify ingots
+  //
+  if @counttype 0x1bf2 ore[0] 'backpack' <  25
+    playsound 'uhoh.wav'
+    headmsg 'I cannot restock ingots!' '88'
+    pause 5000
+    continue
+  endif
+  //
+  // Check tinker tools
+  //
+  if not @findtype 0x1eb8 'any' 'backpack'
+    headmsg 'I have no tinker tools!' 66
+    playsound 'uhoh.wav'
+    pause 5000
+    continue
+  endif
+  //
+  // Use 3x = sometimes server doesnt respond
+  //
+  useobject 'found'
+  pause 100
+  useobject 'found'
+  pause 100
+  useobject 'found'
+  pause 100
+  //
+  // Craft last
+  //
+  waitforgump 0x38920abd 5000
+  replygump 0x38920abd 7
+  // craft response
+  waitforgump 0x38920abd 5000
+  // then dismiss
+  replygump 0x38920abd 0
+  // then wait for item
+  waitforgump 0x38920abd 10000
+  //
+  // Check quality
+  //
+  while @findtype graphicid[0] 'any' 'backpack'
+    @usetype 0x1eb8
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 3
+    waitfortarget 5000
+    target! 'found'
+    pause 1000
+  endwhile
+endwhile
+//
+// Burn off the extras if found
+//
+while @findtype graphicid[0] 'any' 'backpack'
+  @usetype 0x1eb8
+  waitforgump 0x38920abd 15000
+  replygump 0x38920abd 3
+  waitfortarget 5000
+  target! 'found'
+  pause 1000
+endwhile
+playsound 'cymbals.wav'
+headmsg "All done!" 55

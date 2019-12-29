@@ -1,0 +1,453 @@
+//
+// Decodes Research Materials in pack
+// ==================================
+// I dont know original author for credit
+//
+
+while @findtype 0x72a4 'any' 'backpack'
+  @clearjournal
+  useobject 'found'
+  waitforgump 0x2a496f8c 15000
+  // {C,C,C,C,C}
+  replygump 0x2a496f8c 2
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 2
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 2
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 2
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 2
+  waitforgump 0x2a496f8c 15000
+  if not @injournal 'You complete your research' 'system'
+    replygump 0x2a496f8c 5
+    waitforgump 0x2a496f8c 15000
+    headmsg 'Incorrect solution.'
+  else
+    replygump 0x2a496f8c 0
+    headmsg 'Solution found!'
+    pause 600
+    continue
+  endif
+  // {C,C,C,C,D}
+  replygump 0x2a496f8c 2
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 2
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 2
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 2
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 3
+  waitforgump 0x2a496f8c 15000
+  if not @injournal 'You complete your research' 'system'
+    replygump 0x2a496f8c 5
+    waitforgump 0x2a496f8c 15000
+    headmsg 'Incorrect solution.'
+  else
+    replygump 0x2a496f8c 0
+    headmsg 'Solution found!'
+    pause 600
+    continue
+  endif
+  // {C,C,C,C,I}
+  replygump 0x2a496f8c 2
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 2
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 2
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 2
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 4
+  waitforgump 0x2a496f8c 15000
+  if not @injournal 'You complete your research' 'system'
+    replygump 0x2a496f8c 5
+    waitforgump 0x2a496f8c 15000
+    headmsg 'Incorrect solution.'
+  else
+    replygump 0x2a496f8c 0
+    headmsg 'Solution found!'
+    pause 600
+    continue
+  endif
+  // {C,C,C,D,D}
+  replygump 0x2a496f8c 2
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 2
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 2
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 3
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 3
+  waitforgump 0x2a496f8c 15000
+  if not @injournal 'You complete your research' 'system'
+    replygump 0x2a496f8c 5
+    waitforgump 0x2a496f8c 15000
+    headmsg 'Incorrect solution.'
+  else
+    replygump 0x2a496f8c 0
+    headmsg 'Solution found!'
+    pause 600
+    continue
+  endif
+  // {C,C,C,D,I}
+  replygump 0x2a496f8c 2
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 2
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 2
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 3
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 4
+  waitforgump 0x2a496f8c 15000
+  if not @injournal 'You complete your research' 'system'
+    replygump 0x2a496f8c 5
+    waitforgump 0x2a496f8c 15000
+    headmsg 'Incorrect solution.'
+  else
+    replygump 0x2a496f8c 0
+    headmsg 'Solution found!'
+    pause 600
+    continue
+  endif
+  // {C,C,C,I,I}
+  replygump 0x2a496f8c 2
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 2
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 2
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 4
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 4
+  waitforgump 0x2a496f8c 15000
+  if not @injournal 'You complete your research' 'system'
+    replygump 0x2a496f8c 5
+    waitforgump 0x2a496f8c 15000
+    headmsg 'Incorrect solution.'
+  else
+    replygump 0x2a496f8c 0
+    headmsg 'Solution found!'
+    pause 600
+    continue
+  endif
+  // {C,C,D,D,D}
+  replygump 0x2a496f8c 2
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 2
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 3
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 3
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 3
+  waitforgump 0x2a496f8c 15000
+  if not @injournal 'You complete your research' 'system'
+    replygump 0x2a496f8c 5
+    waitforgump 0x2a496f8c 15000
+    headmsg 'Incorrect solution.'
+  else
+    replygump 0x2a496f8c 0
+    headmsg 'Solution found!'
+    pause 600
+    continue
+  endif
+  // {C,C,D,D,I}
+  replygump 0x2a496f8c 2
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 2
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 3
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 3
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 4
+  waitforgump 0x2a496f8c 15000
+  if not @injournal 'You complete your research' 'system'
+    replygump 0x2a496f8c 5
+    waitforgump 0x2a496f8c 15000
+    headmsg 'Incorrect solution.'
+  else
+    replygump 0x2a496f8c 0
+    headmsg 'Solution found!'
+    pause 600
+    continue
+  endif
+  // {C,C,D,I,I}
+  replygump 0x2a496f8c 2
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 2
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 3
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 4
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 4
+  waitforgump 0x2a496f8c 15000
+  if not @injournal 'You complete your research' 'system'
+    replygump 0x2a496f8c 5
+    waitforgump 0x2a496f8c 15000
+    headmsg 'Incorrect solution.'
+  else
+    replygump 0x2a496f8c 0
+    headmsg 'Solution found!'
+    pause 600
+    continue
+  endif
+  // {C,C,I,I,I}
+  replygump 0x2a496f8c 2
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 2
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 4
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 4
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 4
+  waitforgump 0x2a496f8c 15000
+  if not @injournal 'You complete your research' 'system'
+    replygump 0x2a496f8c 5
+    waitforgump 0x2a496f8c 15000
+    headmsg 'Incorrect solution.'
+  else
+    replygump 0x2a496f8c 0
+    headmsg 'Solution found!'
+    pause 600
+    continue
+  endif
+  // {C,D,D,D,D}
+  replygump 0x2a496f8c 2
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 3
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 3
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 3
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 3
+  waitforgump 0x2a496f8c 15000
+  if not @injournal 'You complete your research' 'system'
+    replygump 0x2a496f8c 5
+    waitforgump 0x2a496f8c 15000
+    headmsg 'Incorrect solution.'
+  else
+    replygump 0x2a496f8c 0
+    headmsg 'Solution found!'
+    pause 600
+    continue
+  endif
+  // {C,D,D,D,I}
+  replygump 0x2a496f8c 2
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 3
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 3
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 3
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 4
+  waitforgump 0x2a496f8c 15000
+  if not @injournal 'You complete your research' 'system'
+    replygump 0x2a496f8c 5
+    waitforgump 0x2a496f8c 15000
+    headmsg 'Incorrect solution.'
+  else
+    replygump 0x2a496f8c 0
+    headmsg 'Solution found!'
+    pause 600
+    continue
+  endif
+  // {C,D,D,I,I}
+  replygump 0x2a496f8c 2
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 3
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 3
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 4
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 4
+  waitforgump 0x2a496f8c 15000
+  if not @injournal 'You complete your research' 'system'
+    replygump 0x2a496f8c 5
+    waitforgump 0x2a496f8c 15000
+    headmsg 'Incorrect solution.'
+  else
+    replygump 0x2a496f8c 0
+    headmsg 'Solution found!'
+    pause 600
+    continue
+  endif
+  // {C,D,I,I,I}
+  replygump 0x2a496f8c 2
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 3
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 4
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 4
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 4
+  waitforgump 0x2a496f8c 15000
+  if not @injournal 'You complete your research' 'system'
+    replygump 0x2a496f8c 5
+    waitforgump 0x2a496f8c 15000
+    headmsg 'Incorrect solution.'
+  else
+    replygump 0x2a496f8c 0
+    headmsg 'Solution found!'
+    pause 600
+    continue
+  endif
+  // {C,I,I,I,I}
+  replygump 0x2a496f8c 2
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 4
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 4
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 4
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 4
+  waitforgump 0x2a496f8c 15000
+  if not @injournal 'You complete your research' 'system'
+    replygump 0x2a496f8c 5
+    waitforgump 0x2a496f8c 15000
+    headmsg 'Incorrect solution.'
+  else
+    replygump 0x2a496f8c 0
+    headmsg 'Solution found!'
+    pause 600
+    continue
+  endif
+  // {D,D,D,D,D}
+  replygump 0x2a496f8c 3
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 3
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 3
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 3
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 3
+  waitforgump 0x2a496f8c 15000
+  if not @injournal 'You complete your research' 'system'
+    replygump 0x2a496f8c 5
+    waitforgump 0x2a496f8c 15000
+    headmsg 'Incorrect solution.'
+  else
+    replygump 0x2a496f8c 0
+    headmsg 'Solution found!'
+    pause 600
+    continue
+  endif
+  // {D,D,D,D,I}
+  replygump 0x2a496f8c 3
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 3
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 3
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 3
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 4
+  waitforgump 0x2a496f8c 15000
+  if not @injournal 'You complete your research' 'system'
+    replygump 0x2a496f8c 5
+    waitforgump 0x2a496f8c 15000
+    headmsg 'Incorrect solution.'
+  else
+    replygump 0x2a496f8c 0
+    headmsg 'Solution found!'
+    pause 600
+    continue
+  endif
+  // {D,D,D,I,I}
+  replygump 0x2a496f8c 3
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 3
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 3
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 4
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 4
+  waitforgump 0x2a496f8c 15000
+  if not @injournal 'You complete your research' 'system'
+    replygump 0x2a496f8c 5
+    waitforgump 0x2a496f8c 15000
+    headmsg 'Incorrect solution.'
+  else
+    replygump 0x2a496f8c 0
+    headmsg 'Solution found!'
+    pause 600
+    continue
+  endif
+  // {D,D,I,I,I}
+  replygump 0x2a496f8c 3
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 3
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 4
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 4
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 4
+  waitforgump 0x2a496f8c 15000
+  if not @injournal 'You complete your research' 'system'
+    replygump 0x2a496f8c 5
+    waitforgump 0x2a496f8c 15000
+    headmsg 'Incorrect solution.'
+  else
+    replygump 0x2a496f8c 0
+    headmsg 'Solution found!'
+    pause 600
+    continue
+  endif
+  // {D,I,I,I,I}
+  replygump 0x2a496f8c 3
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 4
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 4
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 4
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 4
+  waitforgump 0x2a496f8c 15000
+  if not @injournal 'You complete your research' 'system'
+    replygump 0x2a496f8c 5
+    waitforgump 0x2a496f8c 15000
+    headmsg 'Incorrect solution.'
+  else
+    replygump 0x2a496f8c 0
+    headmsg 'Solution found!'
+    pause 600
+    continue
+  endif
+  // {I,I,I,I,I}
+  replygump 0x2a496f8c 4
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 4
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 4
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 4
+  waitforgump 0x2a496f8c 15000
+  replygump 0x2a496f8c 4
+  waitforgump 0x2a496f8c 15000
+  if not @injournal 'You complete your research' 'system'
+    replygump 0x2a496f8c 5
+    waitforgump 0x2a496f8c 15000
+    headmsg 'Incorrect solution.'
+  else
+    replygump 0x2a496f8c 0
+    headmsg 'Solution found!'
+    pause 600
+    continue
+  endif
+endwhile
+headmsg 'Research solving finished.'

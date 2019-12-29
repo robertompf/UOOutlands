@@ -1,0 +1,27 @@
+/////////////////////////////////////////////
+// UO Steam Gate Hopper Macro
+// for Outlands
+// by Jewele
+//
+// Updated to account for buggy gump and 
+// occasionally the dreaded "you must wait"
+// messages when attempting to escape in
+// a gate.
+//
+/////////////////////////////////////////////
+sysmsg "[*] Gate hopper running..." 88
+while not @gumpexists 0xe0e675b8 and not @gumpexists 0xe866525f
+  @usetype '0xf6c' 'any' 'ground' '2'
+  pause 100
+endwhile
+//
+// Spam gumps until we use gate
+//
+while @gumpexists 0xe0e675b8
+  replygump 0xe0e675b8 2
+  pause 1000
+endwhile
+while @gumpexists 0xe866525f
+  replygump 0xe866525f 2
+  pause 1000
+endwhile
