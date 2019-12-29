@@ -5,7 +5,11 @@
 
 This is a public script repository of scripts for the Steam client, written specifically for the Outlands server ruleset. Most of the scripts I have written, but I always appreciate hosting contributions from others. The directory layout should be self explanatory if you are looking for anything in particular.
 
-### New 
+## New and Noteworthy
+|| Description | Link
+| --- | --- | --- |
+|:droplet:| Alchemy trainer using shelf  |[Link](https://raw.githubusercontent.com/gmccord333/UOOutlands/master/Skills/Alchemy%20(Shelf).txt)
+
 
 
 
