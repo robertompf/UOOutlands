@@ -9,6 +9,7 @@ This is a public script repository of scripts for the Steam client, written spec
 || Description | Link
 | --- | --- | --- |
 |:droplet:| Alchemy trainer using shelf  |[Link](https://raw.githubusercontent.com/gmccord333/UOOutlands/master/Skills/Alchemy%20(Shelf).txt)
+|:mag:| Vendor mall search macro (very popular)  |[Link](https://raw.githubusercontent.com/gmccord333/UOOutlands/master/Utility/VendorMall.txt)
 
 
 
