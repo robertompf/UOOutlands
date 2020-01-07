@@ -76,13 +76,6 @@ while hits > 0
   @clearjournal
   @clearignorelist
   //
-  // Gump detect
-  //
-  while @ingump 'any' 'Click when complete'
-    headmsg "answer gump"
-    pause 2000
-  endwhile
-  //
   // Transfer to pack horse if found
   //
   if diffweight < 50
