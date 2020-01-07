@@ -1,0 +1,38 @@
+/////////////////////////////////////////////
+// UO Steam Fishing Macro for Nets
+// for Outlands
+//
+// Clicks ocean fishing spots using a net in
+// your pack
+//
+/////////////////////////////////////////////
+sysmsg "UO Outlands Fishing Spot script" 88
+@useobject 'backpack'
+pause 1000
+//
+// Create spots list
+//
+@removelist 'spots'
+@createlist 'spots'
+@pushlist! 'spots' 0x6bf9 // sunken boat
+@pushlist! 'spots' 0x722e // barrels
+@pushlist! 'spots' 0x4988 // hull and stumps
+@pushlist! 'spots' 0x6863 // lily pads
+@pushlist! 'spots' 0x99b1 // kelp circle
+@pushlist! 'spots' 0x1b9 // flotilla
+@pushlist! 'spots' 0x6bf5 // rowboat
+@pushlist! 'spots' 0x58d // thatch shelter
+@pushlist! 'spots' 0x3b0 // fish net
+//
+// While alive
+//
+while hits > 0
+  for 0 to 'spots'
+    if @findtype 'spots[]' 'any' 'world' 0 15
+      headmsg "Throwing a net" 88
+      @useobject 'found'
+      pause 4100
+    endif
+  endfor
+  pause 1000
+endwhile
