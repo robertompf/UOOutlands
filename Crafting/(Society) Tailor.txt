@@ -1,0 +1,153 @@
+/////////////////////////////////////////////
+// UO Steam Society Macro for Tailor
+// for Outlands
+// by Jewele
+//
+// Crafts a certain number of items
+// required for a society then stops, alerting
+// you when its done.
+//
+// This isn't fully AFK - its designed to be
+// monithided. So semi-afk :)
+//
+// How to use:
+// ===========
+// 1) Stock pack with Sewing Kits (10-20)
+// 2) Set crafting menu to leather hide you need
+// 3) Set desired recycle option
+// 4) Craft 1 item you need for job (sets make last)
+// 5) Modify the leather color list code (below)
+// 6) Run script
+// 7) Wait for done alert
+//
+// Version 1.0
+// -----------
+// First release! yay!
+//
+// UOSTEAM COPY-PASTE BELOW THIS LINE
+/////////////////////////////////////////////
+@removelist 'hide'
+@createlist 'hide'
+@removelist 'graphicid'
+@createlist 'graphicid'
+// MODIFY START --------->
+//
+//
+// Add hide color for job
+pushlist 'hide' 0
+
+// Add item graphic id for job item
+pushlist 'graphicid' 0x1416
+//
+//
+// <---------- MODIFY END
+//
+// Open backpack
+//
+@useobject 'backpack'
+pause 1000
+msg "bank"
+pause 1000
+useskill 'hiding'
+//
+// Set alias
+//
+if not @findalias 'HideBox'
+  sysmsg "Select Box or chest with materials"
+  promptalias 'HideBox'
+endif
+//
+// Move all hide from pack to Box (reset)
+//
+while @findtype 0x1081 'any' 'backpack'
+  sysmsg "dumping"
+  moveitem  'found' 'HideBox'
+  pause 500
+endwhile
+//
+// Loop until its done
+//
+@clearjournal
+while not @injournal "completed a society job" 'System'
+  //
+  // Check weight
+  //
+  if diffweight < 10
+    headmsg 'I am too heavy, please unload me' '88'
+    playsound 'uhoh.wav'
+    pause 5000
+    continue
+  endif
+  //
+  // Check or restock hide
+  //
+  if @counttype 0x1081 hide[0] 'backpack' <  25
+    sysmsg "restocking"
+    useobject 'HideBox'
+    pause 1000
+    movetype 0x1081 'HideBox' 'backpack' 0 0 0 hide[0] 500
+    pause 1000
+  endif
+  //
+  // Verify hide
+  //
+  if @counttype 0x1081 hide[0] 'backpack' <  25
+    playsound 'uhoh.wav'
+    headmsg 'I cannot restock hide!' '88'
+    pause 5000
+    continue
+  endif
+  //
+  // Check tools
+  //
+  if not @findtype 0xf9d 'any' 'backpack'
+    headmsg 'I have no sewing kits!' 66
+    playsound 'uhoh.wav'
+    pause 5000
+    continue
+  endif
+  //
+  // Use 3x = sometimes server doesnt respond
+  //
+  useobject 'found'
+  pause 100
+  useobject 'found'
+  pause 100
+  useobject 'found'
+  pause 100
+  //
+  // Craft last
+  //
+  waitforgump 0x38920abd 5000
+  replygump 0x38920abd 7
+  // craft response
+  waitforgump 0x38920abd 5000
+  // then dismiss
+  replygump 0x38920abd 0
+  // then wait for item
+  waitforgump 0x38920abd 10000
+  //
+  // Recycle
+  //
+  while @findtype graphicid[0] 'any' 'backpack'
+    @usetype 0xf9d
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 3
+    waitfortarget 5000
+    target! 'found'
+    pause 1000
+  endwhile
+endwhile
+//
+// Burn off the extras if found
+//
+while @findtype graphicid[0] 'any' 'backpack'
+  @usetype 0xf9d
+  waitforgump 0x38920abd 15000
+  replygump 0x38920abd 3
+  waitfortarget 5000
+  target! 'found'
+  pause 1000
+endwhile
+playsound 'cymbals.wav'
+headmsg "All done!" 55
