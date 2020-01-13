@@ -35,6 +35,7 @@
 //
 // Add ore color for job
 pushlist 'ore' 2406       // shadow iron
+
 // Add item graphic id for job item
 pushlist 'graphicid' 0x1416
 //

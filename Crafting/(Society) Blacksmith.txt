@@ -31,6 +31,8 @@
 // Add ore color for job
 pushlist 'ore' 0       // iron
 
+// Add item graphic id for job item
+pushlist 'graphicid' 0x13f8
 //
 // <---------- MODIFY END
 
@@ -122,20 +124,25 @@ while not @injournal "completed a society job" 'System'
   //
   // Recycle
   //
-  @usetype 0xfbb
-  waitforgump 0x38920abd 15000
-  replygump 0x38920abd 3
-  waitfortarget 5000
-  target! 'self'
-  pause 1000
+  while @findtype graphicid[0] 'any' 'backpack'
+        @usetype 0xfbb
+        waitforgump 0x38920abd 15000
+        replygump 0x38920abd 3
+        waitfortarget 5000
+        target! 'found'
+        pause 1000
+    endwhile
 endwhile
 //
 // Burn off the extras if found
 //
-@usetype 0xfbb
-waitforgump 0x38920abd 15000
-replygump 0x38920abd 3
-waitfortarget 5000
-target! 'self'
+while @findtype graphicid[0] 'any' 'backpack'
+    @usetype 0xfbb
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 3
+    waitfortarget 5000
+    target! 'found'
+    pause 1000
+endwhile
 playsound 'cymbals.wav'
 headmsg "All done!" 55
