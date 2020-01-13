@@ -53,16 +53,16 @@ useskill 'hiding'
 //
 // Set alias
 //
-if not @findalias 'Box'
-  sysmsg "Select box or chest with materials"
-  promptalias 'Box'
+if not @findalias 'woodbox'
+  sysmsg "Select chest with materials"
+  promptalias 'woodbox'
 endif
 //
-// Move all boards from pack to Box (reset)
+// Move all boards from pack to woodbox (reset)
 //
 while @findtype 0x1bd7 'any' 'backpack'
   sysmsg "dumping"
-  moveitem  'found' 'Box'
+  moveitem  'found' 'woodbox'
   pause 500
 endwhile
 //
@@ -84,9 +84,9 @@ while not @injournal "completed a society job" 'System'
   //
   if @counttype 0x1bd7 wood[0] 'backpack' <  25
     sysmsg "restocking"
-    useobject 'Box'
+    useobject 'woodbox'
     pause 1000
-    movetype 0x1bd7 'Box' 'backpack' 0 0 0 wood[0] 500
+    movetype 0x1bd7 'woodbox' 'backpack' 0 0 0 wood[0] 500
     pause 1000
   endif
   //

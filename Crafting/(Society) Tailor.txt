@@ -52,16 +52,16 @@ useskill 'hiding'
 //
 // Set alias
 //
-if not @findalias 'HideBox'
-  sysmsg "Select Box or chest with materials"
-  promptalias 'HideBox'
+if not @findalias 'hidebox'
+  sysmsg "Select chest with materials"
+  promptalias 'hidebox'
 endif
 //
 // Move all hide from pack to Box (reset)
 //
 while @findtype 0x1081 'any' 'backpack'
   sysmsg "dumping"
-  moveitem  'found' 'HideBox'
+  moveitem  'found' 'hidebox'
   pause 500
 endwhile
 //
@@ -83,9 +83,9 @@ while not @injournal "completed a society job" 'System'
   //
   if @counttype 0x1081 hide[0] 'backpack' <  25
     sysmsg "restocking"
-    useobject 'HideBox'
+    useobject 'hidebox'
     pause 1000
-    movetype 0x1081 'HideBox' 'backpack' 0 0 0 hide[0] 500
+    movetype 0x1081 'hidebox' 'backpack' 0 0 0 hide[0] 500
     pause 1000
   endif
   //
