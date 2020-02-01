@@ -3,24 +3,42 @@
 // for Outlands
 // by Jewele
 //
-// Updated to account for buggy gump and 
+// Updated to account for buggy gump and
 // occasionally the dreaded "you must wait"
 // messages when attempting to escape in
 // a gate.
 //
+// This version is much faster and more reliable
+// than previous versions as it attempts multiple
+// times to get you through a gate. This overcomes
+// client lag and gets you out ASAP.
+//
+// Murderers automatically go to corpse creek
+//
 /////////////////////////////////////////////
 sysmsg "[*] Gate hopper running..." 88
+//
+// Spam gates in range
+//
 while not @gumpexists 0xe0e675b8 and not @gumpexists 0xe866525f
   @usetype '0xf6c' 'any' 'ground' '2'
   pause 100
 endwhile
 //
-// Spam gumps until we use gate
+// * Static Moongates *
 //
 while @gumpexists 0xe0e675b8
+  if murderer 'self'
+    sysmsg "Setting Corpse Creek" 32
+    replygump 0xe0e675b8 17
+    waitforgump 0xe0e675b8 5000
+  endif
   replygump 0xe0e675b8 2
   pause 1000
 endwhile
+//
+// * Player Moongates *
+//
 while @gumpexists 0xe866525f
   replygump 0xe866525f 2
   pause 1000
