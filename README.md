@@ -1,6 +1,3 @@
-![Ultima Online](/Banner.png?raw=true "Title")
-
-# Outlands
 ## Ultima Online Outlands Steam Public Script Repository
 
 This is a public script repository of scripts for the Steam client, written specifically for the Outlands server ruleset. Most of the scripts I have written, but I always appreciate hosting contributions from others. The directory layout should be self explanatory if you are looking for anything in particular.
