@@ -10,6 +10,8 @@ This is a public script repository of scripts for the Steam client, written spec
 | --- | --- | --- |
 |:droplet:| Alchemy trainer using shelf  |[Link](https://raw.githubusercontent.com/gmccord333/UOOutlands/master/Skills/Alchemy%20(Shelf).txt)
 |:mag:| Vendor mall search macro (very popular)  |[Link](https://raw.githubusercontent.com/gmccord333/UOOutlands/master/Utility/VendorMall.txt)
+|:first_quarter_moon:| Gate hopper. Fastest way out of dungeon gates |[Link](https://raw.githubusercontent.com/gmccord333/UOOutlands/master/Utility/GateHopper.txt)
+
 
 
 
