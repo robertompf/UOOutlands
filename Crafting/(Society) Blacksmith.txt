@@ -3,7 +3,7 @@
 // for Outlands
 // by Jewele
 //
-// Crafts a certain number of exceptional items
+// Crafts a certain number of items
 // required for a society then stops, alerting
 // you when its done.
 //
