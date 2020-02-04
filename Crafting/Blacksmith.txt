@@ -76,10 +76,10 @@
 // 1) Stock pack with smith tongs (10-20)
 // 2) Stock Pony with ingots you need
 // 3) Go to Exceptional Bonus town
-// 2) Set your preferred recycle option
-//    RECOMMENDED : 'Recycle Regular (of Type)'
-// 3) Modify section below
-// 4) Run
+// 4) Modify section below
+// 5) Run
+//
+// * Macro will auto select ingots and recycle for you
 //
 // Sounds:
 // =======
