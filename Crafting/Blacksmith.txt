@@ -8,9 +8,47 @@
 // you are going to use this to stock a shelf.
 // You can make individual items or complete sets.
 //
-// I highly recommend you pack a pony with ingots
-// and run it in a town with exceptional bonus. Just
-// select pony as ingot source.
+// Requires minimal input by you:
+// * item
+// * ore
+//
+// This macro is based on the idea of making a "set"
+// of things - set of armor, 10 katanas, 20 halberds,
+// whatever you program it to do. Then, when the set
+// is complete, it plays a sound and alerts you. You
+// have 10 seconds before it will run again and make
+// the same set - again, and again.. until you stop it.
+//
+// If you are doing societies, use the other macro:
+// Blacksmith (Society).txt
+//
+// RECYCLING
+// =========
+// The macro is going to attempt to recycle everything
+// you make, but since the filter is 'Regular (of Type)'
+// it will attempt to recycle Exceptionals but fail -
+// and then the Exceptionals will be moved to your
+// final bag.
+//
+// SHELVES?
+// ========
+// This macro is really geared towards using a
+// pony in an Exceptional Bonus town. You can use
+// your house of course - just use a chest/bag.
+// Then, when done, load shelf from chest/bag.
+//
+// THIEVES
+// =======
+// Thieves can be a problem in town, yes. Just use
+// a trapped pouch on your pony - they can't steal it
+// and you will know immediately if they try to snoop.
+//
+// HIDING
+// ======
+// Do not hide your crafter, you cannot trade while
+// hidden - aka - you cannot put items on pony if
+// hidden. If you are dumping to a bag in your pack
+// then go ahead and hide.
 //
 // SETS
 // ====
@@ -21,20 +59,6 @@
 //
 // Feel free to add your own sets, you will see
 // how to do that below.
-//
-// SHELVES?
-// ========
-// This macro is really geared towards using a
-// pony in an Exceptional Bonus town. You can use
-// your house of course - just use a chest.bag. 
-// Then, when done, load shelf from chest/bag.
-//
-// DESTINATION
-// ===========
-// You will be prompted for a destination bag,
-// box, or other container to place items you
-// create into. If in town, I recommend a
-// trapped pouch on a pony.
 //
 // COMPLETION
 // ==========
@@ -49,6 +73,13 @@
 // If you notice items dropping to ground, you will
 // need to stop macro. Most people aren't going to
 // have this issue.
+//
+// BAGGING
+// =======
+// Folks running shops like to bag up sets of armor
+// for sale. I didn't want to pack _all of that_ into
+// this single macro. Instead, I will provide you
+// with another macro to bag up your items for sale.
 //
 // MULTIPLES
 // =========
@@ -76,17 +107,20 @@
 // 1) Stock pack with smith tongs (10-20)
 // 2) Stock Pony with ingots you need
 // 3) Go to Exceptional Bonus town
-// 4) Modify section below
+// 4) Modify script (below)
 // 5) Run
-//
-// * Macro will auto select ingots and recycle for you
+// 6) Stop when you are done making sets.
 //
 // Sounds:
 // =======
 // Please make sure following sounds files exist:
 // ...\UOSteam\Sounds\uhoh.wav
 // ...\UOSteam\Sounds\cymbals.wav
-// ...\UOSteam\Sounds\ding.wav
+// ...\UOSteam\Sounds\anvil.wav
+//
+// You can get them from:
+// https://github.com/gmccord333/UOOutlands/tree/master/Sounds
+// They are just for fun, you dont have to have them.
 //
 // TROUBLESHOOTING
 // ===============
@@ -97,6 +131,10 @@
 // Version history:
 // ================
 // 1.0 - First version
+// 1.1 - Implemented suggestion by 'bert'
+//       to just recycle everything with filter.
+//       Added 'anvil' sound every time you attempt.
+//       Fixed ore selection bug
 //
 // UOSTEAM COPY-PASTE BELOW THIS LINE
 /////////////////////////////////////////////
@@ -109,7 +147,7 @@ sysmsg "UOSteam Blacksmithing Macro" 75
 @createlist 'count'
 //
 // MODIFY START -------->>>
-@pushlist 'ore' 'iron'
+@pushlist 'ore' 'copper'
 @pushlist 'make' 'plate set'
 // <<<-------- MODIFY END
 //
@@ -268,18 +306,23 @@ while list 'make' > 0
   //
   // Select ore
   //
-  while not @ingump 0x38920abd ore[0]
-    @replygump 0x38920abd 13
-    waitforgump 0x38920abd 5000
-    if @inlist 'ore' 'iron' and @ingump 0x38920abd 'shadow iron'
+  // Copper
+  if @inlist 'ore' 'copper'
+    while not @ingump 0x38920abd 'copper' or @ingump 0x38920abd 'dull copper'
       replygump 0x38920abd 13
       waitforgump 0x38920abd 5000
-    endif
-    if @inlist 'ore' 'copper' and @ingump 0x38920abd 'dull copper'
+    endwhile
+  elseif @inlist 'ore' 'iron'
+    while not @ingump 0x38920abd 'iron' or @ingump 0x38920abd 'shadow iron'
       replygump 0x38920abd 13
       waitforgump 0x38920abd 5000
-    endif
-  endwhile
+    endwhile
+  else
+    while not @ingump 0x38920abd ore[0]
+      @replygump 0x38920abd 13
+      waitforgump 0x38920abd 5000
+    endwhile
+  endif
   //
   // Select Recycle
   //
@@ -602,41 +645,36 @@ while list 'make' > 0
     playsound 'cymbals.wav'
     stop
   endif
+  playsound 'anvil.wav'
   waitforgump 0x38920abd 5000
   // make
   pause 3000
   //
-  // recycle normals
+  // recycle (Regulars)
+  //
+  sysmsg '~Recycling~' 44
+  if @findtype 'typeid[0]' 'any' 'backpack'
+    @usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 3
+    waitfortarget 5000
+    target! 'found'
+    pause 2000
+  endif
+  //
+  // check for remake
+  //
+  if @findtype 'typeid[0]' 'any' 'backpack'
+    sysmsg '*Exceptional*' 66
+    poplist 'make' 'front'
+  endif
+  //
+  // save exceptionals
   //
   while @findtype 'typeid[0]' 'any' 'backpack'
-    @clearjournal
-    @clickobject 'found'
-    pause 500
-    if @injournal 'exceptional' 'system'
-      //
-      // mark we found an exceptional
-      //
-      @pushlist 'typeid' 'found'
-      sysmsg '*Exceptional*' 66
-      playsound 'ding.wav'
-      moveitem 'found' 'donebox'
-      pause 2000
-    else
-      sysmsg '~Junk~' 44
-      @usetype 0xfbb
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 3
-      waitfortarget 5000
-      target! 'found'
-      pause 2000
-    endif
+    moveitem 'found' 'donebox'
+    pause 2000
   endwhile
-  //
-  // remake or move to next item
-  //
-  if list 'typeid' > 1
-    poplist 'make' 'make[0]'
-  endif
 endwhile
 sysmsg "Set completed! Remaking in 10 seconds" 55
 playsound 'cymbals.wav'
