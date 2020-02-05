@@ -2,17 +2,16 @@
 
 This is a public script repository of scripts for the Steam client, written specifically for the Outlands server ruleset. Most of the scripts I have written, but I always appreciate hosting contributions from others. The directory layout should be self explanatory if you are looking for anything in particular.
 
+I have donated my time to help the shard, by writing these scripts. There is no expectation, either implicit or explicit, that I be rewarded in any way. I give my time freely to help your game experience. If you see an issue, please notify me immediately. Please respect the amount of work involved by making sure any criticism or comments are constructive.
+
+:gem: -Jewele
+
 ## New and Noteworthy
 || Description | Link
 | --- | --- | --- |
 |:droplet:| Alchemy trainer using shelf  |[Link](https://raw.githubusercontent.com/gmccord333/UOOutlands/master/Skills/Alchemy%20(Shelf).txt)
 |:mag:| Vendor mall search macro (very popular)  |[Link](https://raw.githubusercontent.com/gmccord333/UOOutlands/master/Utility/VendorMall.txt)
 |:first_quarter_moon:| Gate hopper. Fastest way out of dungeon gates |[Link](https://raw.githubusercontent.com/gmccord333/UOOutlands/master/Utility/GateHopper.txt)
-
-
-
-
-
 
 ## Reminders
 
