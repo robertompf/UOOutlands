@@ -32,8 +32,7 @@
 // How to use:
 // ===========
 // 1) Stock pack with smith tongs (10-20)
-// 2) Set your preferred recycle option
-//    RECOMMENDED : 'Recycle All (of Type)'
+// 2) Stock pony with ingots, go to Craft Bonus town
 // 3) Modify section below
 // 4) Run
 //
@@ -48,18 +47,22 @@
 // 1.1 - Initial release
 // 1.2 - Overhauled entire script so user
 //       just has to entire item and ore.
+// 1.3 - Fixed ore selection
+//       Automatically selects recycle option
+// 1.4 - Fixed some minor things
 //
 //
 // UOSTEAM COPY-PASTE BELOW THIS LINE
 /////////////////////////////////////////////
+sysmsg "UOSteam Blacksmith Society Macro" 75
 @removelist 'ore'
 @createlist 'ore'
 @removelist 'make'
 @createlist 'make'
 //
 // MODIFY START -------->>>
-@pushlist 'ore' 'valorite'
-@pushlist 'make' 'executioners axe'
+@pushlist 'ore' 'iron'
+@pushlist 'make' 'plate gloves'
 // <<<-------- MODIFY END
 //
 //
@@ -228,16 +231,16 @@ pause 1000
 //
 // Set alias
 //
-if not @findalias 'orecontainer'
+if not @findalias 'orebox'
   sysmsg "Select chest or pony with materials"
-  promptalias 'orecontainer'
+  promptalias 'orebox'
 endif
 //
-// Move all ingots from pack to orecontainer (reset)
+// Move all ingots from pack to orebox (reset)
 //
 while @findtype 0x1bf2 'any' 'backpack'
   sysmsg "dumping"
-  moveitem  'found' 'orecontainer'
+  moveitem  'found' 'orebox'
   pause 500
 endwhile
 //
@@ -280,9 +283,9 @@ while not @injournal "completed a society job" 'System'
   //
   if @counttype 0x1bf2 orecolor[0] 'backpack' <  25
     sysmsg "restocking"
-    useobject 'orecontainer'
+    useobject 'orebox'
     pause 1000
-    movetype 0x1bf2 'orecontainer' 'backpack' 0 0 0 orecolor[0] 500
+    movetype 0x1bf2 'orebox' 'backpack' 0 0 0 orecolor[0] 500
     pause 1000
   endif
   //
@@ -297,7 +300,7 @@ while not @injournal "completed a society job" 'System'
   //
   // Check smith tongs
   //
-  if not @findtype 0xfbb 'any' 'backpack'
+  if counttype 0xfbb 'any' 'backpack' < 1
     headmsg 'I have no smith tongs!' 66
     playsound 'uhoh.wav'
     pause 5000
@@ -306,26 +309,39 @@ while not @injournal "completed a society job" 'System'
   //
   // Use 3x = sometimes server doesnt respond
   //
-  useobject 'found'
+  @usetype 0xfbb 'any' 'backpack'
   pause 100
-  useobject 'found'
+  @usetype 0xfbb 'any' 'backpack'
   pause 100
-  useobject 'found'
+  @usetype 0xfbb 'any' 'backpack'
   pause 100
+  waitforgump 0x38920abd 5000
   //
   // Select ore
   //
-  while not @ingump 0x38920abd ore[0]
-    @replygump 0x38920abd 13
+  // Copper
+  if @inlist 'ore' 'copper'
+    while not @ingump 0x38920abd 'copper' or @ingump 0x38920abd 'dull copper'
+      replygump 0x38920abd 13
+      waitforgump 0x38920abd 5000
+    endwhile
+  elseif @inlist 'ore' 'iron'
+    while not @ingump 0x38920abd 'iron' or @ingump 0x38920abd 'shadow iron'
+      replygump 0x38920abd 13
+      waitforgump 0x38920abd 5000
+    endwhile
+  else
+    while not @ingump 0x38920abd ore[0]
+      @replygump 0x38920abd 13
+      waitforgump 0x38920abd 5000
+    endwhile
+  endif
+  //
+  // Select Recycle
+  //
+  while not @ingump 0x38920abd 'Recycle All (of Type)'
+    @replygump 0x38920abd 2
     waitforgump 0x38920abd 5000
-    if @inlist 'ore' 'iron' and @ingump 0x38920abd 'shadow iron'
-      replygump 0x38920abd 13
-      waitforgump 0x38920abd 5000
-    endif
-    if @inlist 'ore' 'copper' and @ingump 0x38920abd 'dull copper'
-      replygump 0x38920abd 13
-      waitforgump 0x38920abd 5000
-    endif
   endwhile
   //
   // If we haven't made anything yet
@@ -578,6 +594,10 @@ while not @injournal "completed a society job" 'System'
     endif
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 0
+    while not @ingump 0x38920abd 'create'
+      pause 100
+    endwhile
+    pause 1000
     @clearlist 'make'
     //
     // Just make last, its faster
@@ -587,19 +607,26 @@ while not @injournal "completed a society job" 'System'
     replygump 0x38920abd 7
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 0
-    waitforgump 0x38920abd 10000
+    while not @ingump 0x38920abd 'create'
+      pause 100
+    endwhile
+    pause 1000
   endif
   //
   // Recycle
   //
   while @findtype makeid[0] 'any' 'backpack'
-    @usetype 0xfb 'any' 'backpack'
+    @usetype 0xfbb 'any' 'backpack'
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 3
     waitfortarget 5000
     target! 'found'
-    pause 1000
+    while @gumpexists 0x38920abd
+      replygump 0x38920abd 0
+      pause 1000
+    endwhile
   endwhile
+  pause 2000
 endwhile
 //
 // Burn off the extras if found
