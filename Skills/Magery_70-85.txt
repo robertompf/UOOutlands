@@ -3,9 +3,12 @@
 // for Outlands
 // by Jewele
 // 
-// Magery 75-85 trainer. This script recalls you
+// Magery 70-85 trainer. This script recalls you
 // back and forth between a bank and Prevalia Zoo
 // where you will cast spells on anacondas.
+//
+// Why Flamestrike at 70!?
+// - Because you fail a lot and failure is good.
 //
 // How to use?
 // -----------
@@ -32,7 +35,7 @@
 // UOSTEAM COPY-PASTE BELOW THIS LINE
 /////////////////////////////////////////////
 
-sysmsg "Magery Trainer Script 75-85" 88
+sysmsg "Magery Trainer Script 70-85" 88
 sysmsg "Version 2.0" 88
 
 @useobject 'backpack'
