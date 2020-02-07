@@ -16,6 +16,17 @@
 // with exceptional bonus. Just select pony
 // as ingot source.
 //
+// Please do not share the same UOSteam profile between
+// characters running the script at the same time. This
+// will result in strange and unexpected behavior - either
+// not making the right item or not recycling properly.
+//
+// Recycling
+// =========
+// If you change your recycle option to save exceptionals,
+// they will now be saved to your 'orebox' alias, or 
+// whatever container you chose when starting script.
+//
 // *************************
 // ITEM NAMES -- IMPORTANT!!
 // *************************
@@ -50,6 +61,15 @@
 // 1.3 - Fixed ore selection
 //       Automatically selects recycle option
 // 1.4 - Fixed some minor things
+// 1.5 - Added a timer to avoid script getting
+//       stuck waiting for a gump response.
+// 1.6 - Changed way script detected last item
+//       needed to be made. This fixed a strange
+//       issue I saw from time to time.
+// 1.7 - Added recycle setting as a user value
+//       in case you want to keep what you make
+//       Any items left over after recycling will
+//       now be moved to 'orebox'
 //
 //
 // UOSTEAM COPY-PASTE BELOW THIS LINE
@@ -59,10 +79,16 @@ sysmsg "UOSteam Blacksmith Society Macro" 75
 @createlist 'ore'
 @removelist 'make'
 @createlist 'make'
+@removelist 'recycle'
+@createlist 'recycle'
+@createtimer 'gump'
 //
 // MODIFY START -------->>>
 @pushlist 'ore' 'iron'
-@pushlist 'make' 'plate gloves'
+@pushlist 'make' 'chainmail arms'
+@pushlist 'recycle' 'Recycle All (of Type)'
+//@pushlist 'recycle' 'Recycle Regular (of Type)'
+
 // <<<-------- MODIFY END
 //
 //
@@ -339,14 +365,14 @@ while not @injournal "completed a society job" 'System'
   //
   // Select Recycle
   //
-  while not @ingump 0x38920abd 'Recycle All (of Type)'
+  while not @ingump 0x38920abd 'recycle[0]'
     @replygump 0x38920abd 2
     waitforgump 0x38920abd 5000
   endwhile
   //
   // If we haven't made anything yet
   //
-  if list 'make' > 0
+  if listexists 'make'
     if @inlist 'make' 'ringmail gorget'
       replygump 0x38920abd 100
       waitforgump 0x38920abd 5000
@@ -592,13 +618,17 @@ while not @injournal "completed a society job" 'System'
       waitforgump 0x38920abd 5000
       replygump 0x38920abd 203
     endif
+    //
+    // Signal script to make last
+    //
+    @removelist 'make'
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 0
-    while not @ingump 0x38920abd 'create'
+    settimer 'gump' 0
+    while not @ingump 0x38920abd 'create' and timer 'gump' < 8000
       pause 100
     endwhile
     pause 1000
-    @clearlist 'make'
     //
     // Just make last, its faster
     //
@@ -607,7 +637,8 @@ while not @injournal "completed a society job" 'System'
     replygump 0x38920abd 7
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 0
-    while not @ingump 0x38920abd 'create'
+    settimer 'gump' 0
+    while not @ingump 0x38920abd 'create' and timer 'gump' < 8000
       pause 100
     endwhile
     pause 1000
@@ -625,6 +656,13 @@ while not @injournal "completed a society job" 'System'
       replygump 0x38920abd 0
       pause 1000
     endwhile
+  endwhile
+  //
+  // Move un-recycled to Pony
+  //
+  while @findtype makeid[0] 'any' 'backpack'
+    moveitem  'found' 'orebox'
+    pause 1000
   endwhile
   pause 2000
 endwhile
