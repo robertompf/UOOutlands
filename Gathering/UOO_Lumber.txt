@@ -19,6 +19,10 @@
 // Will now recall if it detects reds
 // Sped up script over previous versions
 //
+// Version 1.3
+// -----------
+// Removed captcha detection and interaction
+//
 // How to use:
 // -----------
 // 1. Put Hatchets in pack
@@ -30,7 +34,8 @@
 //
 /////////////////////////////////////////////
 sysmsg "UO Outlands Lumberjack script" 88
-sysmsg "Version 1.2" 88
+sysmsg "Version 1.3" 88
+@clearjournal
 @useobject 'backpack'
 pause 1000
 //
@@ -48,24 +53,9 @@ createtimer 'whistle'
 //
 @unsetalias 'Hatchet'
 //
-// Create Messages list
-//
-@removelist 'Messages'
-@createlist 'Messages'
-//
 // While alive
 //
 while hits > 0
-  @clearjournal
-  //
-  // Gump detect
-  //
-  if @ingump 'any' 'Click when complete'
-    headmsg "Answer gump" 55
-    playsound 'buzzer.wav'
-    pause 10000
-    continue
-  endif
   //
   // Convert to boards
   //
@@ -144,7 +134,7 @@ while hits > 0
   //
   if @injournal "now tracking" 'system'
     headmsg "PK PK PK!" 22
-    playmacro 'Recall'
+    playmacro 'recall'
     stop
   endif
 endwhile
