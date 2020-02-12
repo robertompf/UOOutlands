@@ -60,11 +60,6 @@ createtimer 'whistle'
 //
 @unsetalias 'PickAxe'
 //
-// Create messages list
-//
-@removelist 'messages'
-@createlist 'messages'
-//
 // Create attempts list
 //
 @removelist 'attempts'
