@@ -16,17 +16,6 @@
 // with exceptional bonus. Just select pony
 // as ingot source.
 //
-// Please do not share the same UOSteam profile between
-// characters running the script at the same time. This
-// will result in strange and unexpected behavior - either
-// not making the right item or not recycling properly.
-//
-// Recycling
-// =========
-// If you change your recycle option to save exceptionals,
-// they will now be saved to your 'orebox' alias, or 
-// whatever container you chose when starting script.
-//
 // *************************
 // ITEM NAMES -- IMPORTANT!!
 // *************************
@@ -57,7 +46,7 @@
 // ================
 // 1.1 - Initial release
 // 1.2 - Overhauled entire script so user
-//       just has to entire item and ore.
+//       just has to only select item and ore.
 // 1.3 - Fixed ore selection
 //       Automatically selects recycle option
 // 1.4 - Fixed some minor things
@@ -66,10 +55,20 @@
 // 1.6 - Changed way script detected last item
 //       needed to be made. This fixed a strange
 //       issue I saw from time to time.
-// 1.7 - Added recycle setting as a user value
-//       in case you want to keep what you make
-//       Any items left over after recycling will
-//       now be moved to 'orebox'
+// 1.7 - Speed improvements:
+//       * GREATLY improved speed
+//       * Moved ore and recycle selections to front 
+//       of script so they only get ran once.
+//       * Recycles now every 10th item. Recycling is
+//       a (time) expensive operation and there is 
+//       little reason to do it every time.
+//       * Gump interactions are faster now
+//
+// NOTES:
+// ======
+// You are occasionally going to see 
+// "You must wait messages" please ignore these. Its 
+// caused by script moving as fast as possible.
 //
 //
 // UOSTEAM COPY-PASTE BELOW THIS LINE
@@ -79,16 +78,11 @@ sysmsg "UOSteam Blacksmith Society Macro" 75
 @createlist 'ore'
 @removelist 'make'
 @createlist 'make'
-@removelist 'recycle'
-@createlist 'recycle'
 @createtimer 'gump'
 //
 // MODIFY START -------->>>
 @pushlist 'ore' 'iron'
-@pushlist 'make' 'chainmail arms'
-@pushlist 'recycle' 'Recycle All (of Type)'
-//@pushlist 'recycle' 'Recycle Regular (of Type)'
-
+@pushlist 'make' 'norse helm'
 // <<<-------- MODIFY END
 //
 //
@@ -283,6 +277,51 @@ sysmsg "ore[0]" 88
 sysmsg "Starting in 5 seconds..." 85
 pause 5000
 //
+// Check smith tongs
+//
+if not @findtype 0xfbb 'any' 'backpack'
+  headmsg 'I have no smith tongs!' 66
+  playsound 'uhoh.wav'
+  pause 5000
+  continue
+endif
+//
+// Use 3x = sometimes server doesnt respond
+//
+@useobject 'found'
+pause 100
+@useobject 'found'
+pause 100
+@useobject 'found'
+pause 100
+//
+// Select ore
+//
+// Copper
+if @inlist 'ore' 'copper'
+  while not @ingump 0x38920abd 'copper' or @ingump 0x38920abd 'dull copper'
+    replygump 0x38920abd 13
+    waitforgump 0x38920abd 5000
+  endwhile
+elseif @inlist 'ore' 'iron'
+  while not @ingump 0x38920abd 'iron' or @ingump 0x38920abd 'shadow iron'
+    replygump 0x38920abd 13
+    waitforgump 0x38920abd 5000
+  endwhile
+else
+  while not @ingump 0x38920abd ore[0]
+    @replygump 0x38920abd 13
+    waitforgump 0x38920abd 5000
+  endwhile
+endif
+//
+// Select Recycle
+//
+while not @ingump 0x38920abd 'Recycle All (of Type)'
+  @replygump 0x38920abd 2
+  waitforgump 0x38920abd 5000
+endwhile
+//
 // Loop until its done
 //
 @clearjournal
@@ -326,7 +365,7 @@ while not @injournal "completed a society job" 'System'
   //
   // Check smith tongs
   //
-  if counttype 0xfbb 'any' 'backpack' < 1
+  if not @findtype 0xfbb 'any' 'backpack'
     headmsg 'I have no smith tongs!' 66
     playsound 'uhoh.wav'
     pause 5000
@@ -335,44 +374,17 @@ while not @injournal "completed a society job" 'System'
   //
   // Use 3x = sometimes server doesnt respond
   //
-  @usetype 0xfbb 'any' 'backpack'
+  @useobject 'found'
   pause 100
-  @usetype 0xfbb 'any' 'backpack'
+  @useobject 'found'
   pause 100
-  @usetype 0xfbb 'any' 'backpack'
+  @useobject 'found'
   pause 100
-  waitforgump 0x38920abd 5000
-  //
-  // Select ore
-  //
-  // Copper
-  if @inlist 'ore' 'copper'
-    while not @ingump 0x38920abd 'copper' or @ingump 0x38920abd 'dull copper'
-      replygump 0x38920abd 13
-      waitforgump 0x38920abd 5000
-    endwhile
-  elseif @inlist 'ore' 'iron'
-    while not @ingump 0x38920abd 'iron' or @ingump 0x38920abd 'shadow iron'
-      replygump 0x38920abd 13
-      waitforgump 0x38920abd 5000
-    endwhile
-  else
-    while not @ingump 0x38920abd ore[0]
-      @replygump 0x38920abd 13
-      waitforgump 0x38920abd 5000
-    endwhile
-  endif
-  //
-  // Select Recycle
-  //
-  while not @ingump 0x38920abd 'recycle[0]'
-    @replygump 0x38920abd 2
-    waitforgump 0x38920abd 5000
-  endwhile
   //
   // If we haven't made anything yet
   //
   if listexists 'make'
+    sysmsg "make once" 75
     if @inlist 'make' 'ringmail gorget'
       replygump 0x38920abd 100
       waitforgump 0x38920abd 5000
@@ -622,49 +634,39 @@ while not @injournal "completed a society job" 'System'
     // Signal script to make last
     //
     @removelist 'make'
-    waitforgump 0x38920abd 5000
-    replygump 0x38920abd 0
-    settimer 'gump' 0
-    while not @ingump 0x38920abd 'create' and timer 'gump' < 8000
-      pause 100
-    endwhile
-    pause 1000
     //
     // Just make last, its faster
     //
   else
+    sysmsg "make last" 92
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 7
-    waitforgump 0x38920abd 5000
-    replygump 0x38920abd 0
-    settimer 'gump' 0
-    while not @ingump 0x38920abd 'create' and timer 'gump' < 8000
-      pause 100
-    endwhile
-    pause 1000
   endif
+  //
+  // Wait for result
+  //
+  settimer 'gump' 0
+  while not @ingump 0x38920abd 'you' and not @ingump 0x38920abd 'create'
+    waitforgump 0x38920abd 100
+    if timer 'gump' > 8000
+     break
+    endif
+  endwhile
   //
   // Recycle
   //
-  while @findtype makeid[0] 'any' 'backpack'
-    @usetype 0xfbb 'any' 'backpack'
-    waitforgump 0x38920abd 5000
-    replygump 0x38920abd 3
-    waitfortarget 5000
-    target! 'found'
-    while @gumpexists 0x38920abd
-      replygump 0x38920abd 0
-      pause 1000
+  if @counttype makeid[0] 'any' 'backpack' >= 10
+    sysmsg "Recycling" 44
+    while @findtype makeid[0] 'any' 'backpack'
+      waitforgump 0x38920abd 2000
+      replygump 0x38920abd 3
+      waitfortarget 5000
+      target! 'found'
+      @ignoreobject 'found'
+      pause 5000
     endwhile
-  endwhile
-  //
-  // Move un-recycled to Pony
-  //
-  while @findtype makeid[0] 'any' 'backpack'
-    moveitem  'found' 'orebox'
-    pause 1000
-  endwhile
-  pause 2000
+  endif
+  sysmsg "loop" 44
 endwhile
 //
 // Burn off the extras if found
