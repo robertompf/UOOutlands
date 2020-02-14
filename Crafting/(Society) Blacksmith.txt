@@ -60,9 +60,10 @@
 //       * Moved ore and recycle selections to front 
 //       of script so they only get ran once.
 //       * Recycles now every 10th item. Recycling is
-//       a (time) expensive operation and there is 
+//       a (time) expensive operation and there is
 //       little reason to do it every time.
 //       * Gump interactions are faster now
+// 1.8 - Added code to detect if items were being dropped
 //
 // NOTES:
 // ======
@@ -261,7 +262,7 @@ endif
 while @findtype 0x1bf2 'any' 'backpack'
   sysmsg "dumping"
   moveitem  'found' 'orebox'
-  pause 500
+  pause 2000
 endwhile
 //
 // Verify with player
@@ -344,6 +345,15 @@ while not @injournal "completed a society job" 'System'
     continue
   endif
   //
+  // Check drops
+  //
+  if @findtype 'makeid[0]' 'any' 'ground'
+    headmsg 'I am dropping items! Do I have room in my pack?' '88'
+    playsound 'uhoh.wav'
+    pause 5000
+    continue
+  endif
+  //
   // Check or restock ingots
   //
   if @counttype 0x1bf2 orecolor[0] 'backpack' <  25
@@ -351,7 +361,7 @@ while not @injournal "completed a society job" 'System'
     useobject 'orebox'
     pause 1000
     movetype 0x1bf2 'orebox' 'backpack' 0 0 0 orecolor[0] 500
-    pause 1000
+    pause 5000
   endif
   //
   // Verify ingots
@@ -656,13 +666,13 @@ while not @injournal "completed a society job" 'System'
   // Recycle
   //
   if @counttype makeid[0] 'any' 'backpack' >= 10
+    @canceltarget
     sysmsg "Recycling" 44
     while @findtype makeid[0] 'any' 'backpack'
       waitforgump 0x38920abd 2000
       replygump 0x38920abd 3
       waitfortarget 5000
       target! 'found'
-      @ignoreobject 'found'
       pause 5000
     endwhile
   endif
@@ -677,7 +687,7 @@ while @findtype makeid[0] 'any' 'backpack'
   replygump 0x38920abd 3
   waitfortarget 5000
   target! 'found'
-  pause 1000
+  pause 5000
 endwhile
 playsound 'cymbals.wav'
 headmsg "All done!" 55
