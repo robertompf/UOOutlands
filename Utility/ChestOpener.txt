@@ -2,10 +2,9 @@
 // UO Steam Chest Opener
 // for Outlands
 // by Jewele
-// 
+//
 // UOSTEAM COPY-PASTE BELOW THIS LINE
 /////////////////////////////////////////////
-
 @clearjournal
 while not dead
   if poisoned 'self'
@@ -20,21 +19,23 @@ while not dead
   endif
   if diffhits > 25
     if @findtype 0xf0c 0 'backpack'
-        headmsg "Drinking [Heal]" 44
-        useobject! 'found'
-        pause 1000
+      headmsg "Drinking [Heal]" 44
+      useobject! 'found'
+      pause 1000
     endif
   endif
   if diffhits > 25
-  	autotargetself
-  	cast 'Greater Heal'
-  	pause 2000
-  	replay
+    autotargetself
+    cast 'Greater Heal'
+    pause 2000
+    replay
   endif
-  if ingump 'any' 'cleared'
-    replygump 'any' 4
-  else
-    replygump 'any' 7
+  if @gumpexists 0x2bdf0cb6
+    if ingump 0x2bdf0cb6 'cleared'
+      replygump 0x2bdf0cb6 4
+    else
+      replygump 0x2bdf0cb6 7
+    endif
   endif
   pause 5000
 endwhile
