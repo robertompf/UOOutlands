@@ -3,7 +3,7 @@
 // for Outlands
 //
 // * just chops wood, nothing else
-// 
+//
 // Version 1.0
 // -----------
 // First release
@@ -60,7 +60,7 @@ while hits > 0
   // Convert to boards
   //
   if diffweight < 30
-    @usetype '0x1bdd'   
+    @usetype '0x1bdd'
     pause 2000
   endif
   //
@@ -95,12 +95,13 @@ while hits > 0
   //
   // Chop wood
   //
+  @clearjournal
   useobject 'Hatchet'
   waitfortarget 1000
   target! 'self'
   pause 100
   // Wait for results
-  for 21
+  for 40
     if @injournal 'enough wood here' 'system'
       headmsg 'Find a new spot' '43'
       pause 1000
