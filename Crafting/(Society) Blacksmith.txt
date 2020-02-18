@@ -260,7 +260,6 @@ endif
 // Move all ingots from pack to orebox (reset)
 //
 while @findtype 0x1bf2 'any' 'backpack'
-  sysmsg "dumping"
   moveitem  'found' 'orebox'
   pause 2000
 endwhile
@@ -357,7 +356,6 @@ while not @injournal "completed a society job" 'System'
   // Check or restock ingots
   //
   if @counttype 0x1bf2 orecolor[0] 'backpack' <  25
-    sysmsg "restocking"
     useobject 'orebox'
     pause 1000
     movetype 0x1bf2 'orebox' 'backpack' 0 0 0 orecolor[0] 500
@@ -394,7 +392,6 @@ while not @injournal "completed a society job" 'System'
   // If we haven't made anything yet
   //
   if listexists 'make'
-    sysmsg "make once" 75
     if @inlist 'make' 'ringmail gorget'
       replygump 0x38920abd 100
       waitforgump 0x38920abd 5000
@@ -648,7 +645,6 @@ while not @injournal "completed a society job" 'System'
     // Just make last, its faster
     //
   else
-    sysmsg "make last" 92
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 7
   endif
@@ -676,7 +672,6 @@ while not @injournal "completed a society job" 'System'
       pause 5000
     endwhile
   endif
-  sysmsg "loop" 44
 endwhile
 //
 // Burn off the extras if found
