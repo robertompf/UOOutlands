@@ -1,0 +1,231 @@
+/////////////////////////////////////////////
+// UO Steam Map Decoder
+// for Outlands
+//
+// Decodes maps from a treasure map tome
+// with spyglasses in your pack. 95% of people
+// doing bulk decodes are going to have a tome.
+// If you don't have one - do yourself a huge
+// favor and get one.
+//
+// How to use:
+// ===========
+// 1) Open container holding your Treasure Map tome
+//    and leave it open in game window.
+// 2) Place spyglasses in your pack
+// 3) Decode a single map with a spyglass once
+//    and set the type of spyglass to use.
+// 4) Modify script (below)
+// 4) Run
+//
+// Sounds:
+// =======
+// Please make sure following sounds files exist:
+// ...\UOSteam\Sounds\cymbals.wav
+// ...\UOSteam\Sounds\uhoh.wav
+//
+// Notes:
+// ======
+//
+// You can decode multiple levels of map
+// by placing multiple levels in list below.
+//
+// 1s and 2s:
+// @pushlist 'maplevel' '1'
+// @pushlist 'maplevel' '2'
+//
+// 1s only:
+// @pushlist 'maplevel' '1'
+//
+// Script will really choke if you have multiple
+// map types sitting in your pack. For this reason,
+// I just ask you start with no maps.
+//
+// Waitforgump Notes
+// =================
+// The 'waitforgump' function only works for new gumps
+// that have not been 'waited for' yet. They are constantly
+// tinkering with gump detection on server side so I hope
+// it does not change any more or this will break the script.
+// This is why the script has to use the spyglass every time.
+//
+// Progress Messages
+// =================
+// Most of the progress messages are not written to system log,
+// they are written to the user log. We cannot search this.
+// Only 3 messages we can use are written to system.
+//
+/////////////////////////////////////////////
+sysmsg "UO Outlands Map Decoder script" 88
+@removelist 'maplevel'
+@createlist 'maplevel'
+@clearignorelist
+@clearjournal
+@unsetalias 'Tome'
+@useobject 'backpack'
+pause 1000
+//
+// MODIFY START -------->>>
+@pushlist 'maplevel' '1'
+@pushlist 'maplevel' '3'
+// <<<-------- MODIFY END
+//
+//
+// Make sure all maps are removed first
+//
+if @counttype 0x14ec 'any' 'backpack' > 0
+  playsound 'uhoh.wav'
+  headmsg "Oops!" 44
+  sysmsg "Remove all maps from my pack first!" 44
+  stop
+endif
+//
+// Make sure we have spyglasses
+//
+if @counttype 0x14f5 'any' 'backpack' == 0
+  playsound 'uhoh.wav'
+  headmsg "Oops!" 44
+  sysmsg "I have no spyglasses!" 44
+  stop
+endif
+//
+// Prompt Tome
+//
+sysmsg "Select Treasure Map Tome" 71
+promptalias 'Tome'
+//
+// While we have spyglasses to decode with
+//
+while @findtype 0x14f5 'any' 'backpack'
+  //
+  // World save
+  //
+  if @injournal 'will save' 'system'
+    sysmsg "pausing for world save" 66
+    pause 30000
+    @clearjournal
+  endif
+  //
+  // Check weight
+  //
+  if diffweight < 5
+    headmsg 'I am too heavy to be pulling maps, I might drop them!' '44'
+    playsound 'uhoh.wav'
+    stop
+  endif
+  //
+  // If I need a map
+  //
+  if @counttype 0x14ec 'any' 'backpack' == 0
+    @replygump 0x5aa6a1db 0
+    @unsetalias 'map'
+    sysmsg "Retrieving map" 85
+    @useobject 'Tome'
+    waitforgump 'Tome' 15000
+    if @inlist 'maplevel' '1' and @counttype 0x14ec 'any' 'backpack' == 0
+      @replygump 0x6f198e6f 10
+      waitforgump 0x6f198e6f 15000
+      pause 5000
+    endif
+    if @inlist 'maplevel' '2' and @counttype 0x14ec 'any' 'backpack' == 0
+      @replygump 0x6f198e6f 11
+      waitforgump 0x6f198e6f 15000
+      pause 5000
+    endif
+    if @inlist 'maplevel' '3' and @counttype 0x14ec 'any' 'backpack' == 0
+      @replygump 0x6f198e6f 12
+      waitforgump 0x6f198e6f 15000
+      pause 5000
+    endif
+    if @inlist 'maplevel' '4' and @counttype 0x14ec 'any' 'backpack' == 0
+      @replygump 0x6f198e6f 13
+      waitforgump 0x6f198e6f 15000
+      pause 5000
+    endif
+    if @inlist 'maplevel' '5' and @counttype 0x14ec 'any' 'backpack' == 0
+      @replygump 0x6f198e6f 14
+      waitforgump 0x6f198e6f 15000
+      pause 5000
+    endif
+    if @inlist 'maplevel' '6' and @counttype 0x14ec 'any' 'backpack' == 0
+      @replygump 0x6f198e6f 15
+      waitforgump 0x6f198e6f 15000
+      pause 5000
+    endif
+    if @inlist 'maplevel' '7' and @counttype 0x14ec 'any' 'backpack' == 0
+      @replygump 0x6f198e6f 16
+      waitforgump 0x6f198e6f 15000
+      pause 5000
+    endif
+    if @inlist 'maplevel' '8' and @counttype 0x14ec 'any' 'backpack' == 0
+      @replygump 0x6f198e6f 17
+      waitforgump 0x6f198e6f 15000
+      pause 5000
+    endif
+    //
+    // Check we got a map or just ran out?
+    //
+    if not @findtype 0x14ec 'any' 'backpack'
+      playsound 'cymbals.wav'
+      headmsg "Done!" 44
+      sysmsg "Looks like I've ran out of maps to decode!" 44
+      stop
+    endif
+  endif
+  //
+  // Spyglass map
+  //
+  @findtype 0x14ec 'any' 'backpack'
+  @usetype 0x14f5 'any' 'backpack'
+  waitfortarget 5000
+  target! 'found'
+  waitforgump 0x5aa6a1db 5000
+  //
+  // Decode
+  //
+  @clearjournal
+  @replygump 0x5aa6a1db 4
+  sysmsg "waiting for message result"
+  @removetimer 'wait'
+  @createtimer 'wait'
+  while timer 'wait' < 2000
+    if @injournal 'You do not have any spyglasses' 'system'
+      break
+    elseif @injournal 'You fail' 'system'
+      break
+    elseif @injournal "You have reached the maximum" "system"
+      break
+    endif
+    pause 250
+  endwhile
+  //
+  // Used up spyglass or selected wrong one
+  //
+  if @injournal 'You do not have any spyglasses' 'system'
+    headmsg "Oops!" 44
+    sysmsg "Wrong spyglass selected!" 44
+    playsound 'uhoh.wav'
+    stop
+  endif
+  //
+  // Not enough skill etc.
+  //
+  if @injournal 'You have no chance' 'system'
+    headmsg "Oops!" 44
+    sysmsg "I can't decipher these maps!" 44
+    playsound 'uhoh.wav'
+    stop
+  endif
+  //
+  // Done with this map
+  //
+  if @injournal "You have reached the maximum" "system"
+    sysmsg "Finished map decoding" 85
+    sysmsg "Putting back in tome" 85
+    while @findtype 0x14ec 'any' 'backpack'
+      movetype 0x14ec 'backpack' 'Tome'
+      pause 3000
+    endwhile
+  endif
+  pause 1000
+endwhile
