@@ -13,6 +13,8 @@ I have donated my time to help the shard, by writing these scripts. There is no 
 |:mag:| Vendor mall search macro (very popular)  |[Link](https://raw.githubusercontent.com/gmccord333/UOOutlands/master/Utility/VendorMall.txt)
 |:first_quarter_moon:| Gate hopper. Fastest way out of dungeon gates |[Link](https://raw.githubusercontent.com/gmccord333/UOOutlands/master/Utility/GateHopper.txt)
 |:hammer:| Blacksmithing macro - to make anything. |[Link](https://raw.githubusercontent.com/gmccord333/UOOutlands/master/Crafting/Blacksmith.txt)
+|:world_map:| Treasure map bulk decoder |[Link](https://raw.githubusercontent.com/gmccord333/UOOutlands/master/Utility/MapDecoder.txt)
+
 
 ## Reminders
 
