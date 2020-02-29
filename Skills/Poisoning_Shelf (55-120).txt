@@ -8,21 +8,24 @@
 // as effective.
 //
 // Make SURE you have 100 str. Server forces a pause after poisoning
-// which causes a delay before you can cure anything. You need to be 
-// able to take a *tic* of poison before cures will kick in!
+// which causes a delay before you can cure anything. You need to be
+// able to take a *tic* of poison before cures will kick in! The reason
+// you need 100 STR is if you are doing Lethal - you need to be able
+// to take 1-2 tics before dying.
+//
+// Sounds
+// ------
+// ..\UOSteam\Sounds\UhOh.wav
+// ..\UOSteam\Sounds\Chimes.wav
 //
 // How to use?
 // -----------
 // 1) Start at home next to shelf
-// 2) Put a _poisoned_ kryss in your pack
-// 3) If you have healing, stock bandages
-//    If you have magery, stock gheal regs
-// 4) Have 1 kryss in your pack
-// 5) Run script
-//
-// Version 1.0
-// -----------
-// First release! yay!
+// 2) Put a _modified_ kryss in your pack
+//    * you can poison it
+//    * you can aspect it
+// 3) Stock shelf with poison, cure and heal
+// 4) Run script
 //
 // Wiki Info:
 // ----------
@@ -32,35 +35,41 @@
 // Deadly Poison: 75-100 Poisoning
 // Lethal Poison: 95-120 Poisoning
 //
+// Version 1.0
+// -----------
+// First release! yay!
+//
+// Version 1.1
+// -----------
+// Added sound files
+// Added weight check
+// Just uses heal pots to heal
+// Added pause for skill cooldown
+//
 // UOSTEAM COPY-PASTE BELOW THIS LINE
 /////////////////////////////////////////////
-
-sysmsg "Poisoning Shelf Script" 88
-sysmsg "Version 1.0" 88
+sysmsg "Poisoning Shelf Script" 73
+sysmsg "Version 1.1" 73
 @clearjournal
-
 //
 // Open backpack
 //
 @useobject 'backpack'
 pause 1000
-
 //
 // Set shelf alias'
 //
 if not findalias 'shelf'
-    sysmsg "Select your shelf"
-    promptalias 'shelf'
+  sysmsg "Select your shelf"
+  promptalias 'shelf'
 endif
-
 //
 // Skill check
-// 
+//
 if skill 'poisoning' < 55
-    headmsg 'Train With Poison Potions til 55' 21
-    stop
+  headmsg 'Train With Poison Potions til 55' 21
+  stop
 endif
-
 //
 // Actions list
 //
@@ -68,59 +77,32 @@ endif
 @createlist 'actions'
 pushlist 'actions' 'restock'
 while not dead
-
-  @canceltarget
-
+  //
+  // Weight check (empty bottles)
+  //
+  if diffweight < 10
+    sysmsg "Dumping bottles" 88
+    waitforcontext 'shelf' 0 5000
+    waitfortarget 5000
+    target! 'self'
+    pause 5000
+  endif
+  //
+  // Weight check for other reasons
+  //
+  if diffweight < 10
+    headmsg "Im too heavy to be pulling items!" 32
+    playsound 'uhoh.wav'
+    stop
+  endif
   //
   // 120
   //
   if skill 'poisoning' == 120
-      headmsg 'Done!' 67
-      stop
+    playsound 'cymbals.wav'
+    headmsg 'Done!' 67
+    stop
   endif
-
-  //
-  // Server save
-  //
-  if @injournal 'will save' 'system'
-    sysmsg "Server save..." 67
-    pause 30000
-    @clearjournal
-  endif
-
-  //
-  // Check : Health
-  //
-  if diffhits > 10
-    // 
-    //  Poison check
-    //
-    if poisoned 
-      autotargetself
-      cast 'Cure'
-      pause 1500
-      continue
-    endif
-    //
-    // Magery heal
-    //
-    if skill magery >= 50 and mana > 15
-      autotargetself
-      cast 'Greater Heal'
-      pause 3500
-      continue
-    endif
-    //
-    // Bandage heal
-    //
-    if counttype '0xe21' 'any' 'backpack' > 1
-      bandageself!
-      pause 10000
-    endif
-    pause 5000
-    continue
-  endif
-
   //
   // Check : Restock
   //
@@ -128,7 +110,7 @@ while not dead
     //
     // cures
     //
-    if @counttype 0xf07 'any' 'backpack' < 5
+    if @counttype 0xf07 'any' 'backpack' < 10
       pushlist! 'actions' 'restock'
       continue
     endif
@@ -138,7 +120,7 @@ while not dead
     if @counttype 0xf0c 'any' 'backpack' < 5
       pushlist! 'actions' 'restock'
       continue
-    endif    
+    endif
     //
     // poison
     //
@@ -147,18 +129,12 @@ while not dead
       continue
     endif
   endif
-
   //
   // Restock
   //
   if @inlist! 'actions' 'restock'
     @clearlist 'actions'
     sysmsg "restocking" 67
-    // restock
-    waitforcontext 'shelf' 0 5000
-    waitfortarget 5000
-    target! 'self'
-    pause 1000
     useobject 'shelf'
     waitforgump 0xc0b1026d 5000
     // clear
@@ -177,19 +153,9 @@ while not dead
     waitforgump 0xc0b1026d 15000
     replygump 0xc0b1026d 215
     waitforgump 0xc0b1026d 15000
-    // gheal regs
-    replygump 0xc0b1026d 106
-    waitforgump 0xc0b1026d 15000
-    replygump 0xc0b1026d 104
-    waitforgump 0xc0b1026d 15000
-    replygump 0xc0b1026d 103
-    waitforgump 0xc0b1026d 15000
-    replygump 0xc0b1026d 102
-    waitforgump 0xc0b1026d 15000
-    // bandages
-    replygump 0xc0b1026d 304
-    waitforgump 0xc0b1026d 15000
+    //
     // 78 poison
+    //
     if skill 'Poisoning' <= 78
       // select greater
       replygump 0xc0b1026d 207
@@ -200,7 +166,9 @@ while not dead
         waitforgump 0xc0b1026d 5000
       endfor
     endif
+    //
     // 100 poison
+    //
     if skill 'Poisoning' <= 98 and skill 'Poisoning' > 78
       // select greater
       replygump 0xc0b1026d 208
@@ -211,7 +179,9 @@ while not dead
         waitforgump 0xc0b1026d 5000
       endfor
     endif
+    //
     // 120 poison
+    //
     if skill 'Poisoning' <= 120 and skill 'Poisoning' > 98
       // select lethal
       replygump 0xc0b1026d 209
@@ -222,19 +192,63 @@ while not dead
         waitforgump 0xc0b1026d 5000
       endfor
     endif
+    //
     // resupply
+    //
     replygump 0xc0b1026d 7
     waitforgump 0xc0b1026d 5000
-    pause 1000
+    pause 2000
     replygump 0xc0b1026d 0
+    //
+    // resupply cure check
+    //
+    if @counttype 0xf07 'any' 'backpack' < 10
+      headmsg "Failed to restock 10 cures!" 73
+      playsound 'uhoh.wav'
+      pause 5000
+      continue
+    endif
+    //
+    // heals check
+    //
+    if @counttype 0xf0c 'any' 'backpack' < 10
+      headmsg "Failed to restock 10 heals!" 73
+      playsound 'uhoh.wav'
+      pause 5000
+      continue
+    endif
+    //
+    // poison check
+    //
+    if @counttype 0xf0a 'any' 'backpack' < 10
+      headmsg "Failed to restock 10 poisons!" 73
+      playsound 'uhoh.wav'
+      pause 5000
+      continue
+    endif
   endif
-
-  sysmsg "Applying poison..." 67
+  //
+  // Check : Health or drink heal
+  //
+  if diffhits > 10
+    @usetype 0xf0c 'any' 'backpack'
+    pause 2000
+    continue
+  endif
+  //
+  // Server save
+  //
+  if @injournal 'will save' 'system'
+    sysmsg "Server save..." 67
+    pause 30000
+    @clearjournal
+  endif
   //
   // Poison
   //
+  sysmsg "Applying poison..." 67
+  @clearjournal
   @findtype 0xf0a 'any' 'backpack'
-  sysmsg "skill"
   useskill 'Poisoning'
   waitfortarget 5000
   target! 'found'
@@ -244,28 +258,35 @@ while not dead
   @findtype 0x1401 'any' 'backpack'
   waitfortarget 5000
   target! 'found'
-  
   //
-  // SERVER PAUSE
+  // Wait for result
   //
-  // THERE IS A SERVER ENFORCED PAUSE AFTER APPLYING POISON.
-  // Probably to counter combat poison scripts people were using.
-  //
-  // Nothing I can do, server is causing this.
-  //
-
+  @removetimer 'apply'
+  @createtimer 'apply'
+  while timer 'apply' < 10000
+    if @injournal 'grave mistake' 'system'
+      break
+    elseif @injournal "apply" "system"
+      break
+    endif
+    pause 100
+  endwhile
   //
   // Poisoned?
   //
   while poisoned
-      headmsg 'Darnit!' 55
-      usetype 0xf07 'any' 'backpack'
-      pause 500
-      if not findtype 0xf07 'any' 'backpack'
-          break
-      endif
+    playsound 'uhoh.wav'
+    headmsg 'Darnit!' 55
+    usetype 0xf07 'any' 'backpack'
+    pause 2000
   endwhile
-
-  sysmsg "endwhile"
-
+  pause 5000
+  //
+  // Extra failsafe poison check
+  //
+  while poisoned
+    headmsg 'Darnit!' 55
+    usetype 0xf07 'any' 'backpack'
+    pause 2000
+  endwhile
 endwhile
