@@ -16,6 +16,12 @@
 // with exceptional bonus. Just select pony
 // as ingot source.
 //
+// This macro IS NOT for making exceptionals
+// you want to save. Everything is salvaged.
+// If you want to make exceptionals, use
+// Blacksmith.txt and stop when your society
+// is completed.
+//
 // *************************
 // ITEM NAMES -- IMPORTANT!!
 // *************************
@@ -44,33 +50,11 @@
 //
 // Version history:
 // ================
-// 1.1 - Initial release
-// 1.2 - Overhauled entire script so user
-//       just has to only select item and ore.
-// 1.3 - Fixed ore selection
-//       Automatically selects recycle option
-// 1.4 - Fixed some minor things
-// 1.5 - Added a timer to avoid script getting
-//       stuck waiting for a gump response.
-// 1.6 - Changed way script detected last item
-//       needed to be made. This fixed a strange
-//       issue I saw from time to time.
-// 1.7 - Speed improvements:
-//       * GREATLY improved speed
-//       * Moved ore and recycle selections to front 
-//       of script so they only get ran once.
-//       * Recycles now every 10th item. Recycling is
-//       a (time) expensive operation and there is
-//       little reason to do it every time.
-//       * Gump interactions are faster now
-// 1.8 - Added code to detect if items were being dropped
+// 2.0 - Removed all version 1.x notes
 //
 // NOTES:
 // ======
-// You are occasionally going to see 
-// "You must wait messages" please ignore these. Its 
-// caused by script moving as fast as possible.
-//
+// * Recycles every 10 items
 //
 // UOSTEAM COPY-PASTE BELOW THIS LINE
 /////////////////////////////////////////////
@@ -83,7 +67,7 @@ sysmsg "UOSteam Blacksmith Society Macro" 75
 //
 // MODIFY START -------->>>
 @pushlist 'ore' 'iron'
-@pushlist 'make' 'norse helm'
+@pushlist 'make' 'plate helm'
 // <<<-------- MODIFY END
 //
 //
@@ -266,16 +250,13 @@ endwhile
 //
 // Verify with player
 //
-sysmsg "******IMPORTANT******" 61
-sysmsg "Please watch to make sure the item you want is being created." 61
-sysmsg "******IMPORTANT******" 61
 pause 1000
 sysmsg "Making:" 85
-sysmsg "make[0]" 88
+sysmsg "make[0]" 68
 sysmsg "with ore:" 85
-sysmsg "ore[0]" 88
-sysmsg "Starting in 5 seconds..." 85
-pause 5000
+sysmsg "ore[0]" 68
+sysmsg "Starting in 2 seconds..." 85
+pause 2000
 //
 // Check smith tongs
 //
@@ -286,14 +267,10 @@ if not @findtype 0xfbb 'any' 'backpack'
   continue
 endif
 //
-// Use 3x = sometimes server doesnt respond
+// Bring up menu
 //
-@useobject 'found'
-pause 100
-@useobject 'found'
-pause 100
-@useobject 'found'
-pause 100
+@usetype 0xfbb
+waitforgump 0x38920abd 5000
 //
 // Select ore
 //
@@ -357,9 +334,9 @@ while not @injournal "completed a society job" 'System'
   //
   if @counttype 0x1bf2 orecolor[0] 'backpack' <  25
     useobject 'orebox'
-    pause 1000
-    movetype 0x1bf2 'orebox' 'backpack' 0 0 0 orecolor[0] 500
-    pause 5000
+    pause 2500
+    movetype 0x1bf2 'orebox' 'backpack' 0 0 0 orecolor[0] 200
+    pause 2500
   endif
   //
   // Verify ingots
@@ -380,296 +357,506 @@ while not @injournal "completed a society job" 'System'
     continue
   endif
   //
-  // Use 3x = sometimes server doesnt respond
+  // Make
   //
-  @useobject 'found'
-  pause 100
-  @useobject 'found'
-  pause 100
-  @useobject 'found'
-  pause 100
-  //
-  // If we haven't made anything yet
-  //
-  if listexists 'make'
-    if @inlist 'make' 'ringmail gorget'
-      replygump 0x38920abd 100
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 200
-    elseif @inlist 'make' 'ringmail gloves'
-      replygump 0x38920abd 100
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 201
-    elseif @inlist 'make' 'ringmail helm'
-      replygump 0x38920abd 100
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 202
-    elseif @inlist 'make' 'ringmail arms'
-      replygump 0x38920abd 100
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 203
-    elseif @inlist 'make' 'ringmail legs'
-      replygump 0x38920abd 100
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 204
-    elseif @inlist 'make' 'ringmail skirt'
-      replygump 0x38920abd 100
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 205
-    elseif @inlist 'make' 'ringmail chest'
-      replygump 0x38920abd 100
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 206
-    elseif @inlist 'make' 'chainmail gorget'
-      replygump 0x38920abd 101
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 200
-    elseif @inlist 'make' 'chainmail gloves'
-      replygump 0x38920abd 101
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 201
-    elseif @inlist 'make' 'chainmail coif'
-      replygump 0x38920abd 101
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 202
-    elseif @inlist 'make' 'chainmail arms'
-      replygump 0x38920abd 101
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 203
-    elseif @inlist 'make' 'chainmail legs'
-      replygump 0x38920abd 101
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 204
-    elseif @inlist 'make' 'chainmail skirt'
-      replygump 0x38920abd 101
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 205
-    elseif @inlist 'make' 'chainmail chest'
-      replygump 0x38920abd 101
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 206
-    elseif @inlist 'make' 'plate gorget'
-      replygump 0x38920abd 102
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 200
-    elseif @inlist 'make' 'plate gloves'
-      replygump 0x38920abd 102
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 201
-    elseif @inlist 'make' 'plate helm'
-      replygump 0x38920abd 102
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 202
-    elseif @inlist 'make' 'plate arms'
-      replygump 0x38920abd 102
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 203
-    elseif @inlist 'make' 'plate legs'
-      replygump 0x38920abd 102
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 204
-    elseif @inlist 'make' 'plate skirt'
-      replygump 0x38920abd 102
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 205
-    elseif @inlist 'make' 'plate chest'
-      replygump 0x38920abd 102
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 206
-    elseif @inlist 'make' 'female plate chest'
-      replygump 0x38920abd 102
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 207
-    elseif @inlist 'make' 'orc helm'
-      replygump 0x38920abd 103
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 200
-    elseif @inlist 'make' 'bascinet'
-      replygump 0x38920abd 103
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 201
-    elseif @inlist 'make' 'close helm'
-      replygump 0x38920abd 103
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 202
-    elseif @inlist 'make' 'norse helm'
-      replygump 0x38920abd 103
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 203
-    elseif @inlist 'make' 'buckler'
-      replygump 0x38920abd 104
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 200
-    elseif @inlist 'make' 'metal shield'
-      replygump 0x38920abd 104
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 201
-    elseif @inlist 'make' 'bronze shield'
-      replygump 0x38920abd 104
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 202
-    elseif @inlist 'make' 'metal kite shield'
-      replygump 0x38920abd 104
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 203
-    elseif @inlist 'make' 'heater shield'
-      replygump 0x38920abd 104
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 204
-    elseif @inlist 'make' 'order shield'
-      replygump 0x38920abd 104
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 205
-    elseif @inlist 'make' 'chaos shield'
-      replygump 0x38920abd 104
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 206
-    elseif @inlist 'make' 'dagger'
-      replygump 0x38920abd 105
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 200
-    elseif @inlist 'make' 'kryss'
-      replygump 0x38920abd 105
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 201
-    elseif @inlist 'make' 'war fork'
-      replygump 0x38920abd 105
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 202
-    elseif @inlist 'make' 'short spear'
-      replygump 0x38920abd 105
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 203
-    elseif @inlist 'make' 'pitchfork'
-      replygump 0x38920abd 105
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 204
-    elseif @inlist 'make' 'spear'
-      replygump 0x38920abd 105
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 205
-    elseif @inlist 'make' 'hammer pick'
-      replygump 0x38920abd 106
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 200
-    elseif @inlist 'make' 'war axe'
-      replygump 0x38920abd 106
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 201
-    elseif @inlist 'make' 'mace'
-      replygump 0x38920abd 106
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 202
-    elseif @inlist 'make' 'maul'
-      replygump 0x38920abd 106
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 203
-    elseif @inlist 'make' 'war mace'
-      replygump 0x38920abd 106
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 204
-    elseif @inlist 'make' 'war hammer'
-      replygump 0x38920abd 106
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 205
-    elseif @inlist 'make' 'cutlass'
-      replygump 0x38920abd 107
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 200
-    elseif @inlist 'make' 'katana'
-      replygump 0x38920abd 107
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 201
-    elseif @inlist 'make' 'scimitar'
-      replygump 0x38920abd 107
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 202
-    elseif @inlist 'make' 'broadsword'
-      replygump 0x38920abd 107
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 203
-    elseif @inlist 'make' 'longsword'
-      replygump 0x38920abd 107
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 204
-    elseif @inlist 'make' 'viking sword'
-      replygump 0x38920abd 107
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 205
-    elseif @inlist 'make' 'axe'
-      replygump 0x38920abd 107
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 206
-    elseif @inlist 'make' 'battleaxe'
-      replygump 0x38920abd 107
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 207
-    elseif @inlist 'make' 'double axe'
-      replygump 0x38920abd 107
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 208
-    elseif @inlist 'make' 'executioners axe'
-      replygump 0x38920abd 107
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 209
-    elseif @inlist 'make' 'large battle axe'
-      replygump 0x38920abd 107
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 11
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 200
-    elseif @inlist 'make' 'two handed axe'
-      replygump 0x38920abd 107
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 11
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 201
-    elseif @inlist 'make' 'bardiche'
-      replygump 0x38920abd 107
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 11
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 202
-    elseif @inlist 'make' 'halberd'
-      replygump 0x38920abd 107
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 11
-      waitforgump 0x38920abd 5000
-      replygump 0x38920abd 203
-    endif
-    //
-    // Signal script to make last
-    //
-    @removelist 'make'
-    //
-    // Just make last, its faster
-    //
-  else
+  if @inlist 'make' 'ringmail gorget'
+    usetype 0xfbb
     waitforgump 0x38920abd 5000
-    replygump 0x38920abd 7
+    replygump 0x38920abd 100
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 200
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'ringmail gloves'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 100
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 201
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'ringmail helm'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 100
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 202
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'ringmail arms'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 100
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 203
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'ringmail legs'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 100
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 204
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'ringmail skirt'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 100
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 205
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'ringmail chest'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 100
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 206
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'chainmail gorget'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 101
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 200
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'chainmail gloves'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 101
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 201
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'chainmail coif'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 101
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 202
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'chainmail arms'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 101
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 203
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'chainmail legs'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 101
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 204
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'chainmail skirt'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 101
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 205
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'chainmail chest'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 101
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 206
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'plate gorget'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 102
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 200
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'plate gloves'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 102
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 201
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'plate helm'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 102
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 202
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'plate arms'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 102
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 203
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'plate legs'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 102
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 204
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'plate skirt'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 102
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 205
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'plate chest'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 102
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 206
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'female plate chest'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 102
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 207
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'orc helm'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 103
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 200
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'bascinet'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 103
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 201
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'close helm'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 103
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 202
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'norse helm'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 103
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 203
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'buckler'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 104
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 200
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'metal shield'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 104
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 201
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'bronze shield'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 104
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 202
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'metal kite shield'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 104
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 203
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'heater shield'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 104
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 204
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'order shield'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 104
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 205
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'chaos shield'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 104
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 206
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'dagger'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 105
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 200
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'kryss'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 105
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 201
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'war fork'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 105
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 202
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'short spear'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 105
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 203
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'pitchfork'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 105
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 204
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'spear'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 105
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 205
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'hammer pick'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 106
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 200
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'war axe'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 106
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 201
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'mace'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 106
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 202
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'maul'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 106
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 203
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'war mace'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 106
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 204
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'war hammer'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 106
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 205
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'cutlass'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 107
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 200
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'katana'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 107
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 201
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'scimitar'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 107
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 202
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'broadsword'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 107
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 203
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'longsword'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 107
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 204
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'viking sword'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 107
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 205
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'axe'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 107
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 206
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'battleaxe'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 107
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 207
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'double axe'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 107
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 208
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'executioners axe'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 107
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 209
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'large battle axe'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 107
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 11
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 200
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'two handed axe'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 107
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 11
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 201
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'bardiche'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 107
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 11
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 202
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
+  elseif @inlist 'make' 'halberd'
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 107
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 11
+    waitforgump 0x38920abd 5000
+    replygump 0x38920abd 203
+    waitforgump 0x38920abd 5000
+    waitforgump 0x38920abd 5000
   endif
-  //
-  // Wait for result
-  //
-  settimer 'gump' 0
-  while not @ingump 0x38920abd 'you' and not @ingump 0x38920abd 'create'
-    waitforgump 0x38920abd 100
-    if timer 'gump' > 8000
-     break
-    endif
-  endwhile
   //
   // Recycle
   //
   if @counttype makeid[0] 'any' 'backpack' >= 10
     @canceltarget
-    sysmsg "Recycling" 44
+    sysmsg "Recycling" 66
+    //
+    // Use tongs
+    //
+    usetype 0xfbb
+    waitforgump 0x38920abd 5000
     while @findtype makeid[0] 'any' 'backpack'
       waitforgump 0x38920abd 2000
       replygump 0x38920abd 3
       waitfortarget 5000
       target! 'found'
-      pause 5000
+      pause 2500
     endwhile
   endif
 endwhile

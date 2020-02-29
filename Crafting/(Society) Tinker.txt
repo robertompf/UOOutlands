@@ -1,74 +1,247 @@
 /////////////////////////////////////////////
-// UO Steam Society Macro for Tinker
+// UO Steam Society Macro for Tinkering
 // for Outlands
 // by Jewele
 //
-// Crafts a certain number of exceptional items
+// Crafts a certain number of items
 // required for a society then stops, alerting
 // you when its done.
 //
-// This isn't fully AFK - its designed to be
-// monitored. So semi-afk :)
+// I highly recommend you pack a pony with materials
+// you need for your job and run it in a town
+// with exceptional bonus. Just select pony
+// as source.
+//
+// This macro IS NOT for making exceptionals
+// you want to save. Everything is salvaged.
+// If you want to make exceptionals, use
+// Tinker.txt and stop when your society
+// is completed.
+//
+// *************************
+// ITEM NAMES -- IMPORTANT!!
+// *************************
+//
+// To make it easier on you, just enter
+// the name of the item without the ore type.
+// Then, in the ore list enter the ore.
 //
 // How to use:
 // ===========
-// 1) Stock pack with Tinker Tools (10-20)
-// 2) Set crafting menu to metal you need
-// 3) Set recycle option to 'RECYCLE ENTIRE BACKPACK'
-// 4) Craft 1 item you need for job (sets make last)
-// 5) Modify the ingot color list code (below)
-// 6) Run script
-// 7) Wait for done alert
+// 1) Stock pack with tinker tools (10-20)
+// 2) Stock pony with ingots (and boards)
+// 3) Go to Craft Bonus town
+// 4) Modify section below
+// 5) Run
 //
-// Version 1.0
-// -----------
-// First release! yay!
+// Materials
+// =========
+// The script only pulls wood and ingots from
+// the source container. If your recipe requires
+// additional materials, then you need to have these
+// in your pack already.
+//
+// Some of the recipes, like ship bombs, are just too
+// hard to manage in a script since you can only have
+// 125 items in your pack and each bomb takes 5 pots,
+// which takes up 5 item slots. For this reason, there
+// are no bombs and no ship repair kits.
+//
+// If you need to make Item ID wands, make sure you have
+// the necessary arcane scrolls in your pack. Note :
+// the final item will be recycled if using this script!
+//
+// For regular wood, just enter 'wood' in list 'material'
+//
+// Item names:
+// ===========
+// I have seperated the material color from the name.
+// So 'Shadow Iron Trap Removal Tool' becomes:
+//    pushlist 'material' 'shadow iron'
+//    pushlist 'make' 'trap removal tool'
+//
+// Sounds:
+// =======
+// Please make sure following sounds files exist:
+// ...\UOSteam\Sounds\uhoh.wav
+// ...\UOSteam\Sounds\cymbals.wav
+//
+// Version history:
+// ================
+// 2.0 - Removed all version 1.x notes
+//
+// NOTES:
+// ======
+// * Recycles every 10 items
 //
 // UOSTEAM COPY-PASTE BELOW THIS LINE
 /////////////////////////////////////////////
-@removelist 'ore'
-@createlist 'ore'
-@removelist 'graphicid'
-@createlist 'graphicid'
-// MODIFY START --------->
+sysmsg "UOSteam Tinker Society Macro" 75
+@removelist 'material'
+@createlist 'material'
+@removelist 'make'
+@createlist 'make'
+//
+// MODIFY START -------->>>
+@pushlist 'material' 'valewood'
+@pushlist 'make' 'fishing pole'
+// <<<-------- MODIFY END
 //
 //
-// Add ore color for job
-pushlist 'ore' 2406       // shadow iron
-
-// Add item graphic id for job item
-pushlist 'graphicid' 0x1416
+// User material check
 //
+@removelist 'orecolor'
+@createlist 'orecolor'
+@removelist 'woodcolor'
+@createlist 'woodcolor'
+if @inlist 'material' 'iron'
+  @pushlist! 'orecolor' 0
+elseif @inlist 'material' 'dull copper'
+  @pushlist! 'orecolor' 2419
+elseif @inlist 'material' 'shadow iron'
+  @pushlist! 'orecolor' 2406
+elseif @inlist 'material' 'copper'
+  @pushlist! 'orecolor' 2413
+elseif @inlist 'material' 'bronze'
+  @pushlist! 'orecolor' 2418
+elseif @inlist 'material' 'gold'
+  @pushlist! 'orecolor' 2213
+elseif @inlist 'material' 'agapite'
+  @pushlist! 'orecolor' 2425
+elseif @inlist 'material' 'verite'
+  @pushlist! 'orecolor' 2207
+elseif @inlist 'material' 'valorite'
+  @pushlist! 'orecolor' 2219
+elseif @inlist 'material' 'avarite'
+  @pushlist! 'orecolor' 1763
+elseif @inlist 'material' 'wood'
+  @pushlist! 'woodcolor' 0
+elseif @inlist 'material' 'dullwood'
+  @pushlist! 'woodcolor' 2419
+elseif @inlist 'material' 'shadowwood'
+  @pushlist! 'woodcolor' 2406
+elseif @inlist 'material' 'copperwood'
+  @pushlist! 'woodcolor' 2413
+elseif @inlist 'material' 'bronzewood'
+  @pushlist! 'woodcolor' 2418
+elseif @inlist 'material' 'goldwood'
+  @pushlist! 'woodcolor' 2213
+elseif @inlist 'material' 'rosewood'
+  @pushlist! 'woodcolor' 2425
+elseif @inlist 'material' 'verewood'
+  @pushlist! 'woodcolor' 2207
+elseif @inlist 'material' 'valewood'
+  @pushlist! 'woodcolor' 2219
+elseif @inlist 'material' 'avarwood'
+  @pushlist! 'woodcolor' 1763
+else
+  headmsg "ERROR" 44
+  sysmsg "Unknown type of material requested!" 44
+  stop
+endif
 //
-// <---------- MODIFY END
+// User item check
+//
+@removelist 'makeid'
+@createlist 'makeid'
+if @inlist 'make' 'skinning knife'
+  @pushlist! 'makeid' 0x2d20
+elseif @inlist 'make' 'pickaxe'
+  @pushlist! 'makeid' 0xe86
+elseif @inlist 'make' 'hatchet'
+  @pushlist! 'makeid' 0xf44
+elseif @inlist 'make' 'shovel'
+  @pushlist! 'makeid' 0xf39
+elseif @inlist 'make' 'fishing pole'
+  @pushlist! 'makeid' 0xdc0
+elseif @inlist 'make' 'lockpicks'
+  @pushlist! 'makeid' 0x14fd
+elseif @inlist 'make' 'trap removal tool'
+  @pushlist! 'makeid' 0x7149
+elseif @inlist 'make' 'identification wand'
+  @pushlist! 'makeid' 0x5010
+  @pushlist! 'matcode' 0x1bf2
+elseif @inlist 'make' 'container identification wand'
+  @pushlist! 'makeid' 0x500f
+elseif @inlist 'make' 'spyglass'
+  @pushlist! 'makeid' 0x14f5
+elseif @inlist 'make' 'planter spade'
+  @pushlist! 'makeid' 0x74ac
+else
+  headmsg "ERROR" 44
+  sysmsg "Unknown type of item requested!" 44
+  stop
+endif
 //
 // Open backpack
 //
 @useobject 'backpack'
 pause 1000
-msg "bank"
-pause 1000
-useskill 'hiding'
 //
 // Set alias
 //
-if not @findalias 'ingotbox'
-  sysmsg "Select chest with materials"
-  promptalias 'ingotbox'
+if not @findalias 'matbag'
+  sysmsg "Select chest or pony with materials"
+  promptalias 'matbag'
 endif
 //
-// Move all ingots from pack to ingotbox (reset)
+// Move all ingots from pack to matbag (reset)
 //
 while @findtype 0x1bf2 'any' 'backpack'
-  sysmsg "dumping"
-  moveitem  'found' 'ingotbox'
-  pause 500
+  moveitem  'found' 'matbag'
+  pause 2000
+endwhile
+//
+// Move all wood from pack to matbag (reset)
+//
+while @findtype 0x1bd7 'any' 'backpack'
+  moveitem  'found' 'matbag'
+  pause 2000
+endwhile
+//
+// Verify with player
+//
+pause 1000
+sysmsg "Making:" 85
+sysmsg "make[0]" 68
+sysmsg "with material:" 85
+sysmsg "material[0]" 68
+sysmsg "Starting in 2 seconds..." 85
+pause 2000
+//
+// Check tinker tools
+//
+if not @findtype 0x1eb8 'any' 'backpack'
+  headmsg 'I have no tinker tools!' 66
+  playsound 'uhoh.wav'
+  pause 5000
+  continue
+endif
+//
+// Bring up menu
+//
+@usetype 0x1eb8
+waitforgump 0x38920abd 5000
+//
+// Select Recycle
+//
+while not @ingump 0x38920abd 'Recycle All (of Type)'
+  @replygump 0x38920abd 2
+  waitforgump 0x38920abd 5000
 endwhile
 //
 // Loop until its done
 //
 @clearjournal
 while not @injournal "completed a society job" 'System'
+  //
+  // World save
+  //
+  if @injournal 'will save' 'system'
+    sysmsg "pausing for world save" 66
+    pause 30000
+    @clearjournal
+  endif
   //
   // Check weight
   //
@@ -79,21 +252,47 @@ while not @injournal "completed a society job" 'System'
     continue
   endif
   //
+  // Check drops
+  //
+  if @findtype 'makeid[0]' 'any' 'ground'
+    headmsg 'I am dropping items! Do I have room in my pack?' '88'
+    playsound 'uhoh.wav'
+    pause 5000
+    continue
+  endif
+  //
   // Check or restock ingots
   //
-  if @counttype 0x1bf2 ore[0] 'backpack' <  25
-    sysmsg "restocking"
-    useobject 'ingotbox'
-    pause 1000
-    movetype 0x1bf2 'ingotbox' 'backpack' 0 0 0 ore[0] 500
-    pause 1000
+  if list 'orecolor' > 0 and @counttype 0x1bf2 orecolor[0] 'backpack' <  25
+    useobject 'matbag'
+    pause 2500
+    movetype 0x1bf2 'matbag' 'backpack' 0 0 0 orecolor[0] 100
+    pause 2500
   endif
   //
   // Verify ingots
   //
-  if @counttype 0x1bf2 ore[0] 'backpack' <  25
+  if list 'orecolor' > 0 and @counttype 0x1bf2 orecolor[0] 'backpack' <  25
     playsound 'uhoh.wav'
     headmsg 'I cannot restock ingots!' '88'
+    pause 5000
+    continue
+  endif
+  //
+  // Check or restock boards
+  //
+  if list 'woodcolor' > 0 and @counttype 0x1bd7 woodcolor[0] 'backpack' <  25
+    useobject 'matbag'
+    pause 2500
+    movetype 0x1bd7 'matbag' 'backpack' 0 0 0 woodcolor[0] 100
+    pause 2500
+  endif
+  //
+  // Verify boards
+  //
+  if list 'woodcolor' > 0 and @counttype 0x1bd7 woodcolor[0] 'backpack' <  25
+    playsound 'uhoh.wav'
+    headmsg 'I cannot restock boards!' '88'
     pause 5000
     continue
   endif
@@ -107,47 +306,802 @@ while not @injournal "completed a society job" 'System'
     continue
   endif
   //
-  // Use 3x = sometimes server doesnt respond
+  // Make first ime
   //
-  useobject 'found'
-  pause 100
-  useobject 'found'
-  pause 100
-  useobject 'found'
-  pause 100
-  //
-  // Craft last
-  //
-  waitforgump 0x38920abd 5000
-  replygump 0x38920abd 7
-  // craft response
-  waitforgump 0x38920abd 5000
-  // then dismiss
-  replygump 0x38920abd 0
-  // then wait for item
-  waitforgump 0x38920abd 10000
-  //
-  // Check quality
-  //
-  while @findtype graphicid[0] 'any' 'backpack'
-    @usetype 0x1eb8
+  if list 'make' > 0
+    //
+    // Skinning Knife
+    //
+    if @inlist 'make' 'skinning knife' and @inlist 'material' 'iron'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 200
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'skinning knife' and @inlist 'material' 'dull copper'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 201
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'skinning knife' and @inlist 'material' 'shadow iron'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 202
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'skinning knife' and @inlist 'material' 'copper'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 203
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'skinning knife' and @inlist 'material' 'bronze'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 204
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'skinning knife' and @inlist 'material' 'gold'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 205
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'skinning knife' and @inlist 'material' 'agapite'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 206
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'skinning knife' and @inlist 'material' 'verite'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 207
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'skinning knife' and @inlist 'material' 'valorite'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 208
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 0
+    elseif @inlist 'make' 'skinning knife' and @inlist 'material' 'avarite'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 209
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+      //
+      // Pickaxe
+      //
+    elseif @inlist 'make' 'pickaxe' and @inlist 'material' 'iron'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 200
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'pickaxe' and @inlist 'material' 'dull copper'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 201
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'pickaxe' and @inlist 'material' 'shadow iron'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 202
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'pickaxe' and @inlist 'material' 'copper'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 203
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'pickaxe' and @inlist 'material' 'bronze'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 204
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'pickaxe' and @inlist 'material' 'gold'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 205
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'pickaxe' and @inlist 'material' 'agapite'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 206
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'pickaxe' and @inlist 'material' 'verite'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 207
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'pickaxe' and @inlist 'material' 'valorite'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 208
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 0
+    elseif @inlist 'make' 'pickaxe' and @inlist 'material' 'avarite'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 209
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+      //
+      // Hatchet
+      //
+    elseif @inlist 'make' 'hatchet' and @inlist 'material' 'iron'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 200
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'hatchet' and @inlist 'material' 'dull copper'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 201
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'hatchet' and @inlist 'material' 'shadow iron'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 202
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'hatchet' and @inlist 'material' 'copper'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 203
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'hatchet' and @inlist 'material' 'bronze'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 204
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'hatchet' and @inlist 'material' 'gold'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 205
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'hatchet' and @inlist 'material' 'agapite'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 206
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'hatchet' and @inlist 'material' 'verite'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 207
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'hatchet' and @inlist 'material' 'valorite'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 208
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 0
+    elseif @inlist 'make' 'hatchet' and @inlist 'material' 'avarite'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 209
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+      //
+      // Shovels
+      //
+    elseif @inlist 'make' 'shovel' and @inlist 'material' 'iron'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 200
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'shovel' and @inlist 'material' 'dull copper'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 201
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'shovel' and @inlist 'material' 'shadow iron'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 202
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'shovel' and @inlist 'material' 'copper'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 203
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'shovel' and @inlist 'material' 'bronze'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 204
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'shovel' and @inlist 'material' 'gold'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 205
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'shovel' and @inlist 'material' 'agapite'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 206
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'shovel' and @inlist 'material' 'verite'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 207
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'shovel' and @inlist 'material' 'valorite'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 208
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 0
+    elseif @inlist 'make' 'shovel' and @inlist 'material' 'avarite'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 209
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+      //
+      // Fishing poles
+      //
+    elseif @inlist 'make' 'fishing pole' and @inlist 'material' 'wood'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 200
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'fishing pole' and @inlist 'material' 'dullwood'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 201
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'fishing pole' and @inlist 'material' 'shadowwood'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 202
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'fishing pole' and @inlist 'material' 'copperwood'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 203
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'fishing pole' and @inlist 'material' 'bronzewood'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 204
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'fishing pole' and @inlist 'material' 'goldwood'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 205
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'fishing pole' and @inlist 'material' 'rosewood'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 206
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'fishing pole' and @inlist 'material' 'verewood'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 207
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'fishing pole' and @inlist 'material' 'valewood'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 208
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 0
+    elseif @inlist 'make' 'fishing pole' and @inlist 'material' 'avarwood'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 101
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 209
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+      //
+      // Planter spade
+      //
+    elseif @inlist 'make' 'planter spade' and @inlist 'material' 'iron'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 9
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 102
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 201
+      waitforgump 0x38920abd 15000
+      waitforgump 0x38920abd 15000
+  elseif @inlist 'make' 'planter spade' and @inlist 'material' 'dull copper'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 9
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 102
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 201
+      waitforgump 0x38920abd 15000
+      waitforgump 0x38920abd 15000
+    elseif @inlist 'make' 'planter spade' and @inlist 'material' 'shadow iron'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 9
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 102
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 201
+      waitforgump 0x38920abd 15000
+      waitforgump 0x38920abd 15000
+    elseif @inlist 'make' 'planter spade' and @inlist 'material' 'copper'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 9
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 102
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 201
+      waitforgump 0x38920abd 15000
+      waitforgump 0x38920abd 15000
+    elseif @inlist 'make' 'planter spade' and @inlist 'material' 'bronze'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 9
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 102
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 201
+      waitforgump 0x38920abd 15000
+      waitforgump 0x38920abd 15000
+    elseif @inlist 'make' 'planter spade' and @inlist 'material' 'gold'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 9
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 102
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 201
+      waitforgump 0x38920abd 15000
+      waitforgump 0x38920abd 15000
+    elseif @inlist 'make' 'planter spade' and @inlist 'material' 'agapite'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 9
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 102
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 201
+      waitforgump 0x38920abd 15000
+      waitforgump 0x38920abd 15000
+    elseif @inlist 'make' 'planter spade' and @inlist 'material' 'verite'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 9
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 102
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 201
+      waitforgump 0x38920abd 15000
+      waitforgump 0x38920abd 15000
+    elseif @inlist 'make' 'planter spade' and @inlist 'material' 'valorite'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 9
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 102
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 201
+      waitforgump 0x38920abd 15000
+      waitforgump 0x38920abd 15000
+    elseif @inlist 'make' 'planter spade' and @inlist 'material' 'avarite'
+      waitforgump 0x38920abd 15000
+    replygump 0x38920abd 9
     waitforgump 0x38920abd 15000
-    replygump 0x38920abd 3
-    waitfortarget 5000
-    target! 'found'
-    pause 1000
-  endwhile
+    replygump 0x38920abd 102
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 11
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 200
+    waitforgump 0x38920abd 15000
+    waitforgump 0x38920abd 15000
+    else
+      playsound 'uhoh.wav'
+      headmsg "I cannot figure out what to make!" 32
+      stop
+    endif
+    //
+    // signal remake
+    //
+    @clearlist 'make'
+    //
+    // remake
+    //
+  else
+    usetype 0x1eb8
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 7
+    waitforgump 0x38920abd 15000
+    waitforgump 0x38920abd 15000
+  endif
+  //
+  // Recycle
+  //
+  if @counttype makeid[0] 'any' 'backpack' >= 10
+    @canceltarget
+    sysmsg "Recycling" 66
+    //
+    // Use tools
+    //
+    usetype 0x1eb8
+    waitforgump 0x38920abd 5000
+    while @findtype makeid[0] 'any' 'backpack'
+      waitforgump 0x38920abd 2000
+      replygump 0x38920abd 3
+      waitfortarget 5000
+      target! 'found'
+      pause 2500
+    endwhile
+  endif
 endwhile
 //
 // Burn off the extras if found
 //
-while @findtype graphicid[0] 'any' 'backpack'
+while @findtype makeid[0] 'any' 'backpack'
   @usetype 0x1eb8
-  waitforgump 0x38920abd 15000
+  waitforgump 0x38920abd 5000
   replygump 0x38920abd 3
   waitfortarget 5000
   target! 'found'
-  pause 1000
+  pause 5000
 endwhile
 playsound 'cymbals.wav'
 headmsg "All done!" 55
