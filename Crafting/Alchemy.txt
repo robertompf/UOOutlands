@@ -1,16 +1,24 @@
 /////////////////////////////////////////////
-// UO Steam Alchemy Trainer
+// UO Steam Alchemy Script
 // for Outlands
 // by Jewele
 //
+// Script to make alchemy potions of your choice
+// pulling from a container and placing filled kegs
+// back into same. You can use this to train alchemy
+// if you wish, or just to make potion kegs.
+//
 // How to use?
 // -----------
-// 1) Start at bank
-// 2) Modify script for potion you want to use
-// 3) Have 1 bag in bank with your regs
-// 4) Have 1 bag in bank with your empty kegs (or same)
-// 5) Stock backpack with pestles (lots!) and 1 bottle
-// 6) Run script
+// 1) Modify script for potion you want to use
+// 2) Place empty kegs and reagents in a container (or bank bag)
+// 3) Stock backpack with pestles (lots!) and 1 bottle
+// 4) Run script
+//
+// Sounds
+// ------
+// ..\UOSteam\Sounds\Chime.wav
+// ..\UOSteam\Sounds\UhOh.wav
 //
 // Version 1.0
 // -----------
@@ -36,11 +44,20 @@
 // most would. You can use a chest in your house as well. Just
 // select that as your reg source :)
 //
+// Version 1.5
+// -----------
+// * Fixed some issues reported from users and my own testing
+// * Added sound file and pause when a keg is full in case you
+//   want to catch the script and stop it.
+// * Added 'uhoh' sound file invocation to let you know of a problem
+// * No longer uses make last
+// * Added weight check 
+//
 // UOSTEAM COPY-PASTE BELOW THIS LINE
 /////////////////////////////////////////////
 
 sysmsg "Alchemy Script" 88
-sysmsg "Version 1.4" 88
+sysmsg "Version 1.5" 88
 //
 // Open backpack
 //
@@ -59,11 +76,11 @@ pause 1000
 // Set alias'
 //
 if not findalias 'kegbag'
-    sysmsg "Select bank bag with empty kegs, full kegs will be placed here"
+    sysmsg "Select container (or bag in bank) with empty kegs, full kegs will be placed here" 88
     promptalias 'kegbag'
 endif
 if not findalias 'regbag'
-    sysmsg "Select bank bag reagents"
+    sysmsg "Select container (or bag in bank) with reagents," 88
     promptalias 'regbag'
 endif
 
@@ -75,7 +92,7 @@ endif
 //
 @removelist 'potion'
 @createlist 'potion'
-@pushlist 'potion' 'Lesser Poison'
+@pushlist 'potion' 'Poison'
 //
 // ****************
 // ** END MODIFY **
@@ -132,6 +149,7 @@ elseif @inlist 'potion' 'Explosion'
 elseif @inlist 'potion' 'Greater Explosion'
     pushlist 'regs' 0xf8c // ash
 else
+    playsound 'uhoh.wav'
     headmsg "Unable to figure out potion type you requested"
     stop
 endif
@@ -154,9 +172,11 @@ pushlist 'potions' 0xf09 // strength
 //
 // Check no potions in pack
 // 
+sysmsg "pack potion check" 16
 for 0 to 'potions'
     if @findtype potions[] 'any' 'backpack'
-        headmsg "Please remove all potions from pack before starting" 91
+        headmsg "Please remove all potions from pack before starting" 88
+	    playsound 'uhoh.wav'
         stop
     endif
 endfor
@@ -164,8 +184,10 @@ endfor
 //
 // Check for 1 empty bottle
 //
+sysmsg "empty bottle check" 16
 if counttype 0xf0e 0 'backpack' != 1
-    headmsg "I need EXACTLY 1 empty bottle" 91
+    headmsg "I need EXACTLY 1 empty bottle" 88
+    playsound 'uhoh.wav'
     stop
 endif
 
@@ -176,6 +198,8 @@ endif
 //
 while not dead
     
+	sysmsg "loop start" 16
+
     //
     // Check for a keg or transfer empty one
     //
@@ -189,7 +213,7 @@ while not dead
     // so throw message, wait, and start again
     //
     if not @findtype 0x1940 'any' 'backpack'
-        headmsg "I need a keg to continue!" 91
+        headmsg "I need a keg to continue!" 88
         pause 5000
         continue
     endif
@@ -198,14 +222,14 @@ while not dead
     // Check if we need to pour into keg
     //
     if not @findtype 0xf0e 0 'backpack'
-        headmsg "Pouring into keg" 91
+        headmsg "Pouring into keg" 88
         @unsetalias 'keg'
         @findtype 0x1940 'any' 'backpack'
         @setalias 'keg' 'found'
         for 0 to 'potions'
             if @findtype potions[] 'any' 'backpack'
                 moveitem 'found' 'keg'
-                pause 1500
+                pause 3000
                 break
             endif
         endfor
@@ -215,8 +239,9 @@ while not dead
     // Check for empty bottle
     //
     if not @findtype 0xf0e 0 'backpack'
-        headmsg "I need an empty bottle" 91
-        pause 5000
+        headmsg "I need an empty bottle" 88
+        playsound 'uhoh.wav'
+	    pause 5000
         continue
     endif
     
@@ -224,8 +249,9 @@ while not dead
     // Verify pestle
     //
     if not @findtype 0xe9b 'any' 'backpack'
-        headmsg "I need mortar and pestles to continue!" 91
-        pause 5000
+        headmsg "I need mortar and pestles to continue!" 88
+        playsound 'uhoh.wav'
+	    pause 5000
         continue
     endif
 
@@ -233,7 +259,7 @@ while not dead
     // Restock regs
     //
     if @counttype regs[0] 'any' 'backpack' < 200
-        sysmsg "restocking reagents" 91
+        sysmsg "restocking reagents" 88
         msg "bank"
         pause 500
         movetype regs[0] 'regbag' 'backpack' 0 0 0 'any' 200
@@ -245,10 +271,21 @@ while not dead
     // so throw message, wait, and start again
     //
     if @counttype regs[0] 'any' 'backpack' < 200
-        headmsg "I need more regs to continue!" 91
+        headmsg "I need more regs to continue!" 88
         pause 5000
-        continue
+        playsound 'uhoh.wav'
+	    continue
     endif
+
+	//
+	// Check weight
+	//
+	if diffweight < 5
+		headmsg 'I am too heavy to make anything, please unload me' 88
+		playsound 'uhoh.wav'
+		pause 5000
+		continue
+	endif
 
     //
     // Use pestle
@@ -257,153 +294,170 @@ while not dead
     @useobject 'found'
     waitforgump 0x38920abd 5000
 
-    //
-    // If keg is new, calibrate potion type
-    //
-    if @findtype 0x1940 0 'backpack'
-        //
-        // ** Potion select **
-        //
-        if @inlist 'potion' 'Lesser Heal'
-            replygump 0x38920abd 100
-            waitforgump 0x38920abd 5000 
-            replygump 0x38920abd 200
-        elseif @inlist 'potion' 'Heal'
-            replygump 0x38920abd 100
-            waitforgump 0x38920abd 5000 
-            replygump 0x38920abd 201
-        elseif @inlist 'potion' 'Greater Heal'
-            replygump 0x38920abd 100
-            waitforgump 0x38920abd 5000 
-            replygump 0x38920abd 202
-        elseif @inlist 'potion' 'Lesser Cure'
-            replygump 0x38920abd 101
-            waitforgump 0x38920abd 5000 
-            replygump 0x38920abd 200
-        elseif @inlist 'potion' 'Cure'
-            replygump 0x38920abd 101
-            waitforgump 0x38920abd 5000 
-            replygump 0x38920abd 201
-        elseif @inlist 'potion' 'Greater Cure'
-            replygump 0x38920abd 101
-            waitforgump 0x38920abd 5000 
-            replygump 0x38920abd 202
-        elseif @inlist 'potion' 'Refresh'
-            replygump 0x38920abd 102
-            waitforgump 0x38920abd 5000 
-            replygump 0x38920abd 200
-        elseif @inlist 'potion' 'Total Refresh'
-            replygump 0x38920abd 102
-            waitforgump 0x38920abd 5000 
-            replygump 0x38920abd 201
-        elseif @inlist 'potion' 'Strength'
-            replygump 0x38920abd 103
-            waitforgump 0x38920abd 5000 
-            replygump 0x38920abd 200
-        elseif @inlist 'potion' 'Greater Strength'
-            replygump 0x38920abd 103
-            waitforgump 0x38920abd 5000 
-            replygump 0x38920abd 201
-        elseif @inlist 'potion' 'Agility'
-            replygump 0x38920abd 104
-            waitforgump 0x38920abd 5000 
-            replygump 0x38920abd 200
-        elseif @inlist 'potion' 'Greater Agility'
-            replygump 0x38920abd 104
-            waitforgump 0x38920abd 5000 
-            replygump 0x38920abd 201
-        elseif @inlist 'potion' 'Lesser Magic Resist'
-            replygump 0x38920abd 105
-            waitforgump 0x38920abd 5000 
-            replygump 0x38920abd 200
-        elseif @inlist 'potion' 'Magic Resist'
-            replygump 0x38920abd 105
-            waitforgump 0x38920abd 5000 
-            replygump 0x38920abd 201
-        elseif @inlist 'potion' 'Greater Magic Resist'
-            replygump 0x38920abd 105
-            waitforgump 0x38920abd 5000 
-            replygump 0x38920abd 202
-        elseif @inlist 'potion' 'Lesser Poison'
-            replygump 0x38920abd 106
-            waitforgump 0x38920abd 5000 
-            replygump 0x38920abd 200
-        elseif @inlist 'potion' 'Poison'
-            replygump 0x38920abd 106
-            waitforgump 0x38920abd 5000 
-            replygump 0x38920abd 201
-        elseif @inlist 'potion' 'Greater Poison'
-            replygump 0x38920abd 106
-            waitforgump 0x38920abd 5000 
-            replygump 0x38920abd 202
-        elseif @inlist 'potion' 'Deadly Poison'
-            replygump 0x38920abd 106
-            waitforgump 0x38920abd 5000 
-            replygump 0x38920abd 203
-        elseif @inlist 'potion' 'Lethal Poison'
-            replygump 0x38920abd 106
-            waitforgump 0x38920abd 5000 
-            replygump 0x38920abd 204
-        elseif @inlist 'potion' 'Lesser Explosion'
-            replygump 0x38920abd 107
-            waitforgump 0x38920abd 5000 
-            replygump 0x38920abd 200
-        elseif @inlist 'potion' 'Explosion'
-            replygump 0x38920abd 107
-            waitforgump 0x38920abd 5000 
-            replygump 0x38920abd 201
-        elseif @inlist 'potion' 'Greater Explosion'
-            replygump 0x38920abd 107
-            waitforgump 0x38920abd 5000 
-            replygump 0x38920abd 202
-        else
-            headmsg "Unable to figure out potion type you requested" 91
-            pause 5000
-            continue
-        endif
-    //
-    // We know the potion, make last
-    //
-    else
-        // press make last
-        @replygump 0x38920abd 7
-    endif
+	//
+	// Make
+	//
+	if @inlist 'potion' 'Lesser Heal'
+	    replygump 0x38920abd 100
+	    waitforgump 0x38920abd 5000 
+	    replygump 0x38920abd 200
+		waitforgump 0x38920abd 15000
+		waitforgump 0x38920abd 15000
+	elseif @inlist 'potion' 'Heal'
+	    replygump 0x38920abd 100
+	    waitforgump 0x38920abd 5000 
+	    replygump 0x38920abd 201
+		waitforgump 0x38920abd 15000
+		waitforgump 0x38920abd 15000
+	elseif @inlist 'potion' 'Greater Heal'
+	    replygump 0x38920abd 100
+	    waitforgump 0x38920abd 5000 
+	    replygump 0x38920abd 202
+		waitforgump 0x38920abd 15000
+		waitforgump 0x38920abd 15000
+	elseif @inlist 'potion' 'Lesser Cure'
+	    replygump 0x38920abd 101
+	    waitforgump 0x38920abd 5000 
+	    replygump 0x38920abd 200
+		waitforgump 0x38920abd 15000
+		waitforgump 0x38920abd 15000
+	elseif @inlist 'potion' 'Cure'
+	    replygump 0x38920abd 101
+	    waitforgump 0x38920abd 5000 
+	    replygump 0x38920abd 201
+		waitforgump 0x38920abd 15000
+		waitforgump 0x38920abd 15000
+	elseif @inlist 'potion' 'Greater Cure'
+	    replygump 0x38920abd 101
+	    waitforgump 0x38920abd 5000 
+	    replygump 0x38920abd 202
+		waitforgump 0x38920abd 15000
+		waitforgump 0x38920abd 15000
+	elseif @inlist 'potion' 'Refresh'
+	    replygump 0x38920abd 102
+	    waitforgump 0x38920abd 5000 
+	    replygump 0x38920abd 200
+		waitforgump 0x38920abd 15000
+		waitforgump 0x38920abd 15000
+	elseif @inlist 'potion' 'Total Refresh'
+	    replygump 0x38920abd 102
+	    waitforgump 0x38920abd 5000 
+	    replygump 0x38920abd 201
+		waitforgump 0x38920abd 15000
+		waitforgump 0x38920abd 15000
+	elseif @inlist 'potion' 'Strength'
+	    replygump 0x38920abd 103
+	    waitforgump 0x38920abd 5000 
+	    replygump 0x38920abd 200
+		waitforgump 0x38920abd 15000
+		waitforgump 0x38920abd 15000
+	elseif @inlist 'potion' 'Greater Strength'
+	    replygump 0x38920abd 103
+	    waitforgump 0x38920abd 5000 
+	    replygump 0x38920abd 201
+		waitforgump 0x38920abd 15000
+		waitforgump 0x38920abd 15000
+	elseif @inlist 'potion' 'Agility'
+	    replygump 0x38920abd 104
+	    waitforgump 0x38920abd 5000 
+	    replygump 0x38920abd 200
+		waitforgump 0x38920abd 15000
+		waitforgump 0x38920abd 15000
+	elseif @inlist 'potion' 'Greater Agility'
+	    replygump 0x38920abd 104
+	    waitforgump 0x38920abd 5000 
+	    replygump 0x38920abd 201
+		waitforgump 0x38920abd 15000
+		waitforgump 0x38920abd 15000
+	elseif @inlist 'potion' 'Lesser Magic Resist'
+	    replygump 0x38920abd 105
+	    waitforgump 0x38920abd 5000 
+	    replygump 0x38920abd 200
+		waitforgump 0x38920abd 15000
+		waitforgump 0x38920abd 15000
+	elseif @inlist 'potion' 'Magic Resist'
+	    replygump 0x38920abd 105
+	    waitforgump 0x38920abd 5000 
+	    replygump 0x38920abd 201
+		waitforgump 0x38920abd 15000
+		waitforgump 0x38920abd 15000
+	elseif @inlist 'potion' 'Greater Magic Resist'
+	    replygump 0x38920abd 105
+	    waitforgump 0x38920abd 5000 
+	    replygump 0x38920abd 202
+		waitforgump 0x38920abd 15000
+		waitforgump 0x38920abd 15000
+	elseif @inlist 'potion' 'Lesser Poison'
+	    replygump 0x38920abd 106
+	    waitforgump 0x38920abd 5000 
+	    replygump 0x38920abd 200
+		waitforgump 0x38920abd 15000
+		waitforgump 0x38920abd 15000
+	elseif @inlist 'potion' 'Poison'
+	    replygump 0x38920abd 106
+	    waitforgump 0x38920abd 5000 
+	    replygump 0x38920abd 201
+		waitforgump 0x38920abd 15000
+		waitforgump 0x38920abd 15000
+	elseif @inlist 'potion' 'Greater Poison'
+	    replygump 0x38920abd 106
+	    waitforgump 0x38920abd 5000 
+	    replygump 0x38920abd 202
+		waitforgump 0x38920abd 15000
+		waitforgump 0x38920abd 15000
+	elseif @inlist 'potion' 'Deadly Poison'
+	    replygump 0x38920abd 106
+	    waitforgump 0x38920abd 5000 
+	    replygump 0x38920abd 203
+		waitforgump 0x38920abd 15000
+		waitforgump 0x38920abd 15000
+	elseif @inlist 'potion' 'Lethal Poison'
+	    replygump 0x38920abd 106
+	    waitforgump 0x38920abd 5000 
+	    replygump 0x38920abd 204
+		waitforgump 0x38920abd 15000
+		waitforgump 0x38920abd 15000
+	elseif @inlist 'potion' 'Lesser Explosion'
+	    replygump 0x38920abd 107
+	    waitforgump 0x38920abd 5000 
+	    replygump 0x38920abd 200
+		waitforgump 0x38920abd 15000
+		waitforgump 0x38920abd 15000
+	elseif @inlist 'potion' 'Explosion'
+	    replygump 0x38920abd 107
+	    waitforgump 0x38920abd 5000 
+	    replygump 0x38920abd 201
+		waitforgump 0x38920abd 15000
+		waitforgump 0x38920abd 15000
+	elseif @inlist 'potion' 'Greater Explosion'
+	    replygump 0x38920abd 107
+	    waitforgump 0x38920abd 5000 
+	    replygump 0x38920abd 202
+		waitforgump 0x38920abd 15000
+		waitforgump 0x38920abd 15000
+	else
+	    headmsg "Unable to figure out potion type you requested" 88
+	    pause 5000
+	    continue
+	endif
 
-    //
-    // Wait for results
-    // (for UOSteam I find single conditionals safer than concatenated)
-    //
-    while not @injournal 'World sav' 'system'
-        if @ingump '0x38920abd' 'You pour' 
-            break
-        endif
-        if @ingump '0x38920abd' 'You create' 
-            break
-        endif
-        if @ingump '0x38920abd' 'You fail' 
-            break
-        endif
-        if @ingump 'any' 'resources required'
-            break
-        endif
-        if @ingump 'any' 'worn out'
-            break
-        endif
-        pause 100
-    endwhile
+	//
+	// Pause to get potion transfer automatically
+	//
+	pause 1500
 
     //
     // Check if we need to pour into keg
     //
     if not @findtype 0xf0e 0 'backpack'
-        headmsg "Pouring into keg" 91
+        headmsg "Pouring into keg" 71
         @unsetalias 'keg'
         @findtype 0x1940 'any' 'backpack'
         @setalias 'keg' 'found'
         for 0 to 'potions'
             if @findtype potions[] 'any' 'backpack'
                 moveitem 'found' 'keg'
-                pause 1500
+                pause 3000
                 break
             endif
         endfor
@@ -413,11 +467,13 @@ while not dead
     // Check if keg full
     //
     if @injournal 'hold any more' 'system'
-        headmsg "Keg full" 91  
+        headmsg "Keg full" 88  
+        sysmsg "Keg full, continuing in 10 seconds" 88  
         msg "bank"
         pause 500
         movetype 0x1940 'backpack' 'kegbag' 0 0 0 'any' 1
-        pause 2000
+        playsound 'chime.wav'
+        pause 10000
     endif
 
     //
