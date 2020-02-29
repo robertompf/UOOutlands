@@ -1,0 +1,66 @@
+/////////////////////////////////////////////
+// UO Steam Fishing Macro
+// for Outlands
+// by Jewele
+//
+// How to use:
+// ===========
+// 1. Empty your hands or equip a pole
+// 2. Run script
+//
+// UOSTEAM COPY-PASTE BELOW THIS LINE
+/////////////////////////////////////////////
+@useobject 'backpack'
+clearhands 'both'
+pause 5000
+@unsetalias 'pole'
+while not dead
+  @canceltarget
+  //
+  // equip pole
+  //
+  if not @findlayer 'self' 2
+    @findtype 0xdc0 'any' 'backpack'
+    setalias 'pole' 'found'
+    equipitem 'pole' 2
+    pause 5000
+  endif
+  //
+  // check pole
+  //
+  if not @findlayer 'self' 2
+    headmsg "Get a pole!"
+    stop
+  endif
+  //
+  // Fish
+  //
+  @useobject 'pole'
+  waitfortarget 5000
+  target! 'self'
+  pause 5000
+  //
+  // Fish
+  //
+  // With fishing, you pretty much have to wait the entire period you are fishing before
+  // attempting again. Its not like harvesting where you can fail quickly and retry.
+  //
+  @removetimer 'fishing'
+  @createtimer 'fishing'
+  @clearjournal
+  while not @injournal 'fish' 'system'
+    pause 1000
+    sysmsg "waiting for fishing in journal or 15s"
+    if timer 'fishing' > 15000
+      break
+    endif
+  endwhile
+  //
+  // World save
+  //
+  if @injournal 'world' 'system'
+    @clearjournal
+    sysmsg "Pausing 30s for world save" 88
+    pause 30000
+  endif
+endwhile
