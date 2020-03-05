@@ -28,8 +28,8 @@
 //
 // Script not running?
 //
-//    Clear your aliases. Go to Macros-Active Objects, and clear 
-//    all Active Objects. 
+//    Clear your aliases. Go to Macros-Active Objects, and clear
+//    all Active Objects.
 //
 // Script buggy?
 //
@@ -38,21 +38,19 @@
 //
 // Notes:
 // ------
-// If the trash can gets full it may not empty. 
+// If the trash can gets full it may not empty.
 // Just let the macro run until it empties. Then
 // it will continue.
 //
 // UOSTEAM COPY-PASTE BELOW THIS LINE
 /////////////////////////////////////////////
-
-// 
+//
 // Pen check
 //
 if counttype 0xfbf 'any' 'backpack' < 1
-    headmsg 'I have no pens!' '88'
-    stop
+  headmsg 'I have no pens!' '88'
+  stop
 endif
-
 //
 // Materials bag
 //
@@ -60,86 +58,77 @@ if not @findobject 'matsbag'
   headmsg 'Select container or bag with blank maps' 71
   promptalias 'matsbag'
 endif
-
 //
 // Trash can
 //
 if not findalias 'trash'
-    sysmsg "Select a trash barrel" 71
-    promptalias 'trash'
+  sysmsg "Select a trash barrel" 71
+  promptalias 'trash'
 endif
-
 //
 // Loop until done
 //
 while skill 'Cartography' < 120
-
-	//
-	// Restock
-	//
-	if counttype 0x14ec '2955' 'backpack' < 10
-	  useobject 'matsbag'
-	  pause 750
-	  movetype 0x14ec 'matsbag' 'backpack' 0 0 0 'any' 500
-	  pause 1200
-	endif
-
-	//
-	// Check Restock
-	//
-	if counttype 0x14ec '2955' 'backpack' < 10
-		headmsg "I cannot restock blank maps!" 32
-		playsound 'uhoh.wav'
-		stop
-	endif
-
-	//
-	// Check Pens
-	//
-	if not @findtype 0xfbf '2575' 'backpack'
-		headmsg "I have no pens!" 32
-		playsound 'uhoh.wav'
-		stop
-	endif
-
-	//
-	// Make
-	//
-	if skill 'cartography' < 75
-	  usetype 0xfbf 'any' 'backpack'
-	  waitforgump 0x38920abd 15000
-	  replygump 0x38920abd 100
-	  waitforgump 0x38920abd 15000
-	  replygump 0x38920abd 201
-	  waitforgump 0x38920abd 15000
-	  waitforgump 0x38920abd 15000
-	elseif skill 'cartography' < 100
-	  usetype 0xfbf 'any' 'backpack'
-	  waitforgump 0x38920abd 15000
-	  replygump 0x38920abd 100
-	  waitforgump 0x38920abd 15000
-	  replygump 0x38920abd 202
-	  waitforgump 0x38920abd 15000
-	  waitforgump 0x38920abd 15000
-	elseif skill 'cartography' < 120
-	  usetype 0xfbf 'any' 'backpack'
-	  waitforgump 0x38920abd 15000
-	  replygump 0x38920abd 100
-	  waitforgump 0x38920abd 15000
-	  replygump 0x38920abd 203
-	  waitforgump 0x38920abd 15000
-	  waitforgump 0x38920abd 15000
-	else
-	  break
-	endif
-
-	// Dump to trash
-	while @findtype 0x14ec 2669 'backpack'
-	    movetype 0x14ec 'backpack' 'trash' 0 0 0 2669 1
-	    pause 1000
-	endwhile
-
+  //
+  // Restock
+  //
+  if counttype 0x14ec '2955' 'backpack' < 10
+    useobject 'matsbag'
+    pause 750
+    movetype 0x14ec 'matsbag' 'backpack' 0 0 0 'any' 500
+    pause 1200
+  endif
+  //
+  // Check Restock
+  //
+  if counttype 0x14ec '2955' 'backpack' < 10
+    headmsg "I cannot restock blank maps!" 32
+    playsound 'uhoh.wav'
+    stop
+  endif
+  //
+  // Check Pens
+  //
+  if not @findtype 0xfbf '2575' 'backpack'
+    headmsg "I have no pens!" 32
+    playsound 'uhoh.wav'
+    stop
+  endif
+  //
+  // Make
+  //
+  if skill 'cartography' < 75
+    usetype 0xfbf 'any' 'backpack'
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 100
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 201
+    waitforgump 0x38920abd 15000
+    waitforgump 0x38920abd 15000
+  elseif skill 'cartography' < 100
+    usetype 0xfbf 'any' 'backpack'
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 100
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 202
+    waitforgump 0x38920abd 15000
+    waitforgump 0x38920abd 15000
+  elseif skill 'cartography' < 120
+    usetype 0xfbf 'any' 'backpack'
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 100
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 203
+    waitforgump 0x38920abd 15000
+    waitforgump 0x38920abd 15000
+  else
+    break
+  endif
+  // Dump to trash
+  while @findtype 0x14ec 2669 'backpack'
+    movetype 0x14ec 'backpack' 'trash' 0 0 0 2669 1
+    pause 1000
+  endwhile
 endwhile
-
 headmsg "Done!" 71
 playsound 'cymbals.wav'
