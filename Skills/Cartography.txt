@@ -1,13 +1,48 @@
 /////////////////////////////////////////////
-// UO Steam Cartography Trainer Macro
+// UO Steam Cartography Training Script
 // for Outlands
 //
-// Steps for using:
-// 1) Have blank maps
-// 2) Have mapmakers pen
-// 3) !IMPORTANT : Attempt to make one of the items you want so it sets Make Last
-// 4) Set to [X] Loop, run
+// Crafts maps until you are 120.
 //
+// How to use?
+// -----------
+// 1) Stock a container with blank maps
+// 2) Have a trash can nearby
+// 3) Stock pack with pens
+// 4) Run script
+//
+// If running from bank:
+// ---------------------
+// 1) Open bank, leave it open, select container in bank
+// 2) Banks have a trash barrel - use that
+//
+// If running from home:
+// ---------------------
+// 1) Locate container with your blank maps
+// 2) Place a trash barrel nearby
+//
+// Sounds:
+// -------
+// ..\UOSteam\Sounds\UhOh.wav
+// ..\UOSteam\Sounds\Cymbals.wav
+//
+// Script not running?
+//
+//    Clear your aliases. Go to Macros-Active Objects, and clear 
+//    all Active Objects. 
+//
+// Script buggy?
+//
+//    DO NOT share profiles between characters, it will confuse
+//    the aliases.
+//
+// Notes:
+// ------
+// If the trash can gets full it may not empty. 
+// Just let the macro run until it empties. Then
+// it will continue.
+//
+// UOSTEAM COPY-PASTE BELOW THIS LINE
 /////////////////////////////////////////////
 
 // 
@@ -18,34 +53,93 @@ if counttype 0xfbf 'any' 'backpack' < 1
     stop
 endif
 
-// 
-// Map check
 //
-if counttype 0x14ec '2955' 'backpack' < 1
-    headmsg 'I have no blank maps!' '88'
-    stop
+// Materials bag
+//
+if not @findobject 'matsbag'
+  headmsg 'Select container or bag with blank maps' 71
+  promptalias 'matsbag'
 endif
 
 //
 // Trash can
 //
 if not findalias 'trash'
-    sysmsg "Select a trash barrel"
+    sysmsg "Select a trash barrel" 71
     promptalias 'trash'
 endif
 
 //
-// Make last map
+// Loop until done
 //
-@findtype 0xfbf 'any' 'backpack'  
-useobject 'found'
-pause 100
-waitforgump 0x38920abd 5000
-replygump 0x38920abd 7
-pause 500
+while skill 'Cartography' < 120
 
-// Dump to trash
-while @findtype 0x14ec 2669 'backpack'
-    movetype 0x14ec 'backpack' 'trash' 0 0 0 2669 1
-    pause 1000
+	//
+	// Restock
+	//
+	if counttype 0x14ec '2955' 'backpack' < 10
+	  useobject 'matsbag'
+	  pause 750
+	  movetype 0x14ec 'matsbag' 'backpack' 0 0 0 'any' 500
+	  pause 1200
+	endif
+
+	//
+	// Check Restock
+	//
+	if counttype 0x14ec '2955' 'backpack' < 10
+		headmsg "I cannot restock blank maps!" 32
+		playsound 'uhoh.wav'
+		stop
+	endif
+
+	//
+	// Check Pens
+	//
+	if not @findtype 0xfbf '2575' 'backpack'
+		headmsg "I have no pens!" 32
+		playsound 'uhoh.wav'
+		stop
+	endif
+
+	//
+	// Make
+	//
+	if skill 'cartography' < 75
+	  usetype 0xfbf 'any' 'backpack'
+	  waitforgump 0x38920abd 15000
+	  replygump 0x38920abd 100
+	  waitforgump 0x38920abd 15000
+	  replygump 0x38920abd 201
+	  waitforgump 0x38920abd 15000
+	  waitforgump 0x38920abd 15000
+	elseif skill 'cartography' < 100
+	  usetype 0xfbf 'any' 'backpack'
+	  waitforgump 0x38920abd 15000
+	  replygump 0x38920abd 100
+	  waitforgump 0x38920abd 15000
+	  replygump 0x38920abd 202
+	  waitforgump 0x38920abd 15000
+	  waitforgump 0x38920abd 15000
+	elseif skill 'cartography' < 120
+	  usetype 0xfbf 'any' 'backpack'
+	  waitforgump 0x38920abd 15000
+	  replygump 0x38920abd 100
+	  waitforgump 0x38920abd 15000
+	  replygump 0x38920abd 203
+	  waitforgump 0x38920abd 15000
+	  waitforgump 0x38920abd 15000
+	else
+	  break
+	endif
+
+	// Dump to trash
+	while @findtype 0x14ec 2669 'backpack'
+	    movetype 0x14ec 'backpack' 'trash' 0 0 0 2669 1
+	    pause 1000
+	endwhile
+
 endwhile
+
+headmsg "Done!" 71
+playsound 'cymbals.wav'
