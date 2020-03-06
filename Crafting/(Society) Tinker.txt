@@ -83,8 +83,8 @@ sysmsg "UOSteam Tinker Society Macro" 75
 @createlist 'make'
 //
 // MODIFY START -------->>>
-@pushlist 'material' 'valewood'
-@pushlist 'make' 'fishing pole'
+@pushlist 'material' 'valorite'
+@pushlist 'make' 'spyglass'
 // <<<-------- MODIFY END
 //
 //
@@ -403,8 +403,6 @@ while not @injournal "completed a society job" 'System'
       waitforgump 0x38920abd 5000
       replygump 0x38920abd 11
       waitforgump 0x38920abd 15000
-      replygump 0x38920abd 11
-      waitforgump 0x38920abd 15000
       replygump 0x38920abd 200
       waitforgump 0x38920abd 5000
       waitforgump 0x38920abd 5000
@@ -413,8 +411,6 @@ while not @injournal "completed a society job" 'System'
       waitforgump 0x38920abd 5000
       replygump 0x38920abd 101
       waitforgump 0x38920abd 5000
-      replygump 0x38920abd 11
-      waitforgump 0x38920abd 15000
       replygump 0x38920abd 11
       waitforgump 0x38920abd 15000
       replygump 0x38920abd 201
@@ -427,8 +423,6 @@ while not @injournal "completed a society job" 'System'
       waitforgump 0x38920abd 5000
       replygump 0x38920abd 11
       waitforgump 0x38920abd 15000
-      replygump 0x38920abd 11
-      waitforgump 0x38920abd 15000
       replygump 0x38920abd 202
       waitforgump 0x38920abd 5000
       waitforgump 0x38920abd 5000
@@ -437,8 +431,6 @@ while not @injournal "completed a society job" 'System'
       waitforgump 0x38920abd 5000
       replygump 0x38920abd 101
       waitforgump 0x38920abd 5000
-      replygump 0x38920abd 11
-      waitforgump 0x38920abd 15000
       replygump 0x38920abd 11
       waitforgump 0x38920abd 15000
       replygump 0x38920abd 203
@@ -451,8 +443,6 @@ while not @injournal "completed a society job" 'System'
       waitforgump 0x38920abd 5000
       replygump 0x38920abd 11
       waitforgump 0x38920abd 15000
-      replygump 0x38920abd 11
-      waitforgump 0x38920abd 15000
       replygump 0x38920abd 204
       waitforgump 0x38920abd 5000
       waitforgump 0x38920abd 5000
@@ -461,8 +451,6 @@ while not @injournal "completed a society job" 'System'
       waitforgump 0x38920abd 5000
       replygump 0x38920abd 101
       waitforgump 0x38920abd 5000
-      replygump 0x38920abd 11
-      waitforgump 0x38920abd 15000
       replygump 0x38920abd 11
       waitforgump 0x38920abd 15000
       replygump 0x38920abd 205
@@ -475,8 +463,6 @@ while not @injournal "completed a society job" 'System'
       waitforgump 0x38920abd 5000
       replygump 0x38920abd 11
       waitforgump 0x38920abd 15000
-      replygump 0x38920abd 11
-      waitforgump 0x38920abd 15000
       replygump 0x38920abd 206
       waitforgump 0x38920abd 5000
       waitforgump 0x38920abd 5000
@@ -485,8 +471,6 @@ while not @injournal "completed a society job" 'System'
       waitforgump 0x38920abd 5000
       replygump 0x38920abd 101
       waitforgump 0x38920abd 5000
-      replygump 0x38920abd 11
-      waitforgump 0x38920abd 15000
       replygump 0x38920abd 11
       waitforgump 0x38920abd 15000
       replygump 0x38920abd 207
@@ -499,8 +483,6 @@ while not @injournal "completed a society job" 'System'
       waitforgump 0x38920abd 5000
       replygump 0x38920abd 11
       waitforgump 0x38920abd 15000
-      replygump 0x38920abd 11
-      waitforgump 0x38920abd 15000
       replygump 0x38920abd 208
       waitforgump 0x38920abd 5000
       waitforgump 0x38920abd 5000
@@ -510,8 +492,6 @@ while not @injournal "completed a society job" 'System'
       waitforgump 0x38920abd 5000
       replygump 0x38920abd 101
       waitforgump 0x38920abd 5000
-      replygump 0x38920abd 11
-      waitforgump 0x38920abd 15000
       replygump 0x38920abd 11
       waitforgump 0x38920abd 15000
       replygump 0x38920abd 209
@@ -950,6 +930,89 @@ while not @injournal "completed a society job" 'System'
       waitforgump 0x38920abd 5000
       waitforgump 0x38920abd 5000
       //
+      // Spyglass
+      //
+    elseif @inlist 'make' 'spyglass' and @inlist 'material' 'iron'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 105
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 200
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'spyglass' and @inlist 'material' 'dull copper'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 105
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 201
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'spyglass' and @inlist 'material' 'shadow iron'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 105
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 202
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'spyglass' and @inlist 'material' 'copper'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 105
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 203
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'spyglass' and @inlist 'material' 'bronze'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 105
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 204
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'spyglass' and @inlist 'material' 'gold'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 105
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 205
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'spyglass' and @inlist 'material' 'agapite'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 105
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 206
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'spyglass' and @inlist 'material' 'verite'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 105
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 207
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'spyglass' and @inlist 'material' 'valorite'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 105
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 208
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+    elseif @inlist 'make' 'spyglass' and @inlist 'material' 'avarite'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 105
+      waitforgump 0x38920abd 5000
+      replygump 0x38920abd 209
+      waitforgump 0x38920abd 5000
+      waitforgump 0x38920abd 5000
+      //
       // Planter spade
       //
     elseif @inlist 'make' 'planter spade' and @inlist 'material' 'iron'
@@ -962,7 +1025,7 @@ while not @injournal "completed a society job" 'System'
       replygump 0x38920abd 201
       waitforgump 0x38920abd 15000
       waitforgump 0x38920abd 15000
-  elseif @inlist 'make' 'planter spade' and @inlist 'material' 'dull copper'
+    elseif @inlist 'make' 'planter spade' and @inlist 'material' 'dull copper'
       usetype 0x1eb8
       waitforgump 0x38920abd 15000
       replygump 0x38920abd 9
@@ -1044,15 +1107,15 @@ while not @injournal "completed a society job" 'System'
       waitforgump 0x38920abd 15000
     elseif @inlist 'make' 'planter spade' and @inlist 'material' 'avarite'
       waitforgump 0x38920abd 15000
-    replygump 0x38920abd 9
-    waitforgump 0x38920abd 15000
-    replygump 0x38920abd 102
-    waitforgump 0x38920abd 15000
-    replygump 0x38920abd 11
-    waitforgump 0x38920abd 15000
-    replygump 0x38920abd 200
-    waitforgump 0x38920abd 15000
-    waitforgump 0x38920abd 15000
+      replygump 0x38920abd 9
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 102
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 200
+      waitforgump 0x38920abd 15000
+      waitforgump 0x38920abd 15000
     else
       playsound 'uhoh.wav'
       headmsg "I cannot figure out what to make!" 32
