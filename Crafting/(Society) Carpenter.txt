@@ -1,75 +1,164 @@
 /////////////////////////////////////////////
-// UO Steam Society Macro for Carpenter
+// UO Steam Society Macro for Carpentry
 // for Outlands
 // by Jewele
 //
 // Crafts a certain number of items
-// required for a society then stops, 
-// alerting you when its done.
+// required for a society then stops, alerting
+// you when its done.
 //
-// This isn't fully AFK - its designed to be
-// monitwoodd. So semi-afk :)
+// This macro only works for items requiring only
+// wood. All other items (manuals, aspect, etc)
+// you will have to make manually.
+//
+// I highly recommend you pack a pony with wood
+// you need for your job and run it in a town
+// with exceptional bonus. Just select pony
+// as ingot source.
+//
+// This macro IS NOT for making exceptionals
+// you want to save. Everything is salvaged.
+// If you want to make exceptionals, use
+// Carpenter.txt and stop when your society
+// is completed.
+//
+// *************************
+// ITEM NAMES -- IMPORTANT!!
+// *************************
+//
+// There are discrepancies between the item name
+// in the society and the item name in your pack.
+// For example : society says 'Platemail gloves'
+// but item name is 'Plate Gloves'
+//
+// Note : Executioner's Axe is Executioners Axe
+//
+// When in doubt, look in my list below.
 //
 // How to use:
 // ===========
-// 1) Stock pack with Saws
-// 2) Set crafting menu to metal you need
-// 3) Set recycle option to 'RECYCLE SINGLE ITEM'
-// 4) Craft 1 item you need for job (sets make last)
-// 5) Add the graphic ID to the list (below)
-// 6) Modify the wood color list code (below)
-// 7) Run script
-// 8) Wait for done alert
+// 1) Stock pack with carpenter saws (10-20)
+// 2) Stock pony with wood, go to Craft Bonus town
+// 3) Modify section below
+// 4) Run
 //
-// Version 1.0
-// -----------
-// First release! yay!
+// Sounds:
+// =======
+// Please make sure following sounds files exist:
+// ...\UOSteam\Sounds\uhoh.wav
+// ...\UOSteam\Sounds\cymbals.wav
+//
+// NOTES:
+// ======
+// * Recycles every 10 items
+// DO NOT, I REPEAT, DO NOT ENABLE [ ] Loop
 //
 // UOSTEAM COPY-PASTE BELOW THIS LINE
 /////////////////////////////////////////////
+sysmsg "UOSteam Carpenter Society Macro" 75
 @removelist 'wood'
 @createlist 'wood'
-@removelist 'graphicid'
-@createlist 'graphicid'
-// MODIFY START --------->
-//
-//
-// Add wood color for job
-pushlist 'wood' 2213      // goldenwood
+@removelist 'make'
+@createlist 'make'
 
-// Add item graphic id for job item
-pushlist 'graphicid' 0x13f8
+//
+// MODIFY START -------->>>
+@pushlist 'wood' 'bronzewood'
+@pushlist 'make' 'bow'
+// <<<-------- MODIFY END
 //
 //
-// <---------- MODIFY END
+// User wood check
+//
+@removelist 'woodcolor'
+@createlist 'woodcolor'
+if @inlist 'wood' 'regular'
+  pushlist 'woodcolor' 0
+elseif @inlist 'wood' 'dullwood'
+  pushlist 'woodcolor' 2419
+elseif @inlist 'wood' 'shadowwood'
+  pushlist 'woodcolor' 2406
+elseif @inlist 'wood' 'copperwood'
+  pushlist 'woodcolor' 2413
+elseif @inlist 'wood' 'bronzewood'
+  pushlist 'woodcolor' 2418
+elseif @inlist 'wood' 'goldwood'
+  pushlist 'woodcolor' 2213
+elseif @inlist 'wood' 'rosewood'
+  pushlist 'woodcolor' 2425
+elseif @inlist 'wood' 'verewood'
+  pushlist 'woodcolor' 2207
+elseif @inlist 'wood' 'valewood'
+  pushlist 'woodcolor' 2219
+elseif @inlist 'wood' 'avarwood'
+  pushlist 'woodcolor' 1763
+else
+  headmsg "ERROR" 44
+  sysmsg "Unknown type of wood requested!" 44
+  stop
+endif
 //
 // Open backpack
 //
 @useobject 'backpack'
 pause 1000
-msg "bank"
-pause 1000
-useskill 'hiding'
 //
 // Set alias
 //
 if not @findalias 'woodbox'
-  sysmsg "Select chest with materials"
+  sysmsg "Select chest or pony with materials"
   promptalias 'woodbox'
 endif
+@useobject 'woodbox'
+pause 2500
 //
-// Move all boards from pack to woodbox (reset)
+// Move all wood from pack to woodbox (reset)
 //
 while @findtype 0x1bd7 'any' 'backpack'
   sysmsg "dumping"
   moveitem  'found' 'woodbox'
-  pause 500
+  pause 2000
 endwhile
 //
-// Loop until its done
+// Check saws
+//
+if not @findtype 0x1034 'any' 'backpack'
+  headmsg 'I have no carpenter saws!' 66
+  playsound 'uhoh.wav'
+  stop
+endif
+//
+// Bring up menu
+//
+@usetype 0x1034
+waitforgump 0x38920abd 5000
+//
+// Select wood
+//
+while not @ingump 0x38920abd wood[0]
+  @replygump 0x38920abd 13
+  waitforgump 0x38920abd 5000
+endwhile
+//
+// Select Recycle
+//
+while not @ingump 0x38920abd 'Recycle All (of Type)'
+  @replygump 0x38920abd 2
+  waitforgump 0x38920abd 5000
+endwhile
+//
+// Make items
 //
 @clearjournal
 while not @injournal "completed a society job" 'System'
+  //
+  // World save
+  //
+  if @injournal 'will save' 'system'
+    sysmsg "pausing for world save" 66
+    pause 30000
+    @clearjournal
+  endif
   //
   // Check weight
   //
@@ -80,77 +169,224 @@ while not @injournal "completed a society job" 'System'
     continue
   endif
   //
-  // Check or restock boards
+  // Verify with player
   //
-  if @counttype 0x1bd7 wood[0] 'backpack' <  25
+  pause 1000
+  sysmsg "Making:" 85
+  sysmsg "make[0]" 88
+  sysmsg "with:" 85
+  sysmsg "wood[0]" 88
+  //
+  // Check or restock wood
+  //
+  if @counttype 0x1bd7 woodcolor[0] 'backpack' <  25
     sysmsg "restocking"
     useobject 'woodbox'
-    pause 1000
-    movetype 0x1bd7 'woodbox' 'backpack' 0 0 0 wood[0] 500
-    pause 1000
+    pause 2500
+    movetype 0x1bd7 'woodbox' 'backpack' 0 0 0 woodcolor[0] 200
+    pause 2500
   endif
   //
-  // Verify boards
+  // Verify wood
   //
-  if @counttype 0x1bd7 wood[0] 'backpack' <  25
+  if @counttype 0x1bd7 woodcolor[0] 'backpack' <  25
     playsound 'uhoh.wav'
-    headmsg 'I cannot restock boards!' '88'
-    pause 5000
-    continue
+    headmsg 'I cannot restock wood!' '88'
+    stop
   endif
   //
-  // Check saws
+  // Check carpenter saws
   //
   if not @findtype 0x1034 'any' 'backpack'
-    headmsg 'I have no saws!' 66
+    headmsg 'I have no carpenter saws!' 66
     playsound 'uhoh.wav'
-    pause 5000
-    continue
+    stop
   endif
   //
-  // Use 3x = sometimes server doesnt respond
+  // Make
   //
-  useobject 'found'
-  pause 100
-  useobject 'found'
-  pause 100
-  useobject 'found'
-  pause 100
+  @removelist 'typeid'
+  @createlist 'typeid'
+  if @inlist 'make' 'bow'
+    pushlist 'typeid' 0x13b2
+    usetype 0x1034
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 100
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 204
+    waitforgump 0x38920abd 15000
+    waitforgump 0x38920abd 15000
+  elseif @inlist 'make' 'crossbow'
+    pushlist 'typeid' 0xf50
+    usetype 0x1034
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 100
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 205
+    waitforgump 0x38920abd 15000
+    waitforgump 0x38920abd 15000
+  elseif @inlist 'make' 'heavy crossbow'
+    pushlist 'typeid' 0x13fd
+    usetype 0x1034
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 100
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 206
+    waitforgump 0x38920abd 15000
+    waitforgump 0x38920abd 15000
+  elseif @inlist 'make' 'club'
+    pushlist 'typeid' 0x13b4
+    usetype 0x1034
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 101
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 200
+    waitforgump 0x38920abd 15000
+    waitforgump 0x38920abd 15000
+  elseif @inlist 'make' 'shepherds crook'
+    pushlist 'typeid' 0xe81
+    usetype 0x1034
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 101
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 201
+    waitforgump 0x38920abd 15000
+    waitforgump 0x38920abd 15000
+  elseif @inlist 'make' 'quarter staff'
+    pushlist 'typeid' 0xe89
+    usetype 0x1034
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 101
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 202
+    waitforgump 0x38920abd 15000
+    waitforgump 0x38920abd 15000
+  elseif @inlist 'make' 'gnarled staff'
+    pushlist 'typeid' 0x13f8
+    usetype 0x1034
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 101
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 203
+    waitforgump 0x38920abd 15000
+    waitforgump 0x38920abd 15000
+  elseif @inlist 'make' 'black staff'
+    pushlist 'typeid' 0xdf0
+    usetype 0x1034
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 101
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 204
+    waitforgump 0x38920abd 15000
+    waitforgump 0x38920abd 15000
+  elseif @inlist 'make' 'wooden shield'
+    pushlist 'typeid' 0x1b7a
+    usetype 0x1034
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 101
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 205
+    waitforgump 0x38920abd 15000
+    waitforgump 0x38920abd 15000
+  elseif @inlist 'make' 'wooden kite shield'
+    pushlist 'typeid' 0x1b79
+    usetype 0x1034
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 101
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 206
+    waitforgump 0x38920abd 15000
+    waitforgump 0x38920abd 15000
+  elseif @inlist 'make' 'harp'
+    pushlist 'typeid' 0xeb2
+    usetype 0x1034
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 102
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 200
+    waitforgump 0x38920abd 15000
+    waitforgump 0x38920abd 15000
+  elseif @inlist 'make' 'drums'
+    pushlist 'typeid' 0xe9c
+    usetype 0x1034
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 102
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 201
+    waitforgump 0x38920abd 15000
+    waitforgump 0x38920abd 15000
+  elseif @inlist 'make' 'lute'
+    pushlist 'typeid' 0xeb3
+    usetype 0x1034
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 102
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 202
+    waitforgump 0x38920abd 15000
+    waitforgump 0x38920abd 15000
+  elseif @inlist 'make' 'tambourine'
+    pushlist 'typeid' 0xe9e
+    usetype 0x1034
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 102
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 203
+    waitforgump 0x38920abd 15000
+    waitforgump 0x38920abd 15000
+  elseif @inlist 'make' 'bamboo flute'
+    pushlist 'typeid' 0x2805
+    usetype 0x1034
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 102
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 204
+    waitforgump 0x38920abd 15000
+    waitforgump 0x38920abd 15000
+  elseif @inlist 'make' 'standing harp'
+    pushlist 'typeid' 0xeb1
+    usetype 0x1034
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 102
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 205
+    waitforgump 0x38920abd 15000
+    waitforgump 0x38920abd 15000
+  endif
   //
-  // Craft last
+  // Check drops
   //
-  waitforgump 0x38920abd 5000
-  replygump 0x38920abd 7
-  // craft response
-  waitforgump 0x38920abd 5000
-  // then dismiss
-  replygump 0x38920abd 0
-  // then wait for item
-  waitforgump 0x38920abd 10000
+  if @findtype 'typeid[0]' 'any' 'ground'
+    headmsg 'I am dropping items! Do I have room in my pack?' '88'
+    playsound 'uhoh.wav'
+    stop
+  endif
   //
   // Recycle
   //
-  while @findtype graphicid[0] 'any' 'backpack'
-    @usetype 0x1034
-    waitforgump 0x38920abd 15000
-    replygump 0x38920abd 3
-    waitfortarget 5000
-    target! 'found'
-    pause 1000
-  endwhile
+  if @counttype typeid[0] 'any' 'backpack' >= 10
+    @canceltarget
+    sysmsg "Recycling" 66
+    usetype 0x1034
+    waitforgump 0x38920abd 5000
+    while @findtype typeid[0] 'any' 'backpack'
+      waitforgump 0x38920abd 2000
+      replygump 0x38920abd 3
+      waitfortarget 5000
+      target! 'found'
+      pause 2500
+    endwhile
+  endif
 endwhile
-
 //
 // Burn off the extras if found
 //
-while @findtype graphicid[0] 'any' 'backpack'
+while @findtype typeid[0] 'any' 'backpack'
   @usetype 0x1034
-  waitforgump 0x38920abd 15000
+  waitforgump 0x38920abd 5000
   replygump 0x38920abd 3
   waitfortarget 5000
   target! 'found'
-  pause 1000
+  pause 5000
 endwhile
-
 playsound 'cymbals.wav'
 headmsg "All done!" 55

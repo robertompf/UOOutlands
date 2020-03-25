@@ -51,7 +51,7 @@
 // the necessary arcane scrolls in your pack. Note :
 // the final item will be recycled if using this script!
 //
-// For regular wood, just enter 'wood' in list 'material'
+// For regular wood, just enter 'regular' in list 'material'
 //
 // Item names:
 // ===========
@@ -66,13 +66,10 @@
 // ...\UOSteam\Sounds\uhoh.wav
 // ...\UOSteam\Sounds\cymbals.wav
 //
-// Version history:
-// ================
-// 2.0 - Removed all version 1.x notes
-//
 // NOTES:
 // ======
 // * Recycles every 10 items
+// DO NOT, I REPEAT, DO NOT ENABLE [ ] Loop
 //
 // UOSTEAM COPY-PASTE BELOW THIS LINE
 /////////////////////////////////////////////
@@ -81,10 +78,13 @@ sysmsg "UOSteam Tinker Society Macro" 75
 @createlist 'material'
 @removelist 'make'
 @createlist 'make'
+@removelist 'typeid'
+@createlist 'typeid'
+
 //
 // MODIFY START -------->>>
-@pushlist 'material' 'valorite'
-@pushlist 'make' 'spyglass'
+@pushlist 'material' 'dull copper'
+@pushlist 'make' 'trap removal tool'
 // <<<-------- MODIFY END
 //
 //
@@ -114,7 +114,7 @@ elseif @inlist 'material' 'valorite'
   @pushlist! 'orecolor' 2219
 elseif @inlist 'material' 'avarite'
   @pushlist! 'orecolor' 1763
-elseif @inlist 'material' 'wood'
+elseif @inlist 'material' 'regular'
   @pushlist! 'woodcolor' 0
 elseif @inlist 'material' 'dullwood'
   @pushlist! 'woodcolor' 2419
@@ -140,39 +140,6 @@ else
   stop
 endif
 //
-// User item check
-//
-@removelist 'makeid'
-@createlist 'makeid'
-if @inlist 'make' 'skinning knife'
-  @pushlist! 'makeid' 0x2d20
-elseif @inlist 'make' 'pickaxe'
-  @pushlist! 'makeid' 0xe86
-elseif @inlist 'make' 'hatchet'
-  @pushlist! 'makeid' 0xf44
-elseif @inlist 'make' 'shovel'
-  @pushlist! 'makeid' 0xf39
-elseif @inlist 'make' 'fishing pole'
-  @pushlist! 'makeid' 0xdc0
-elseif @inlist 'make' 'lockpicks'
-  @pushlist! 'makeid' 0x14fd
-elseif @inlist 'make' 'trap removal tool'
-  @pushlist! 'makeid' 0x7149
-elseif @inlist 'make' 'identification wand'
-  @pushlist! 'makeid' 0x5010
-  @pushlist! 'matcode' 0x1bf2
-elseif @inlist 'make' 'container identification wand'
-  @pushlist! 'makeid' 0x500f
-elseif @inlist 'make' 'spyglass'
-  @pushlist! 'makeid' 0x14f5
-elseif @inlist 'make' 'planter spade'
-  @pushlist! 'makeid' 0x74ac
-else
-  headmsg "ERROR" 44
-  sysmsg "Unknown type of item requested!" 44
-  stop
-endif
-//
 // Open backpack
 //
 @useobject 'backpack'
@@ -184,10 +151,13 @@ if not @findalias 'matbag'
   sysmsg "Select chest or pony with materials"
   promptalias 'matbag'
 endif
+@useobject 'matbag'
+pause 2500
 //
 // Move all ingots from pack to matbag (reset)
 //
 while @findtype 0x1bf2 'any' 'backpack'
+  sysmsg "dumping"
   moveitem  'found' 'matbag'
   pause 2000
 endwhile
@@ -195,27 +165,17 @@ endwhile
 // Move all wood from pack to matbag (reset)
 //
 while @findtype 0x1bd7 'any' 'backpack'
+  sysmsg "dumping"
   moveitem  'found' 'matbag'
   pause 2000
 endwhile
-//
-// Verify with player
-//
-pause 1000
-sysmsg "Making:" 85
-sysmsg "make[0]" 68
-sysmsg "with material:" 85
-sysmsg "material[0]" 68
-sysmsg "Starting in 2 seconds..." 85
-pause 2000
 //
 // Check tinker tools
 //
 if not @findtype 0x1eb8 'any' 'backpack'
   headmsg 'I have no tinker tools!' 66
   playsound 'uhoh.wav'
-  pause 5000
-  continue
+  stop
 endif
 //
 // Bring up menu
@@ -230,7 +190,7 @@ while not @ingump 0x38920abd 'Recycle All (of Type)'
   waitforgump 0x38920abd 5000
 endwhile
 //
-// Loop until its done
+// Make items
 //
 @clearjournal
 while not @injournal "completed a society job" 'System'
@@ -252,22 +212,22 @@ while not @injournal "completed a society job" 'System'
     continue
   endif
   //
-  // Check drops
+  // Verify with player
   //
-  if @findtype 'makeid[0]' 'any' 'ground'
-    headmsg 'I am dropping items! Do I have room in my pack?' '88'
-    playsound 'uhoh.wav'
-    pause 5000
-    continue
-  endif
+  pause 1000
+  sysmsg "Making:" 85
+  sysmsg "make[0]" 88
+  sysmsg "with:" 85
+  sysmsg "material[0]" 88
   //
   // Check or restock ingots
   //
   if list 'orecolor' > 0 and @counttype 0x1bf2 orecolor[0] 'backpack' <  25
+    sysmsg "restocking"
     useobject 'matbag'
-    pause 2500
+    pause 1000
     movetype 0x1bf2 'matbag' 'backpack' 0 0 0 orecolor[0] 100
-    pause 2500
+    pause 1000
   endif
   //
   // Verify ingots
@@ -275,13 +235,13 @@ while not @injournal "completed a society job" 'System'
   if list 'orecolor' > 0 and @counttype 0x1bf2 orecolor[0] 'backpack' <  25
     playsound 'uhoh.wav'
     headmsg 'I cannot restock ingots!' '88'
-    pause 5000
-    continue
+    stop
   endif
   //
   // Check or restock boards
   //
   if list 'woodcolor' > 0 and @counttype 0x1bd7 woodcolor[0] 'backpack' <  25
+    sysmsg "restocking"
     useobject 'matbag'
     pause 2500
     movetype 0x1bd7 'matbag' 'backpack' 0 0 0 woodcolor[0] 100
@@ -293,8 +253,7 @@ while not @injournal "completed a society job" 'System'
   if list 'woodcolor' > 0 and @counttype 0x1bd7 woodcolor[0] 'backpack' <  25
     playsound 'uhoh.wav'
     headmsg 'I cannot restock boards!' '88'
-    pause 5000
-    continue
+    stop
   endif
   //
   // Check tinker tools
@@ -302,13 +261,43 @@ while not @injournal "completed a society job" 'System'
   if not @findtype 0x1eb8 'any' 'backpack'
     headmsg 'I have no tinker tools!' 66
     playsound 'uhoh.wav'
-    pause 5000
-    continue
+    stop
   endif
   //
-  // Make first ime
+  // First time we've made this item
   //
-  if list 'make' > 0
+  if list 'make' < 2
+    //
+    // Set typeid for recycles
+    //
+    if @inlist 'make' 'skinning knife'
+      @pushlist! 'typeid' 0x2d20
+    elseif @inlist 'make' 'pickaxe'
+      @pushlist! 'typeid' 0xe86
+    elseif @inlist 'make' 'hatchet'
+      @pushlist! 'typeid' 0xf44
+    elseif @inlist 'make' 'shovel'
+      @pushlist! 'typeid' 0xf39
+    elseif @inlist 'make' 'fishing pole'
+      @pushlist! 'typeid' 0xdc0
+    elseif @inlist 'make' 'lockpicks'
+      @pushlist! 'typeid' 0x14fd
+    elseif @inlist 'make' 'trap removal tool'
+      @pushlist! 'typeid' 0x7149
+    elseif @inlist 'make' 'identification wand'
+      @pushlist! 'typeid' 0x5010
+      @pushlist! 'matcode' 0x1bf2
+    elseif @inlist 'make' 'container identification wand'
+      @pushlist! 'typeid' 0x500f
+    elseif @inlist 'make' 'spyglass'
+      @pushlist! 'typeid' 0x14f5
+    elseif @inlist 'make' 'planter spade'
+      @pushlist! 'typeid' 0x74ac
+    else
+      playsound 'uhoh.wav'
+      headmsg "I cannot figure out what to make!" 32
+      stop
+    endif
     //
     // Skinning Knife
     //
@@ -393,6 +382,184 @@ while not @injournal "completed a society job" 'System'
       replygump 0x38920abd 209
       waitforgump 0x38920abd 5000
       waitforgump 0x38920abd 5000
+      //
+      // lockpicks
+      //
+    elseif @inlist 'make' 'lockpicks' and @inlist 'material' 'iron'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 102
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 200
+      waitforgump 0x38920abd 15000
+      waitforgump 0x38920abd 15000
+    elseif @inlist 'make' 'lockpicks' and @inlist 'material' 'dull copper'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 102
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 201
+      waitforgump 0x38920abd 15000
+      waitforgump 0x38920abd 15000
+    elseif @inlist 'make' 'lockpicks' and @inlist 'material' 'shadow iron'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 102
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 202
+      waitforgump 0x38920abd 15000
+      waitforgump 0x38920abd 15000
+    elseif @inlist 'make' 'lockpicks' and @inlist 'material' 'copper'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 102
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 203
+      waitforgump 0x38920abd 15000
+      waitforgump 0x38920abd 15000
+    elseif @inlist 'make' 'lockpicks' and @inlist 'material' 'bronze'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 102
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 204
+      waitforgump 0x38920abd 15000
+      waitforgump 0x38920abd 15000
+    elseif @inlist 'make' 'lockpicks' and @inlist 'material' 'gold'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 102
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 205
+      waitforgump 0x38920abd 15000
+      waitforgump 0x38920abd 15000
+    elseif @inlist 'make' 'lockpicks' and @inlist 'material' 'agapite'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 102
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 206
+      waitforgump 0x38920abd 15000
+      waitforgump 0x38920abd 15000
+    elseif @inlist 'make' 'lockpicks' and @inlist 'material' 'verite'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 102
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 207
+      waitforgump 0x38920abd 15000
+      waitforgump 0x38920abd 15000
+    elseif @inlist 'make' 'lockpicks' and @inlist 'material' 'valorite'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 102
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 208
+      waitforgump 0x38920abd 15000
+      waitforgump 0x38920abd 15000
+    elseif @inlist 'make' 'lockpicks' and @inlist 'material' 'avarite'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 102
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 209
+      waitforgump 0x38920abd 15000
+      waitforgump 0x38920abd 15000
+      //
+      // Trap Removal Tools
+      //
+    elseif @inlist 'make' 'trap removal tool' and @inlist 'material' 'iron'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 103
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 206
+      waitforgump 0x38920abd 15000
+      waitforgump 0x38920abd 15000
+    elseif @inlist 'make' 'trap removal tool' and @inlist 'material' 'dull copper'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 103
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 207
+      waitforgump 0x38920abd 15000
+      waitforgump 0x38920abd 15000
+    elseif @inlist 'make' 'trap removal tool' and @inlist 'material' 'shadow iron'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 103
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 208
+      waitforgump 0x38920abd 15000
+      waitforgump 0x38920abd 15000
+    elseif @inlist 'make' 'trap removal tool' and @inlist 'material' 'copper'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 103
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 209
+      waitforgump 0x38920abd 15000
+      waitforgump 0x38920abd 15000
+    elseif @inlist 'make' 'trap removal tool' and @inlist 'material' 'bronze'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 103
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 200
+      waitforgump 0x38920abd 15000
+      waitforgump 0x38920abd 15000
+    elseif @inlist 'make' 'trap removal tool' and @inlist 'material' 'gold'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 103
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 201
+      waitforgump 0x38920abd 15000
+      waitforgump 0x38920abd 15000
+    elseif @inlist 'make' 'trap removal tool' and @inlist 'material' 'agapite'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 103
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 202
+      waitforgump 0x38920abd 15000
+      waitforgump 0x38920abd 15000
+    elseif @inlist 'make' 'trap removal tool' and @inlist 'material' 'verite'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 103
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 203
+      waitforgump 0x38920abd 15000
+      waitforgump 0x38920abd 15000
+    elseif @inlist 'make' 'trap removal tool' and @inlist 'material' 'valorite'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 103
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 204
+      waitforgump 0x38920abd 15000
+      waitforgump 0x38920abd 15000
+    elseif @inlist 'make' 'trap removal tool' and @inlist 'material' 'avarite'
+      usetype 0x1eb8
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 103
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 11
+      waitforgump 0x38920abd 15000
+      replygump 0x38920abd 205
+      waitforgump 0x38920abd 15000
+      waitforgump 0x38920abd 15000
       //
       // Pickaxe
       //
@@ -1032,7 +1199,7 @@ while not @injournal "completed a society job" 'System'
       waitforgump 0x38920abd 15000
       replygump 0x38920abd 102
       waitforgump 0x38920abd 15000
-      replygump 0x38920abd 201
+      replygump 0x38920abd 202
       waitforgump 0x38920abd 15000
       waitforgump 0x38920abd 15000
     elseif @inlist 'make' 'planter spade' and @inlist 'material' 'shadow iron'
@@ -1042,7 +1209,7 @@ while not @injournal "completed a society job" 'System'
       waitforgump 0x38920abd 15000
       replygump 0x38920abd 102
       waitforgump 0x38920abd 15000
-      replygump 0x38920abd 201
+      replygump 0x38920abd 203
       waitforgump 0x38920abd 15000
       waitforgump 0x38920abd 15000
     elseif @inlist 'make' 'planter spade' and @inlist 'material' 'copper'
@@ -1052,7 +1219,7 @@ while not @injournal "completed a society job" 'System'
       waitforgump 0x38920abd 15000
       replygump 0x38920abd 102
       waitforgump 0x38920abd 15000
-      replygump 0x38920abd 201
+      replygump 0x38920abd 204
       waitforgump 0x38920abd 15000
       waitforgump 0x38920abd 15000
     elseif @inlist 'make' 'planter spade' and @inlist 'material' 'bronze'
@@ -1062,7 +1229,7 @@ while not @injournal "completed a society job" 'System'
       waitforgump 0x38920abd 15000
       replygump 0x38920abd 102
       waitforgump 0x38920abd 15000
-      replygump 0x38920abd 201
+      replygump 0x38920abd 205
       waitforgump 0x38920abd 15000
       waitforgump 0x38920abd 15000
     elseif @inlist 'make' 'planter spade' and @inlist 'material' 'gold'
@@ -1072,7 +1239,7 @@ while not @injournal "completed a society job" 'System'
       waitforgump 0x38920abd 15000
       replygump 0x38920abd 102
       waitforgump 0x38920abd 15000
-      replygump 0x38920abd 201
+      replygump 0x38920abd 206
       waitforgump 0x38920abd 15000
       waitforgump 0x38920abd 15000
     elseif @inlist 'make' 'planter spade' and @inlist 'material' 'agapite'
@@ -1082,7 +1249,7 @@ while not @injournal "completed a society job" 'System'
       waitforgump 0x38920abd 15000
       replygump 0x38920abd 102
       waitforgump 0x38920abd 15000
-      replygump 0x38920abd 201
+      replygump 0x38920abd 207
       waitforgump 0x38920abd 15000
       waitforgump 0x38920abd 15000
     elseif @inlist 'make' 'planter spade' and @inlist 'material' 'verite'
@@ -1092,20 +1259,20 @@ while not @injournal "completed a society job" 'System'
       waitforgump 0x38920abd 15000
       replygump 0x38920abd 102
       waitforgump 0x38920abd 15000
-      replygump 0x38920abd 201
+      replygump 0x38920abd 208
       waitforgump 0x38920abd 15000
       waitforgump 0x38920abd 15000
     elseif @inlist 'make' 'planter spade' and @inlist 'material' 'valorite'
-      usetype 0x1eb8
       waitforgump 0x38920abd 15000
       replygump 0x38920abd 9
       waitforgump 0x38920abd 15000
       replygump 0x38920abd 102
       waitforgump 0x38920abd 15000
-      replygump 0x38920abd 201
+      replygump 0x38920abd 209
       waitforgump 0x38920abd 15000
       waitforgump 0x38920abd 15000
     elseif @inlist 'make' 'planter spade' and @inlist 'material' 'avarite'
+      usetype 0x1eb8
       waitforgump 0x38920abd 15000
       replygump 0x38920abd 9
       waitforgump 0x38920abd 15000
@@ -1117,36 +1284,34 @@ while not @injournal "completed a society job" 'System'
       waitforgump 0x38920abd 15000
       waitforgump 0x38920abd 15000
     else
-      playsound 'uhoh.wav'
-      headmsg "I cannot figure out what to make!" 32
+      headmsg "ERROR" 44
+      sysmsg "Unknown type of item requested!" 44
       stop
     endif
     //
     // signal remake
     //
-    @clearlist 'make'
+    @pushlist 'make' 'remake'
+  else
     //
     // remake
     //
-  else
     usetype 0x1eb8
     waitforgump 0x38920abd 15000
     replygump 0x38920abd 7
     waitforgump 0x38920abd 15000
     waitforgump 0x38920abd 15000
   endif
+  msg "Guards"
   //
   // Recycle
   //
-  if @counttype makeid[0] 'any' 'backpack' >= 10
+  if @counttype typeid[0] 'any' 'backpack' >= 10
     @canceltarget
     sysmsg "Recycling" 66
-    //
-    // Use tools
-    //
-    usetype 0x1eb8
+     usetype 0x1eb8
     waitforgump 0x38920abd 5000
-    while @findtype makeid[0] 'any' 'backpack'
+    while @findtype typeid[0] 'any' 'backpack'
       waitforgump 0x38920abd 2000
       replygump 0x38920abd 3
       waitfortarget 5000
@@ -1158,7 +1323,7 @@ endwhile
 //
 // Burn off the extras if found
 //
-while @findtype makeid[0] 'any' 'backpack'
+while @findtype typeid[0] 'any' 'backpack'
   @usetype 0x1eb8
   waitforgump 0x38920abd 5000
   replygump 0x38920abd 3

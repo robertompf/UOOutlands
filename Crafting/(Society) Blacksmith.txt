@@ -48,13 +48,10 @@
 // ...\UOSteam\Sounds\uhoh.wav
 // ...\UOSteam\Sounds\cymbals.wav
 //
-// Version history:
-// ================
-// 2.0 - Removed all version 1.x notes
-//
 // NOTES:
 // ======
 // * Recycles every 10 items
+// DO NOT, I REPEAT, DO NOT ENABLE [ ] Loop
 //
 // UOSTEAM COPY-PASTE BELOW THIS LINE
 /////////////////////////////////////////////
@@ -63,7 +60,7 @@ sysmsg "UOSteam Blacksmith Society Macro" 75
 @createlist 'ore'
 @removelist 'make'
 @createlist 'make'
-@createtimer 'gump'
+
 //
 // MODIFY START -------->>>
 @pushlist 'ore' 'iron'
@@ -71,7 +68,7 @@ sysmsg "UOSteam Blacksmith Society Macro" 75
 // <<<-------- MODIFY END
 //
 //
-// User ore check
+// User material check
 //
 @removelist 'orecolor'
 @createlist 'orecolor'
@@ -100,134 +97,7 @@ else
   sysmsg "Unknown type of ore requested!" 44
   stop
 endif
-//
-// User item check
-//
-@removelist 'makeid'
-@createlist 'makeid'
-if @inlist 'make' 'ringmail gorget'
-  pushlist 'makeid' 0x13d6
-elseif @inlist 'make' 'ringmail gloves'
-  pushlist 'makeid' 0x13f2
-elseif @inlist 'make' 'ringmail helm'
-  pushlist 'makeid' 0x140b
-elseif @inlist 'make' 'ringmail arms'
-  pushlist 'makeid' 0x13ef
-elseif @inlist 'make' 'ringmail legs'
-  pushlist 'makeid' 0x13f1
-elseif @inlist 'make' 'ringmail skirt'
-  pushlist 'makeid' 0x1c09
-elseif @inlist 'make' 'ringmail chest'
-  pushlist 'makeid' 0x13ed
-elseif @inlist 'make' 'chainmail gorget'
-  pushlist 'makeid' 0x13c7
-elseif @inlist 'make' 'chainmail gloves'
-  pushlist 'makeid' 0x13f2
-elseif @inlist 'make' 'chainmail coif'
-  pushlist 'makeid' 0x13c0
-elseif @inlist 'make' 'chainmail arms'
-  pushlist 'makeid' 0x13ef
-elseif @inlist 'make' 'chainmail legs'
-  pushlist 'makeid' 0x13c3
-elseif @inlist 'make' 'chainmail skirt'
-  pushlist 'makeid' 0x1c09
-elseif @inlist 'make' 'chainmail chest'
-  pushlist 'makeid' 0x13c4
-elseif @inlist 'make' 'plate gorget'
-  pushlist 'makeid' 0x1413
-elseif @inlist 'make' 'plate gloves'
-  pushlist 'makeid' 0x1418
-elseif @inlist 'make' 'plate helm'
-  pushlist 'makeid' 0x1412
-elseif @inlist 'make' 'plate arms'
-  pushlist 'makeid' 0x1417
-elseif @inlist 'make' 'plate legs'
-  pushlist 'makeid' 0x141a
-elseif @inlist 'make' 'plate skirt'
-  pushlist 'makeid' 0x1c09
-elseif @inlist 'make' 'plate chest'
-  pushlist 'makeid' 0x1416
-elseif @inlist 'make' 'female plate chest'
-  pushlist 'makeid' 0x1c05
-elseif @inlist 'make' 'orc helm'
-  pushlist 'makeid' 0x1f0b
-elseif @inlist 'make' 'bascinet'
-  pushlist 'makeid' 0x140c
-elseif @inlist 'make' 'close helm'
-  pushlist 'makeid' 0x1409
-elseif @inlist 'make' 'norse helm'
-  pushlist 'makeid' 0x140f
-elseif @inlist 'make' 'buckler'
-  pushlist 'makeid' 0x1b73
-elseif @inlist 'make' 'metal shield'
-  pushlist 'makeid' 0x1b7b
-elseif @inlist 'make' 'bronze shield'
-  pushlist 'makeid' 0x1b72
-elseif @inlist 'make' 'metal kite shield'
-  pushlist 'makeid' 0x1b75
-elseif @inlist 'make' 'heater shield'
-  pushlist 'makeid' 0x1b77
-elseif @inlist 'make' 'order shield'
-  pushlist 'makeid' 0x1bc5
-elseif @inlist 'make' 'chaos shield'
-  pushlist 'makeid' 0x1bc3
-elseif @inlist 'make' 'dagger'
-  pushlist 'makeid' 0xf52
-elseif @inlist 'make' 'kryss'
-  pushlist 'makeid' 0x1401
-elseif @inlist 'make' 'war fork'
-  pushlist 'makeid' 0x1405
-elseif @inlist 'make' 'short spear'
-  pushlist 'makeid' 0x1403
-elseif @inlist 'make' 'pitchfork'
-  pushlist 'makeid' 0xe87
-elseif @inlist 'make' 'spear'
-  pushlist 'makeid' 0xf62
-elseif @inlist 'make' 'hammer pick'
-  pushlist 'makeid' 0x143d
-elseif @inlist 'make' 'war axe'
-  pushlist 'makeid' 0x13b0
-elseif @inlist 'make' 'mace'
-  pushlist 'makeid' 0xf5c
-elseif @inlist 'make' 'maul'
-  pushlist 'makeid' 0x143b
-elseif @inlist 'make' 'war mace'
-  pushlist 'makeid' 0x1407
-elseif @inlist 'make' 'war hammer'
-  pushlist 'makeid' 0x1439
-elseif @inlist 'make' 'cutlass'
-  pushlist 'makeid' 0x1441
-elseif @inlist 'make' 'katana'
-  pushlist 'makeid' 0x13ff
-elseif @inlist 'make' 'scimitar'
-  pushlist 'makeid' 0x13b6
-elseif @inlist 'make' 'broadsword'
-  pushlist 'makeid' 0xf5e
-elseif @inlist 'make' 'longsword'
-  pushlist 'makeid' 0xf61
-elseif @inlist 'make' 'viking sword'
-  pushlist 'makeid' 0x13b9
-elseif @inlist 'make' 'axe'
-  pushlist 'makeid' 0xf49
-elseif @inlist 'make' 'battleaxe'
-  pushlist 'makeid' 0xf47
-elseif @inlist 'make' 'double axe'
-  pushlist 'makeid' 0xf4b
-elseif @inlist 'make' 'executioners axe'
-  pushlist 'makeid' 0xf45
-elseif @inlist 'make' 'large battle axe'
-  pushlist 'makeid' 0x13fb
-elseif @inlist 'make' 'two handed axe'
-  pushlist 'makeid' 0x1443
-elseif @inlist 'make' 'bardiche'
-  pushlist 'makeid' 0xf4d
-elseif @inlist 'make' 'halberd'
-  pushlist 'makeid' 0x143e
-else
-  headmsg "ERROR" 44
-  sysmsg "Unknown type of item requested!" 44
-  stop
-endif
+
 //
 // Open backpack
 //
@@ -240,31 +110,24 @@ if not @findalias 'orebox'
   sysmsg "Select chest or pony with materials"
   promptalias 'orebox'
 endif
+@useobject 'orebox'
+pause 2500
 //
 // Move all ingots from pack to orebox (reset)
 //
 while @findtype 0x1bf2 'any' 'backpack'
+  sysmsg "dumping"
   moveitem  'found' 'orebox'
   pause 2000
 endwhile
-//
-// Verify with player
-//
-pause 1000
-sysmsg "Making:" 85
-sysmsg "make[0]" 68
-sysmsg "with ore:" 85
-sysmsg "ore[0]" 68
-sysmsg "Starting in 2 seconds..." 85
-pause 2000
+
 //
 // Check smith tongs
 //
 if not @findtype 0xfbb 'any' 'backpack'
   headmsg 'I have no smith tongs!' 66
   playsound 'uhoh.wav'
-  pause 5000
-  continue
+  stop
 endif
 //
 // Bring up menu
@@ -274,7 +137,6 @@ waitforgump 0x38920abd 5000
 //
 // Select ore
 //
-// Copper
 if @inlist 'ore' 'copper'
   while not @ingump 0x38920abd 'copper' or @ingump 0x38920abd 'dull copper'
     replygump 0x38920abd 13
@@ -299,7 +161,7 @@ while not @ingump 0x38920abd 'Recycle All (of Type)'
   waitforgump 0x38920abd 5000
 endwhile
 //
-// Loop until its done
+// Make items
 //
 @clearjournal
 while not @injournal "completed a society job" 'System'
@@ -321,22 +183,23 @@ while not @injournal "completed a society job" 'System'
     continue
   endif
   //
-  // Check drops
+  // Verify with player
   //
-  if @findtype 'makeid[0]' 'any' 'ground'
-    headmsg 'I am dropping items! Do I have room in my pack?' '88'
-    playsound 'uhoh.wav'
-    pause 5000
-    continue
-  endif
+  pause 1000
+  sysmsg "Making:" 85
+  sysmsg "make[0]" 88
+  sysmsg "with:" 85
+  sysmsg "ore[0]" 88
+
   //
   // Check or restock ingots
   //
   if @counttype 0x1bf2 orecolor[0] 'backpack' <  25
+    sysmsg "restocking"
     useobject 'orebox'
-    pause 2500
-    movetype 0x1bf2 'orebox' 'backpack' 0 0 0 orecolor[0] 200
-    pause 2500
+    pause 1000
+    movetype 0x1bf2 'orebox' 'backpack' 0 0 0 orecolor[0] 250
+    pause 1000
   endif
   //
   // Verify ingots
@@ -344,8 +207,7 @@ while not @injournal "completed a society job" 'System'
   if @counttype 0x1bf2 orecolor[0] 'backpack' <  25
     playsound 'uhoh.wav'
     headmsg 'I cannot restock ingots!' '88'
-    pause 5000
-    continue
+    stop
   endif
   //
   // Check smith tongs
@@ -353,13 +215,15 @@ while not @injournal "completed a society job" 'System'
   if not @findtype 0xfbb 'any' 'backpack'
     headmsg 'I have no smith tongs!' 66
     playsound 'uhoh.wav'
-    pause 5000
-    continue
-  endif
+    stop
+  endif  
   //
   // Make
   //
+  @removelist 'typeid'
+  @createlist 'typeid'
   if @inlist 'make' 'ringmail gorget'
+    pushlist 'typeid' 0x13d6
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 100
@@ -368,6 +232,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'ringmail gloves'
+    pushlist 'typeid' 0x13f2
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 100
@@ -376,6 +241,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'ringmail helm'
+    pushlist 'typeid' 0x140b
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 100
@@ -384,6 +250,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'ringmail arms'
+    pushlist 'typeid' 0x13ef
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 100
@@ -392,6 +259,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'ringmail legs'
+    pushlist 'typeid' 0x13f1
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 100
@@ -400,6 +268,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'ringmail skirt'
+    pushlist 'typeid' 0x1c09
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 100
@@ -408,6 +277,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'ringmail chest'
+    pushlist 'typeid' 0x13ed
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 100
@@ -416,6 +286,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'chainmail gorget'
+    pushlist 'typeid' 0x13c7
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 101
@@ -424,6 +295,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'chainmail gloves'
+    pushlist 'typeid' 0x13f2
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 101
@@ -432,6 +304,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'chainmail coif'
+    pushlist 'typeid' 0x13c0
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 101
@@ -440,6 +313,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'chainmail arms'
+    pushlist 'typeid' 0x13ef
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 101
@@ -448,6 +322,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'chainmail legs'
+    pushlist 'typeid' 0x13c3
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 101
@@ -456,6 +331,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'chainmail skirt'
+    pushlist 'typeid' 0x1c09
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 101
@@ -464,6 +340,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'chainmail chest'
+    pushlist 'typeid' 0x13c4
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 101
@@ -472,6 +349,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'plate gorget'
+    pushlist 'typeid' 0x1413
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 102
@@ -480,6 +358,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'plate gloves'
+    pushlist 'typeid' 0x1418
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 102
@@ -488,6 +367,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'plate helm'
+    pushlist 'typeid' 0x1412
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 102
@@ -496,6 +376,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'plate arms'
+    pushlist 'typeid' 0x1417
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 102
@@ -504,6 +385,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'plate legs'
+    pushlist 'typeid' 0x141a
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 102
@@ -512,6 +394,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'plate skirt'
+    pushlist 'typeid' 0x1c09
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 102
@@ -520,6 +403,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'plate chest'
+    pushlist 'typeid' 0x1416
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 102
@@ -528,6 +412,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'female plate chest'
+    pushlist 'typeid' 0x1c05
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 102
@@ -536,6 +421,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'orc helm'
+    pushlist 'typeid' 0x1f0b
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 103
@@ -544,6 +430,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'bascinet'
+    pushlist 'typeid' 0x140c
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 103
@@ -552,6 +439,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'close helm'
+    pushlist 'typeid' 0x1409
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 103
@@ -560,6 +448,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'norse helm'
+    pushlist 'typeid' 0x140f
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 103
@@ -568,6 +457,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'buckler'
+    pushlist 'typeid' 0x1b73
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 104
@@ -576,6 +466,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'metal shield'
+    pushlist 'typeid' 0x1b7b
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 104
@@ -584,6 +475,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'bronze shield'
+    pushlist 'typeid' 0x1b72
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 104
@@ -592,6 +484,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'metal kite shield'
+    pushlist 'typeid' 0x1b75
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 104
@@ -600,6 +493,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'heater shield'
+    pushlist 'typeid' 0x1b77
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 104
@@ -608,6 +502,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'order shield'
+    pushlist 'typeid' 0x1bc5
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 104
@@ -616,6 +511,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'chaos shield'
+    pushlist 'typeid' 0x1bc3
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 104
@@ -624,6 +520,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'dagger'
+    pushlist 'typeid' 0xf52
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 105
@@ -632,6 +529,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'kryss'
+    pushlist 'typeid' 0x1401
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 105
@@ -640,6 +538,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'war fork'
+    pushlist 'typeid' 0x1405
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 105
@@ -648,6 +547,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'short spear'
+    pushlist 'typeid' 0x1403
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 105
@@ -656,6 +556,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'pitchfork'
+    pushlist 'typeid' 0xe87
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 105
@@ -664,6 +565,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'spear'
+    pushlist 'typeid' 0xf62
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 105
@@ -672,6 +574,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'hammer pick'
+    pushlist 'typeid' 0x143d
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 106
@@ -680,6 +583,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'war axe'
+    pushlist 'typeid' 0x13b0
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 106
@@ -688,6 +592,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'mace'
+    pushlist 'typeid' 0xf5c
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 106
@@ -696,6 +601,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'maul'
+    pushlist 'typeid' 0x143b
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 106
@@ -704,6 +610,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'war mace'
+    pushlist 'typeid' 0x1407
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 106
@@ -712,6 +619,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'war hammer'
+    pushlist 'typeid' 0x1439
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 106
@@ -720,6 +628,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'cutlass'
+    pushlist 'typeid' 0x1441
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 107
@@ -728,6 +637,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'katana'
+    pushlist 'typeid' 0x13ff
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 107
@@ -736,6 +646,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'scimitar'
+    pushlist 'typeid' 0x13b6
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 107
@@ -744,6 +655,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'broadsword'
+    pushlist 'typeid' 0xf5e
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 107
@@ -752,6 +664,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'longsword'
+    pushlist 'typeid' 0xf61
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 107
@@ -760,6 +673,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'viking sword'
+    pushlist 'typeid' 0x13b9
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 107
@@ -768,6 +682,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'axe'
+    pushlist 'typeid' 0xf49
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 107
@@ -776,6 +691,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'battleaxe'
+    pushlist 'typeid' 0xf47
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 107
@@ -784,6 +700,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'double axe'
+    pushlist 'typeid' 0xf4b
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 107
@@ -792,6 +709,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'executioners axe'
+    pushlist 'typeid' 0xf45
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 107
@@ -800,6 +718,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'large battle axe'
+    pushlist 'typeid' 0x13fb
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 107
@@ -810,6 +729,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'two handed axe'
+    pushlist 'typeid' 0x1443
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 107
@@ -820,6 +740,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'bardiche'
+    pushlist 'typeid' 0xf4d
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 107
@@ -830,6 +751,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'halberd'
+    pushlist 'typeid' 0x143e
     usetype 0xfbb
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 107
@@ -839,19 +761,29 @@ while not @injournal "completed a society job" 'System'
     replygump 0x38920abd 203
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
+  else
+    headmsg "ERROR" 44
+    sysmsg "Unknown type of item requested!" 44
+    stop
+  endif
+  msg "Guards"
+  //
+  // Check drops
+  //
+  if @findtype 'typeid[0]' 'any' 'ground'
+    headmsg 'I am dropping items! Do I have room in my pack?' '88'
+    playsound 'uhoh.wav'
+    stop
   endif
   //
   // Recycle
   //
-  if @counttype makeid[0] 'any' 'backpack' >= 10
+  if @counttype typeid[0] 'any' 'backpack' >= 10
     @canceltarget
     sysmsg "Recycling" 66
-    //
-    // Use tongs
-    //
     usetype 0xfbb
     waitforgump 0x38920abd 5000
-    while @findtype makeid[0] 'any' 'backpack'
+    while @findtype typeid[0] 'any' 'backpack'
       waitforgump 0x38920abd 2000
       replygump 0x38920abd 3
       waitfortarget 5000
@@ -863,7 +795,7 @@ endwhile
 //
 // Burn off the extras if found
 //
-while @findtype makeid[0] 'any' 'backpack'
+while @findtype typeid[0] 'any' 'backpack'
   @usetype 0xfbb
   waitforgump 0x38920abd 5000
   replygump 0x38920abd 3

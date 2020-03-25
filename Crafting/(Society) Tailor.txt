@@ -16,6 +16,12 @@
 // with exceptional bonus. Just select pony
 // as hide source.
 //
+// This macro IS NOT for making exceptionals
+// you want to save. Everything is salvaged.
+// If you want to make exceptionals, use
+// Tailor.txt and stop when your society
+// is completed.
+//
 // *************************
 // ITEM NAMES -- IMPORTANT!!
 // *************************
@@ -38,11 +44,6 @@
 // ...\UOSteam\Sounds\uhoh.wav
 // ...\UOSteam\Sounds\cymbals.wav
 //
-// Version history:
-// ================
-// 1.0 - Copied Smith macro 2.0 and modified
-//       for Tailoring.
-//
 // NOTES:
 // ======
 // * Recycles every 10 items
@@ -54,7 +55,7 @@ sysmsg "UOSteam Tailoring Society Macro" 75
 @createlist 'hide'
 @removelist 'make'
 @createlist 'make'
-@createtimer 'gump'
+
 //
 // MODIFY START -------->>>
 @pushlist 'hide' 'verehide'
@@ -91,68 +92,7 @@ else
   sysmsg "Unknown type of hide requested!" 44
   stop
 endif
-//
-// User item check
-//
-@removelist 'makeid'
-@createlist 'makeid'
-if @inlist 'make' 'bone gorget'
-  pushlist 'makeid' 0x13d6
-elseif @inlist 'make' 'bone gloves'
-  pushlist 'makeid' 0x1455
-elseif @inlist 'make' 'bone helm'
-  pushlist 'makeid' 0x1451
-elseif @inlist 'make' 'bone arms'
-  pushlist 'makeid' 0x1453
-elseif @inlist 'make' 'bone legs'
-  pushlist 'makeid' 0x1457
-elseif @inlist 'make' 'bone skirt'
-  pushlist 'makeid' 0x1c09
-elseif @inlist 'make' 'bone chest'
-  pushlist 'makeid' 0x1454
-elseif @inlist 'make' 'leather gorget'
-  pushlist 'makeid' 0x13d6
-elseif @inlist 'make' 'leather gloves'
-  pushlist 'makeid' 0x13ce
-elseif @inlist 'make' 'leather cap'
-  pushlist 'makeid' 0x1dba
-elseif @inlist 'make' 'leather arms'
-  pushlist 'makeid' 0x13c5
-elseif @inlist 'make' 'leather legs'
-  pushlist 'makeid' 0x13d2
-elseif @inlist 'make' 'leather shorts'
-  pushlist 'makeid' 0x1c01
-elseif @inlist 'make' 'leather skirt'
-  pushlist 'makeid' 0x1c09
-elseif @inlist 'make' 'leather chest'
-  pushlist 'makeid' 0x13d3
-elseif @inlist 'make' 'leather bustier'
-  pushlist 'makeid' 0x1c0b
-elseif @inlist 'make' 'female leather chest'
-  pushlist 'makeid' 0x1c07
-elseif @inlist 'make' 'studded gorget'
-  pushlist 'makeid' 0x13d6
-elseif @inlist 'make' 'studded gloves'
-  pushlist 'makeid' 0x13dd
-elseif @inlist 'make' 'studded cap'
-  pushlist 'makeid' 0x1dba
-elseif @inlist 'make' 'studded arms'
-  pushlist 'makeid' 0x13d4
-elseif @inlist 'make' 'studded legs'
-  pushlist 'makeid' 0x13e1
-elseif @inlist 'make' 'studded skirt'
-  pushlist 'makeid' 0x1c09
-elseif @inlist 'make' 'studded chest'
-  pushlist 'makeid' 0x13e2
-elseif @inlist 'make' 'studded bustier'
-  pushlist 'makeid' 0x1c0d
-elseif @inlist 'make' 'studded female chest'
-  pushlist 'makeid' 0x1c02
-else
-  headmsg "ERROR" 44
-  sysmsg "Unknown type of item requested!" 44
-  stop
-endif
+
 //
 // Open backpack
 //
@@ -165,31 +105,25 @@ if not @findalias 'hidebox'
   sysmsg "Select chest or pony with materials"
   promptalias 'hidebox'
 endif
+@useobject 'hidebox'
+pause 2500
 //
 // Move all hide from pack to hidebox (reset)
 //
 while @findtype 0x1081 'any' 'backpack'
+  sysmsg "dumping"
   moveitem  'found' 'hidebox'
   pause 2000
 endwhile
 //
 // Verify with player
 //
-pause 1000
-sysmsg "Making:" 85
-sysmsg "make[0]" 68
-sysmsg "with hide:" 85
-sysmsg "hide[0]" 68
-sysmsg "Starting in 2 seconds..." 85
-pause 2000
-//
 // Check sewing kits
 //
 if not @findtype 0xf9d 'any' 'backpack'
   headmsg 'I have no sewing kits!' 66
   playsound 'uhoh.wav'
-  pause 5000
-  continue
+  stop
 endif
 //
 // Bring up menu
@@ -211,7 +145,7 @@ while not @ingump 0x38920abd 'Recycle All (of Type)'
   waitforgump 0x38920abd 5000
 endwhile
 //
-// Loop until its done
+// Make items
 //
 @clearjournal
 while not @injournal "completed a society job" 'System'
@@ -233,22 +167,23 @@ while not @injournal "completed a society job" 'System'
     continue
   endif
   //
-  // Check drops
+  // Verify with player
   //
-  if @findtype 'makeid[0]' 'any' 'ground'
-    headmsg 'I am dropping items! Do I have room in my pack?' '88'
-    playsound 'uhoh.wav'
-    pause 5000
-    continue
-  endif
+  pause 1000
+  sysmsg "Making:" 85
+  sysmsg "make[0]" 88
+  sysmsg "with:" 85
+  sysmsg "hide[0]" 88
+
   //
   // Check or restock hides
   //
   if @counttype 0x1081 hidecolor[0] 'backpack' <  25
+    sysmsg "restocking"
     useobject 'hidebox'
-    pause 2500
+    pause 1000
     movetype 0x1081 'hidebox' 'backpack' 0 0 0 hidecolor[0] 200
-    pause 2500
+    pause 1000
   endif
   //
   // Verify hides
@@ -256,8 +191,7 @@ while not @injournal "completed a society job" 'System'
   if @counttype 0x1081 hidecolor[0] 'backpack' <  25
     playsound 'uhoh.wav'
     headmsg 'I cannot restock hides!' '88'
-    pause 5000
-    continue
+    stop
   endif
   //
   // Check sewing kits
@@ -265,13 +199,15 @@ while not @injournal "completed a society job" 'System'
   if not @findtype 0xf9d 'any' 'backpack'
     headmsg 'I have no sewing kits!' 66
     playsound 'uhoh.wav'
-    pause 5000
-    continue
-  endif
+    stop
+  endif  
   //
   // Make
   //
+  @removelist 'typeid'
+  @createlist 'typeid'
   if @inlist 'make' 'bone gorget'
+    pushlist 'typeid' 0x13d6
     usetype 0xf9d
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 100
@@ -280,6 +216,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'bone gloves'
+    pushlist 'typeid' 0x1455
     usetype 0xf9d
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 100
@@ -288,6 +225,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'bone helm'
+    pushlist 'typeid' 0x1451
     usetype 0xf9d
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 100
@@ -296,6 +234,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'bone arms'
+    pushlist 'typeid' 0x1453
     usetype 0xf9d
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 100
@@ -304,6 +243,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'bone legs'
+    pushlist 'typeid' 0x1457
     usetype 0xf9d
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 100
@@ -312,6 +252,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'bone skirt'
+    pushlist 'typeid' 0x1c09
     usetype 0xf9d
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 100
@@ -320,6 +261,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'bone chest'
+    pushlist 'typeid' 0x1454
     usetype 0xf9d
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 100
@@ -328,6 +270,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'leather gorget'
+    pushlist 'typeid' 0x13d6
     usetype 0xf9d
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 101
@@ -336,6 +279,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'leather gloves'
+    pushlist 'typeid' 0x13ce
     usetype 0xf9d
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 101
@@ -344,6 +288,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'leather cap'
+    pushlist 'typeid' 0x1dba
     usetype 0xf9d
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 101
@@ -352,6 +297,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'leather arms'
+    pushlist 'typeid' 0x13c5
     usetype 0xf9d
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 101
@@ -360,6 +306,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'leather legs'
+    pushlist 'typeid' 0x13d2
     usetype 0xf9d
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 101
@@ -368,6 +315,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'leather shorts'
+    pushlist 'typeid' 0x1c01
     usetype 0xf9d
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 101
@@ -376,6 +324,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'leather skirt'
+    pushlist 'typeid' 0x1c09
     usetype 0xf9d
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 101
@@ -384,6 +333,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'leather chest'
+    pushlist 'typeid' 0x13d3
     usetype 0xf9d
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 101
@@ -392,6 +342,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'leather bustier'
+    pushlist 'typeid' 0x1c0b
     usetype 0xf9d
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 101
@@ -400,6 +351,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'female leather chest'
+    pushlist 'typeid' 0x1c07
     usetype 0xf9d
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 101
@@ -408,6 +360,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'studded gorget'
+    pushlist 'typeid' 0x13d6
     usetype 0xf9d
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 102
@@ -416,6 +369,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'studded gloves'
+    pushlist 'typeid' 0x13dd
     usetype 0xf9d
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 102
@@ -424,6 +378,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'studded cap'
+    pushlist 'typeid' 0x1dba
     usetype 0xf9d
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 102
@@ -432,6 +387,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'studded arms'
+    pushlist 'typeid' 0x13d4
     usetype 0xf9d
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 102
@@ -440,6 +396,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'studded legs'
+    pushlist 'typeid' 0x13e1
     usetype 0xf9d
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 102
@@ -448,6 +405,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'studded skirt'
+    pushlist 'typeid' 0x1c09
     usetype 0xf9d
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 102
@@ -456,6 +414,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'studded chest'
+    pushlist 'typeid' 0x13e2
     usetype 0xf9d
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 102
@@ -464,6 +423,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'studded bustier'
+    pushlist 'typeid' 0x1c0d
     usetype 0xf9d
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 102
@@ -472,6 +432,7 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   elseif @inlist 'make' 'studded female chest'
+    pushlist 'typeid' 0x1c02
     usetype 0xf9d
     waitforgump 0x38920abd 5000
     replygump 0x38920abd 102
@@ -480,18 +441,24 @@ while not @injournal "completed a society job" 'System'
     waitforgump 0x38920abd 5000
     waitforgump 0x38920abd 5000
   endif
+  msg "Guards"
+  //
+  // Check drops
+  //
+  if @findtype 'typeid[0]' 'any' 'ground'
+    headmsg 'I am dropping items! Do I have room in my pack?' '88'
+    playsound 'uhoh.wav'
+    stop
+  endif
   //
   // Recycle
   //
-  if @counttype makeid[0] 'any' 'backpack' >= 10
+  if @counttype typeid[0] 'any' 'backpack' >= 10
     @canceltarget
     sysmsg "Recycling" 66
-    //
-    // Use sewing kits
-    //
     usetype 0xf9d
     waitforgump 0x38920abd 5000
-    while @findtype makeid[0] 'any' 'backpack'
+    while @findtype typeid[0] 'any' 'backpack'
       waitforgump 0x38920abd 2000
       replygump 0x38920abd 3
       waitfortarget 5000
@@ -503,7 +470,7 @@ endwhile
 //
 // Burn off the extras if found
 //
-while @findtype makeid[0] 'any' 'backpack'
+while @findtype typeid[0] 'any' 'backpack'
   @usetype 0xf9d
   waitforgump 0x38920abd 5000
   replygump 0x38920abd 3
