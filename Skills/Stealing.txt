@@ -32,6 +32,7 @@
 //       pony, 1 by 1. The ones that are on cooldown wont move
 //       but the others will move just fine.
 //
+// 1.2 - Updated bottle graphic id (0xf0e)
 //
 // NOTES:
 // ======
@@ -53,7 +54,7 @@
 /////////////////////////////////////////////
 sysmsg "Stealing Script Trainer" 88
 @clearjournal
-sysmsg "Version 1.1" 88
+sysmsg "Version 1.2" 88
 @clearjournal
 @useobject 'backpack'
 pause 1000
@@ -75,7 +76,7 @@ while not dead
   // that are on cooldown
   //
   @clearignorelist
-  while findtype 0x143e 'any' 'backpack'
+  while findtype 0xf0e 'any' 'backpack'
     moveitem  'found' 'pony'
     @ignoreobject 'found'
     pause 1000
