@@ -44,10 +44,14 @@
 // Just uses heal pots to heal
 // Added pause for skill cooldown
 //
+// Version 1.2
+// -----------
+// Switched macro to store bought kryss
+//
 // UOSTEAM COPY-PASTE BELOW THIS LINE
 /////////////////////////////////////////////
 sysmsg "Poisoning Shelf Script" 73
-sysmsg "Version 1.1" 73
+sysmsg "Version 1.2" 73
 @clearjournal
 //
 // Open backpack
