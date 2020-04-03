@@ -21,9 +21,7 @@
 // How to use?
 // -----------
 // 1) Start at home next to shelf
-// 2) Put a _modified_ kryss in your pack
-//    * you can poison it
-//    * you can aspect it
+// 2) Put a _store bought_ kryss in your pack
 // 3) Stock shelf with poison, cure and heal
 // 4) Run script
 //
