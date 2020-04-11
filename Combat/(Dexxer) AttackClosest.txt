@@ -65,8 +65,7 @@
 // ----------------
 // 1.0 complete rewrite
 // 1.1 toggles war mode to clear current combatant
-// 1.2 Removes target prompt to prevent accidentally healing a mob with a heal up
-//
+
 // >> COPY BELOW >>
 /////////////////////////////////////////////
 //
@@ -75,7 +74,6 @@
 @unsetalias 'last'
 @unsetalias 'enemy'
 @cleartargetqueue
-@canceltarget
 //
 // Toggle war mode
 //
@@ -179,7 +177,6 @@ endif
 if @findobject 'enemy' and @inrange 'enemy' 15
   headmsg "*Attacking*" 22
   attack! 'enemy'
-  target! 'enemy'
 else
   headmsg "No targets" 44
 endif

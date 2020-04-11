@@ -1,11 +1,9 @@
 /////////////////////////////////////////////
-// UO Steam Get Closest Enemy Macro (for PVP)
+// UO Steam Attack Nearest for Pet Classes
 // for Outlands
 //
 // Greetings and thank you for your interest in this script!
-// This macro is *primarily* for PVP, and is a "general purpose"
-// script for most players on the shard doing PVP. Its primary
-// purpose is to scan around you for the closest target, sets
+// Its primary purpose is to scan around you for the closest target, sets
 // that target to your 'enemy' alias, and attacks that target.
 //
 // Please please PLEASE read ALL my notes on on how this script 
@@ -17,6 +15,28 @@
 // 2. Record a dress profile named 'default' with your 
 //    weapon equipped (or spellbook, etc).
 // 3. Run macro any time to locate nearest target and attack.
+//
+// Humanoid Filter
+//
+//    If you look at the filter below, it has a "humanoid" entry.
+//    Thus you will pick up any type of player closest to you,
+//    matching the existing filter. Filters will match if you are
+//    a PK murderer or not.
+//
+// Friends list
+// 
+//    Add anything you do not want to target to your friends list. This includes
+//    guild PKs, their pets, guildies who flag grey, etc. Once on that list,
+//    the macro will no longer pick them up.
+//
+// Why not 'transformation'?
+//
+//    See ScriptJournal.txt
+//
+// Why is it attacking my target?
+//
+//    This will highlight your target.
+//    For more notes on this, see ScriptJournal.txt
 //
 // Active target prompts
 //
@@ -53,17 +73,27 @@
 // ----------------
 // 1.0 complete rewrite
 // 1.1 toggles war mode to clear current combatant
-//
 // >> COPY BELOW >> 
 /////////////////////////////////////////////
-
+//
+// Clear existing queues and targets
+//
+@unsetalias 'last'
+@unsetalias 'enemy'
+@cleartargetqueue
 //
 // Toggle war mode
 //
-if not war 'self'
-    warmode 'on'
+if war 'self'
+  warmode 'off'
 endif
-
+//
+// run dress macro
+//
+dress 'default'
+while dressing
+endwhile
+//
 //
 // Create temporary list
 // 
@@ -75,16 +105,28 @@ endif
 //
 for 0 to 20
   if murderer 'self'
+    //
+    // Players > mobs
+    //
     @getenemy 'murderer' 'innocent' 'enemy' 'criminal' 'gray' 'humanoid' 'next'
+    @pushlist! 'enemies' 'enemy'
   else
+    //
+    // PKs > criminals > mobs
+    //
     @getenemy 'murderer' 'enemy' 'criminal' 'gray' 'humanoid' 'next'
+    //
+    // mobs
+    //
+    if not @findobject 'enemy'
+      @getenemy 'murderer' 'enemy' 'criminal' 'gray' 'next'
+    endif
+    @pushlist! 'enemies' 'enemy'
   endif
-  @pushlist! 'enemies' 'enemy'
 endfor
-
 //
 // Create a distances list, seeding from 1
-// 
+//
 @removelist 'distances'
 @createlist 'distances'
 pushlist 'distances' 1
@@ -105,21 +147,33 @@ pushlist 'distances' 15
 
 //
 // Sort by distance
-//  
+//
 @unsetalias 'enemy'
 for 0 to 'distances'
-    if not @findobject 'enemy'
-        for 0 to 'enemies'
-            if @inrange enemies[] distances[] and not dead enemies[]
-                setalias 'enemy' enemies[]
-                break
-            endif
-        endfor
-    else
+  if not @findobject 'enemy'
+    for 0 to 'enemies'
+      if @inrange enemies[] distances[] and not dead enemies[]
+        @setalias 'enemy' enemies[]
         break
-    endif
+      endif
+    endfor
+  else
+    break
+  endif
 endfor
-
+//
+// Leave friends alone (in case you add friend in fight)
+//
+if friend 'enemy'
+  stop
+endif
+//
+// Highlight and set last
+//
+if @findobject 'enemy'
+  @setalias 'last' 'enemy'
+  getenemy 'enemy'
+endif
 //
 // Drop target on enemy
 //
@@ -128,21 +182,22 @@ if @findobject 'enemy' and targetexists
 endif
 
 //
-// run dress macro
-//
-dress 'default'
-while dressing
-endwhile
-
-//
 // attack or message
 //
-if @findobject 'enemy'
-    headmsg "*Attacking*" 22
-    setalias 'last' 'enemy'
-    attack! 'enemy'
-    target! 'enemy'
-    @cleartargetqueue
+if @findobject 'enemy' and @inrange 'enemy' 15
+  headmsg "*Attacking*" 22
+  attack! 'enemy'
+  msg "All kill"
+  waitfortarget 5000
+  target! 'enemy'
+  //
+  // Herd
+  //
+  if findtype '0xe81' 'any' 'backpack'
+    useobject 'found'
+    waitfortarget 5000
+    target! 'last'
+  endif
 else
     headmsg "No targets" 44
 endif
