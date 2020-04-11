@@ -99,9 +99,9 @@ endwhile
 //
 for 0 to 20
   if murderer 'self'
-	//
-	// Players > mobs
-	//
+    //
+    // Players > mobs
+    //
     @getenemy 'murderer' 'innocent' 'enemy' 'criminal' 'gray' 'humanoid' 'next'
     @pushlist! 'enemies' 'enemy'
   else
@@ -146,7 +146,7 @@ for 0 to 'distances'
   if not @findobject 'enemy'
     for 0 to 'enemies'
       if @inrange enemies[] distances[] and not dead enemies[]
-        setalias 'enemy' enemies[]
+        @setalias 'enemy' enemies[]
         break
       endif
     endfor
@@ -164,7 +164,7 @@ endif
 // Highlight and set last
 //
 if @findobject 'enemy'
-  setalias 'last' 'enemy'
+  @setalias 'last' 'enemy'
   getenemy 'enemy'
 endif
 //
