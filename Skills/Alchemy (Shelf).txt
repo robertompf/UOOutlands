@@ -4,7 +4,7 @@
 // by Jewele
 //
 // Alchemy 50-120 trainer, using a shelf in your home. Uses
-// a combination of Greater Heal and Poisons to level. 
+// a combination of Greater Heal and Poisons to level.
 //
 // How to use?
 // -----------
@@ -12,9 +12,10 @@
 //    -Nightshade
 //    -Mortars and Pestles (optional)
 // 2) Configure a Restock profile for:
-//    -5 Mortar and Pestle (optional)
+//    -5 Empty Bottles
 //    -300+ Nightshade
 //    -300+ Ginseng
+//    -5 Mortar and Pestle (optional)
 // 3) Place a secure box near your working area with:
 //    - Empty kegs
 //    - Pestles (optional)
@@ -27,36 +28,40 @@
 // want them in the shelf, you need to add empty bottles
 // to shelf to accomodate dropping kegs onto it. If you
 // do not have enough bottles, then the kegs will be placed
-// back in your box when full.
+// in your box.
 //
 // You can keep pestles in your shelf profile and pull them
-// that way, OR, you can put them in your box. Sometimes
-// buying 50 of them at the Mage shop and dumping them into
-// a box is just easier. Works either way.
+// that way, OR, you can put them in your box, OR, just
+// keep a bunch in your pack. Sometimes buying 50 of them
+// at the Mage shop is just easier.
 //
 // Script has been calibrated to make any kind of potion ~
 // you can further adjust this to your own needs. Some folks
 // make poison all the way, I prefer to mix it up.
 //
-// Scripts which just use 'make last' are going to be faster 
+// Scripts which just use 'make last' are going to be faster
 // but we cannot use that here, due to changing skill levels
 // and skill targets.
 //
 // Script not running?
 //
-//    Clear your aliases. Go to Macros-Active Objects, and clear 
-//    all Active Objects. 
+//    Clear your aliases. Go to Macros-Active Objects, and clear
+//    all Active Objects.
 //
 // Script buggy?
 //
 //    DO NOT share profiles between characters, it will confuse
 //    the aliases.
 //
+// Edit 4.12.2020
+// ==============
+// * Script will now completely empty pack when starting. This should
+//   make it much easier to start/stop when running to store for more
+//   materials.
+//
 // UOSTEAM COPY-PASTE BELOW THIS LINE
 /////////////////////////////////////////////
-sysmsg "Alchemy Trainer Script" 88
-@useobject 'backpack'
-pause 1000
+sysmsg "Alchemy Trainer Script for Shelves" 73
 @removelist 'potion'
 @createlist 'potion'
 @removelist 'regs'
@@ -76,39 +81,54 @@ pushlist 'potions' 0xf0a // poison
 pushlist 'potions' 0xf0d // explo
 pushlist 'potions' 0xf09 // strength
 //
-// Check no potions in pack
-//
-for 0 to 'potions'
-  if @findtype potions[] 'any' 'backpack'
-    headmsg "Please remove all potions from pack before starting" 91
-    stop
-  endif
-endfor
-//
-// Check for 1 empty bottle
-//
-if counttype 0xf0e 0 'backpack' != 1
-  headmsg "I need EXACTLY 1 empty bottle" 44
-  sysmsg "I need EXACTLY 1 empty bottle" 44
-  stop
-endif
-//
 // Set alias'
 //
-if not findalias 'box'
-  sysmsg "Select a box with empty kegs"
-  promptalias 'box'
-endif
 if not findalias 'shelf'
-  sysmsg "Select shelf"
+  sysmsg "Select shelf" 55
   promptalias 'shelf'
+endif
+if not findalias 'box'
+  sysmsg "Select a box with empty kegs" 55
+  promptalias 'box'
 endif
 @clearjournal
 @canceltarget
 //
+// Dump pack into Shelf
+//
+sysmsg "Dumping pack to shelf" 44
+waitforcontext 'shelf' 0 5000
+waitfortarget 5000
+target! 'self'
+waitforgump 0xefa60f03 5000
+replygump 0xefa60f03 0
+//
+// Check no potions in pack
+//
+for 0 to 'potions'
+  if @findtype potions[] 'any' 'backpack'
+    headmsg "Please remove all potions from pack before starting" 44
+    stop
+  endif
+endfor
+//
+// Clear kegs out of pack
+//
+while @findtype 0x1940 'any' 'backpack'
+  sysmsg "Emptying kegs into shelf" 30
+  moveitem 'found' 'shelf'
+  pause 2000
+  sysmsg "Putting keg back in box" 30
+  moveitem 'found' 'box'
+  pause 2000
+endwhile
+//
 // Open box
 //
 @useobject 'box'
+pause 1000
+@useobject 'backpack'
+pause 1000
 //
 // Main loop
 //
@@ -125,19 +145,19 @@ while not dead
     sysmsg "GO GET 50 ALCHEMY!" 32
     stop
   elseif skill 'Alchemy' < 65
-    sysmsg "Making Poison" 75
+    sysmsg "Making Poison" 68
     pushlist 'potion' 'Poison'
     pushlist 'regs' 0xf88 // shade
   elseif skill 'Alchemy' < 90
-    sysmsg "Making Greater Heal" 75
+    sysmsg "Making Greater Heal" 55
     pushlist 'potion' 'Greater Heal'
     pushlist 'regs' 0xf85 // ginseng
   elseif skill 'Alchemy' < 115
-    sysmsg "Making Deadly Poison" 75
+    sysmsg "Making Deadly Poison" 71
     pushlist 'potion' 'Deadly Poison'
     pushlist 'regs' 0xf88 // shade
   elseif skill 'Alchemy' < 120
-    sysmsg "Making Lethal Poison" 75
+    sysmsg "Making Lethal Poison" 73
     pushlist 'potion' 'Lethal Poison'
     pushlist 'regs' 0xf88 // shade
   elseif skill 'Alchemy' == 120
@@ -148,47 +168,8 @@ while not dead
   // Check for a keg or transfer empty one
   //
   if not @findtype 0x1940 'any' 'backpack'
+    sysmsg "I need a keg, transferring one from box" 91
     movetype 0x1940 'box' 'backpack' 0 0 0 0 1
-    pause 2000
-  endif
-  //
-  // Verify keg. Server save on restock may occur
-  // so throw message, wait, and start again
-  //
-  if not @findtype 0x1940 'any' 'backpack'
-    headmsg "I need a keg to continue!" 91
-    pause 5000
-    continue
-  endif
-  //
-  // Check if we need to pour into keg
-  //
-  if not @findtype 0xf0e 0 'backpack'
-    headmsg "Pouring into keg" 91
-    @unsetalias 'keg'
-    @findtype 0x1940 'any' 'backpack'
-    @setalias 'keg' 'found'
-    for 0 to 'potions'
-      if @findtype potions[] 'any' 'backpack'
-        moveitem 'found' 'keg'
-        pause 1500
-        break
-      endif
-    endfor
-  endif
-  //
-  // Check for empty bottle
-  //
-  if not @findtype 0xf0e 0 'backpack'
-    headmsg "I need an empty bottle" 91
-    pause 5000
-    continue
-  endif
-  //
-  // Check for a keg or transfer empty one
-  //
-  if not @findtype 0x1940 'any' 'backpack'
-    movetype 0x1940 'kegbag' 'backpack' 0 0 0 0 1
     pause 2000
   endif
   //
@@ -205,7 +186,7 @@ while not dead
   // from box.
   //
   if not @findtype 0xe9b 'any' 'backpack'
-    sysmsg "Restocking pestles from box" 44
+    sysmsg "I have no pestles, restocking pestles from box" 44
     movetype 0xe9b 'box' 'backpack' 0 0 0 0 1
     pause 2000
   endif
@@ -214,7 +195,7 @@ while not dead
   // from shelf.
   //
   if not @findtype 0xe9b 'any' 'backpack'
-    sysmsg "Restocking pestles from shelf" 44
+    sysmsg "I have no pestles, restocking pestles from shelf" 44
     waitforcontext 'shelf' 1 5000
     pause 2000
   endif
@@ -235,6 +216,14 @@ while not dead
     pause 2000
   endif
   //
+  // Restock bottles
+  //
+  if @counttype 0xf0e 'any' 'backpack' < 1
+    sysmsg "Restocking bottles" 44
+    waitforcontext 'shelf' 1 5000
+    pause 2000
+  endif
+  //
   // Verify regs.
   //
   if not @counttype regs[0] 'any' 'backpack' > 199
@@ -243,8 +232,17 @@ while not dead
     continue
   endif
   //
+  // Verify empty bottles
+  //
+  if not @findtype 0xf0e 0 'backpack'
+    headmsg "I need empty bottles to continue!" 91
+    pause 5000
+    continue
+  endif
+  //
   // Use pestle
   //
+  sysmsg "Creating potion" 91
   @findtype 0xe9b 'any' 'backpack'
   @useobject 'found'
   waitforgump 0x38920abd 5000
@@ -373,47 +371,56 @@ while not dead
   endwhile
   //
   // Check if we need to pour into keg
-  // (Empty bottle will tell us)
   //
-  if not @findtype 0xf0e 0 'backpack'
-    headmsg "Pouring into keg" 91
-    @unsetalias 'keg'
-    // leave this set to 'any'
-    if @findtype 0x1940 'any' 'backpack'
-      @setalias 'keg' 'found'
-      for 0 to 'potions'
-        if @findtype potions[] 'any' 'backpack'
-          moveitem 'found' 'keg'
-          pause 1500
-          break
-        endif
-      endfor
-    endif
-  endif
+  for 0 to 'potions'
+    while @findtype 'potions[]' 0 'backpack'
+      headmsg "Pouring into keg" 76
+      @setalias 'potion' 'found'
+      @ignoreobject 'found'
+      @findtype 0x1940 'any' 'backpack'
+      moveitem 'potion' 'found'
+      pause 2000
+    endwhile
+    @clearignorelist
+  endfor
   //
-  // Check if keg full or we attempting to mix
+  // Check for full, invalid mixing, whatever.
   //
-  if @injournal 'hold any more' 'system' or @injournal 'mix' 'system'
-    headmsg "Keg full" 91
-    sysmsg "Dropping keg on shelf" 81
-    movetype 0x1940 'backpack' 'shelf' 0 0 0 'any' 1
-    pause 2500
+  for 0 to 'potions'
     //
-    // Verify potion pull
+    // Indicates a mix or a full keg, etc. Need reset.
     //
-    if not @findtype 0xf0e 0 'backpack'
-      sysmsg "Shelf has no empty bottles, moving to box" 81
-      movetype 0x1940 'backpack' 'box' 0 0 0 'any' 1
-      pause 2500
+    if @findtype 'potions[]' 0 'backpack'
+      sysmsg "Resetting script" 16
+      //
+      // Dump pack to shelf
+      //
+      sysmsg "Emptying pack into shelf" 30
+      waitforcontext 'shelf' 0 5000
+      waitfortarget 5000
+      target! 'self'
+      waitforgump 0xefa60f03 5000
+      replygump 0xefa60f03 0
+      //
+      // Clear kegs out of pack
+      //
+      while @findtype 0x1940 'any' 'backpack'
+        sysmsg "Emptying kegs into shelf" 30
+        moveitem 'found' 'shelf'
+        pause 2000
+        sysmsg "Putting keg back in box" 30
+        moveitem 'found' 'box'
+        pause 2000
+      endwhile
     endif
-  endif
+  endfor
   //
   // World save check
   //
   if @injournal 'world will save' 'system'
     sysmsg 'pausing for world save'
+    @clearjournal
     pause 30000
   endif
-  @clearjournal
   pause 500
 endwhile
