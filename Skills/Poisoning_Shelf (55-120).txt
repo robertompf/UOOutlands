@@ -48,10 +48,14 @@
 // -----------
 // Switched macro to store bought kryss
 //
+// Version 1.3
+// -----------
+// Updated script for new shelf gumps
+//
 // UOSTEAM COPY-PASTE BELOW THIS LINE
 /////////////////////////////////////////////
 sysmsg "Poisoning Shelf Script" 73
-sysmsg "Version 1.2" 73
+sysmsg "Version 1.3" 73
 @clearjournal
 //
 // Open backpack
@@ -139,22 +143,32 @@ while not dead
     sysmsg "restocking" 67
     useobject 'shelf'
     waitforgump 0xc0b1026d 5000
+    //
     // clear
+    //
     replygump 0xc0b1026d 16
     waitforgump 0xc0b1026d 5000
-    // edit loadout
-    replygump 0xc0b1026d 3
+    replygump 0xc0b1026d 16
     waitforgump 0xc0b1026d 5000
+    //
+    // edit loadout
+    //
+    replygump 0xc0b1026d 5
+    waitforgump 0xc0b1026d 5000
+    //
     // cures (10)
+    //
     replygump 0xc0b1026d 201
     waitforgump 0xc0b1026d 5000
     replygump 0xc0b1026d 216
     waitforgump 0xc0b1026d 5000
+    //
     // heals (10)
+    //
     replygump 0xc0b1026d 200
-    waitforgump 0xc0b1026d 15000
+    waitforgump 0xc0b1026d 5000
     replygump 0xc0b1026d 215
-    waitforgump 0xc0b1026d 15000
+    waitforgump 0xc0b1026d 5000
     //
     // 78 poison
     //
@@ -200,6 +214,7 @@ while not dead
     replygump 0xc0b1026d 7
     waitforgump 0xc0b1026d 5000
     pause 2000
+    // close shelf
     replygump 0xc0b1026d 0
     //
     // resupply cure check
