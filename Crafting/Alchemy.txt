@@ -84,14 +84,14 @@ if not findalias 'regbag'
     promptalias 'regbag'
 endif
 
+@removelist 'potion'
+@createlist 'potion'
 // ****************************
 // ** MODIFY THIS FOR POTION **
 // ****************************
 // Add exact name of potion you want to make
 // No need to add the 'Potion' part of name.
 //
-@removelist 'potion'
-@createlist 'potion'
 @pushlist 'potion' 'Poison'
 //
 // ****************
