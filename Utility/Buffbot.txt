@@ -1,0 +1,77 @@
+@useobject 'backpack'
+@removelist 'players'
+@createlist 'players'
+//
+// Create instrument
+//
+@removelist 'instrumentlist'
+@createlist 'instrumentlist'
+@pushlist 'instrumentlist' 0xeb1
+@pushlist 'instrumentlist' 0xeb2
+@pushlist 'instrumentlist' 0xeb3
+@pushlist 'instrumentlist' 0xe9c
+@pushlist 'instrumentlist' 0xe9d
+@pushlist 'instrumentlist' 0xe9e
+//
+// Set instrument
+//
+for 0 to 'instrumentlist'
+  @usetype 'instrumentlist[]' 'any' 'backpack'
+endfor
+//
+// Run until stopped
+//
+while not dead
+  sysmsg "Area buff bot running" 15
+  @clearignorelist
+  @ignoreobject 'self'
+  @clearlist 'players'
+  @removetimer 'search'
+  @createtimer 'search'
+  //
+  // Search for players
+  //
+  while timer 'search' < 2000
+    if @findtype 0x190 'any' 'world' 2 or @findtype 0x191 'any' 'world' 2
+      @pushlist! 'players' 'found'
+      @ignoreobject 'found'
+    endif
+  endwhile
+  //
+  // If players close to buff bot
+  //
+  for 0 to 'players'
+    if @inrange 'players[]' 2
+      msg "Ho traveler! Pause a moment while I count thy accomplishments!"
+      //
+      // Get dagger in pack
+      //
+      @findtype 0xf52 'any' 'backpack'
+      @setalias 'dagger' 'found'
+      usetype 0xde1 'any' 'backpack'
+      pause 2000
+      useskill 'Peacemaking'
+      waitfortarget 5000
+      @target! 'dagger'
+      pause 5500
+      useskill 'Discordance'
+      waitfortarget 5000
+      @target! 'dagger'
+      pause 5500
+      useskill 'taste identification'
+      waitfortarget 5000
+      @target! 'dagger'
+      pause 2000
+      cast 'bless'
+      waitfortarget 5000
+      target! 'players[0]'
+      pause 2000
+      autotargetself
+      useskill 'Arch Protection'
+      pause 10000
+      msg "May the blessings of the Avatar be with you!"
+      break
+    endif
+    endfor
+    pause 5000
+  endwhile
