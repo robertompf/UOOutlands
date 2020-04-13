@@ -6,10 +6,16 @@
 // Alchemy 50-120 trainer, using a shelf in your home. Uses
 // a combination of Greater Heal and Poisons to level.
 //
+// This macro isn't as straightforward as my usual macros - 
+// its mainly to accomodate different player's needs. Read,
+// the notes, understand what its doing - it will be fine.
+//
 // How to use?
 // -----------
 // 1) Stock your shelf with :
+//    -Ginseng
 //    -Nightshade
+//    -At least 5 empty bottles
 //    -Mortars and Pestles (optional)
 // 2) Configure a Restock profile for:
 //    -5 Empty Bottles
@@ -19,8 +25,7 @@
 // 3) Place a secure box near your working area with:
 //    - Empty kegs
 //    - Pestles (optional)
-// 4) Put exactly 1 empty bottle in your pack
-// 5) Run script
+// 4) Run script
 //
 // Notes:
 // ------
@@ -32,7 +37,7 @@
 //
 // You can keep pestles in your shelf profile and pull them
 // that way, OR, you can put them in your box, OR, just
-// keep a bunch in your pack. Sometimes buying 50 of them
+// keep a bunch in your pack. Sometimes buying 100 of them
 // at the Mage shop is just easier.
 //
 // Script has been calibrated to make any kind of potion ~
@@ -42,6 +47,12 @@
 // Scripts which just use 'make last' are going to be faster
 // but we cannot use that here, due to changing skill levels
 // and skill targets.
+//
+// Keeping Kegs?
+// =============
+// If you are keeping your kegs, then make sure you have enough
+// bottles in shelf to run script, but not enough bottles to 
+// allow you to dump a keg into it.
 //
 // Script not running?
 //
@@ -393,15 +404,6 @@ while not dead
     if @findtype 'potions[]' 0 'backpack'
       sysmsg "Resetting script" 16
       //
-      // Dump pack to shelf
-      //
-      sysmsg "Emptying pack into shelf" 30
-      waitforcontext 'shelf' 0 5000
-      waitfortarget 5000
-      target! 'self'
-      waitforgump 0xefa60f03 5000
-      replygump 0xefa60f03 0
-      //
       // Clear kegs out of pack
       //
       while @findtype 0x1940 'any' 'backpack'
@@ -412,6 +414,15 @@ while not dead
         moveitem 'found' 'box'
         pause 2000
       endwhile
+      //
+      // Dump pack to shelf
+      //
+      sysmsg "Emptying pack into shelf" 30
+      waitforcontext 'shelf' 0 5000
+      waitfortarget 5000
+      target! 'self'
+      waitforgump 0xefa60f03 5000
+      replygump 0xefa60f03 0
     endif
   endfor
   //
