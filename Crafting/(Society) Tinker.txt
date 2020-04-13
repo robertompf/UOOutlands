@@ -71,6 +71,13 @@
 // * Recycles every 10 items
 // DO NOT, I REPEAT, DO NOT ENABLE [ ] Loop
 //
+// DEBUGGING:
+// ==========
+// When in doubt clear aliases. For example,
+// if you have an alias 'pickaxe' from mining macros,
+// then try to make a 'pickaxe' the script will get
+// confused.
+//
 // UOSTEAM COPY-PASTE BELOW THIS LINE
 /////////////////////////////////////////////
 sysmsg "UOSteam Tinker Society Macro" 75
